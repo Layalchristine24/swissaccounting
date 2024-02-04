@@ -1,4 +1,30 @@
-#' @references <https://karpeo.ch/plan-comptable-suisse-explications-exemple/>
+#' Financial Accounts Model (French)
+#'
+#' This tribble represents a model of financial accounts in French.
+#' It includes account numbers, descriptions, and types.
+#'
+#' @references
+#' [Plan Comptable Suisse - Explications et Exemple](https://karpeo.ch/plan-comptable-suisse-explications-exemple/)
+#'
+#' @usage
+#' accounts_model_fr
+#'
+#' @format
+#' A tibble with columns:
+#' \describe{
+#'   \item{account_number}{Numeric. The account number.}
+#'   \item{account_description}{Character. The description of the account.}
+#'   \item{account_type}{Character. The type of account (e.g., "Actif", "Passif", "Produit", "Charge").}
+#' }
+#'
+#' @examples
+#' \dontrun{
+#' # Load the data
+#' accounts_model_fr
+#' }
+#'
+#' @keywords dataset
+#' @export
 accounts_model_fr <- tribble(
   ~account_number, ~account_description, ~account_type,
   1, "Actifs", "Actif",
@@ -171,7 +197,33 @@ accounts_model_fr <- tribble(
   mutate(account_number = as.integer(account_number))
 
 
-#' @references <https://karpeo.ch/plan-comptable-suisse-explications-exemple/>
+#' Financial Accounts Model (English)
+#'
+#' This tribble represents a model of financial accounts in English.
+#' It includes account numbers, descriptions, and types.
+#'
+#' @references
+#' [Plan Comptable Suisse - Explications et Exemple](https://karpeo.ch/plan-comptable-suisse-explications-exemple/)
+#'
+#' @usage
+#' accounts_model_en
+#'
+#' @format
+#' A tibble with columns:
+#' \describe{
+#'   \item{account_number}{Numeric. The account number.}
+#'   \item{account_description}{Character. The description of the account.}
+#'   \item{account_type}{Character. The type of account (e.g., "Asset", "Liability", "Income", "Expense").}
+#' }
+#'
+#' @examples
+#' \dontrun{
+#' # Load the data
+#' accounts_model_en
+#' }
+#'
+#' @keywords dataset
+#' @export
 accounts_model_en <- tribble(
   ~account_number, ~account_description, ~account_type,
   1, "Assets", "Asset",
@@ -344,7 +396,33 @@ accounts_model_en <- tribble(
   mutate(account_number = as.integer(account_number))
 
 
-#' @references <https://karpeo.ch/plan-comptable-suisse-explications-exemple/>
+#' Financial Accounts Model (German)
+#'
+#' This tribble represents a model of financial accounts in German.
+#' It includes account numbers, descriptions, and types.
+#'
+#' @references
+#' [Plan Comptable Suisse - Explications et Exemple](https://karpeo.ch/plan-comptable-suisse-explications-exemple/)
+#'
+#' @usage
+#' accounts_model_de
+#'
+#' @format
+#' A tibble with columns:
+#' \describe{
+#'   \item{account_number}{Numeric. The account number.}
+#'   \item{account_description}{Character. The description of the account.}
+#'   \item{account_type}{Character. The type of account (e.g., "Aktivkonto", "Passivkonto", "Einnahmen", "Ausgabe").}
+#' }
+#'
+#' @examples
+#' \dontrun{
+#' # Load the data
+#' accounts_model_de
+#' }
+#'
+#' @keywords dataset
+#' @export
 accounts_model_de <- tribble(
   ~account_number, ~account_description, ~account_type,
   1, "Aktiva", "Aktivkonto",
