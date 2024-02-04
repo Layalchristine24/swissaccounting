@@ -1,5 +1,5 @@
 #' @references <https://karpeo.ch/plan-comptable-suisse-explications-exemple/>
-accounts_model_fr <- tibble::tribble(
+accounts_model_fr <- tribble(
   ~account_number, ~account_description, ~account_type,
   1, "Actifs", "Actif",
   10, "Actifs circulants", "Actif",
@@ -168,11 +168,11 @@ accounts_model_fr <- tibble::tribble(
   9, "Clôture", "Clôture",
   9200, "Bénéfice / perte de l’exercice", "Produit/Charge"
 ) |>
-  dplyr::mutate(account_number = as.integer(account_number))
+  mutate(account_number = as.integer(account_number))
 
 
 #' @references <https://karpeo.ch/plan-comptable-suisse-explications-exemple/>
-accounts_model_en <- tibble::tribble(
+accounts_model_en <- tribble(
   ~account_number, ~account_description, ~account_type,
   1, "Assets", "Asset",
   10, "Current Assets", "Asset",
@@ -341,11 +341,11 @@ accounts_model_en <- tibble::tribble(
   9, "Closing", "Closing",
   9200, "Current Year's Profit / Loss", "Income/Expense"
 ) |>
-  dplyr::mutate(account_number = as.integer(account_number))
+  mutate(account_number = as.integer(account_number))
 
 
 #' @references <https://karpeo.ch/plan-comptable-suisse-explications-exemple/>
-accounts_model_de <- tibble::tribble(
+accounts_model_de <- tribble(
   ~account_number, ~account_description, ~account_type,
   1, "Aktiva", "Aktivkonto",
   10, "Umlaufvermögen", "Aktivkonto",
@@ -514,4 +514,4 @@ accounts_model_de <- tibble::tribble(
   9, "Abschluss", "Abschluss",
   9200, "Gewinn / Verlust des Geschäftsjahres", "Einnahmen/Ausgabe"
 ) |>
-  dplyr::mutate(account_number = as.integer(account_number))
+  mutate(account_number = as.integer(account_number))
