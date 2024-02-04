@@ -12,4 +12,5 @@ Imports:
     cli,
     dplyr,
     lubridate,
-    tibble
+    tibble,
+    tidyr

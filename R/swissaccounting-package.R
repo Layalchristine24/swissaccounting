@@ -9,5 +9,6 @@
 #' @importFrom lubridate today
 #' @importFrom tibble add_row
 #' @importFrom tibble tribble
+#' @importFrom tidyr drop_na
 ## usethis namespace: end
 NULL
