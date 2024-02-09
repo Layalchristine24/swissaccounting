@@ -29,6 +29,10 @@ add_ledger_entry <- function(date,
                              filename_to_import = NULL,
                              export_csv = FALSE,
                              filename_to_export = NULL) {
+  if (is.character(date)) {
+    date <- lubridate::as_date(date)
+  }
+
   last_ledger <- get_last_ledger_version(
     import_csv = import_csv,
     ledger_file = filename_to_import
