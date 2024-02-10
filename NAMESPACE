@@ -3,6 +3,7 @@
 export(accounts_model_de)
 export(accounts_model_en)
 export(accounts_model_fr)
+export(add_ledger_entry)
 importFrom(cli,cli_abort)
 importFrom(dplyr,if_else)
 importFrom(dplyr,mutate)

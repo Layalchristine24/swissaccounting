@@ -19,6 +19,7 @@ get_last_ledger_version <- function(ledger_file = NULL,
 # add_ledger_entry(date = today(), counterpart_id = 1L, descr = "Contributions accident insurance paid by the employee", credit_account = 5730, amount = 890, import_csv = TRUE, filename_to_import = "~/2024-02-04_ledger.csv", export_csv = TRUE, filename_to_export = "~/2024-02-04_ledger.csv")
 
 # https://www.banana.ch/doc/fr/node/2726
+#' @export
 add_ledger_entry <- function(date,
                              counterpart_id = NULL,
                              debit_account = NULL,
