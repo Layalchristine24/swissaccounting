@@ -21,6 +21,7 @@ get_last_ledger_version <- function(ledger_file = NULL,
 # https://www.banana.ch/doc/fr/node/2726
 #' @export
 add_ledger_entry <- function(date,
+                             language = "en",
                              counterpart_id = NULL,
                              debit_account = NULL,
                              credit_account = NULL,
@@ -39,6 +40,14 @@ add_ledger_entry <- function(date,
     ledger_file = filename_to_import
   )
 
+  account_model <- if (language == "fr") {
+    accounts_model_fr
+  } else if (language == "en") {
+    accounts_model_en
+  } else if (language == "de") {
+    accounts_model_de
+  }
+  browser()
   ledger <- last_ledger |>
     add_row(
       date = date,
@@ -50,7 +59,10 @@ add_ledger_entry <- function(date,
       amount = amount
     ) |>
     drop_na(amount) |>
-    mutate(counterpart_id = if_else(is.na(counterpart_id), id, counterpart_id))
+    mutate(counterpart_id = if_else(is.na(counterpart_id), id, counterpart_id)) |>
+    left_join(account_model,
+      by = c("counterpart_id" = "account_number")
+    )
 
   if (export_csv) {
     ledger |>
