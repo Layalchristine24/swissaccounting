@@ -4,6 +4,7 @@
 ## usethis namespace: start
 #' @importFrom cli cli_abort
 #' @importFrom dplyr if_else
+#' @importFrom dplyr left_join
 #' @importFrom dplyr mutate
 #' @importFrom lubridate NA_Date_
 #' @importFrom lubridate today
