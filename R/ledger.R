@@ -47,7 +47,7 @@ add_ledger_entry <- function(date,
   } else if (language == "de") {
     accounts_model_de
   }
-  browser()
+
   ledger <- last_ledger |>
     add_row(
       date = date,
