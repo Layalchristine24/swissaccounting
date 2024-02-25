@@ -10,7 +10,16 @@ get_last_ledger_version <- function(ledger_file = NULL,
       NA_Date_, NA_integer_, NA_integer_, NA_character_, NA_integer_, NA_integer_, NA_real_
     )
   } else if (import_csv) {
-    readr::read_csv(ledger_file)
+    read_csv(ledger_file,
+      col_types = cols(
+        date = col_date(),
+        description = col_character(),
+        account_description = col_character(),
+        account_type = col_character(),
+        .default = col_integer(),
+        amount = col_double()
+      )
+    )
   }
 }
 # add_ledger_entry(date = today(), descr = "Gross salaries month of December", debit_account = 5000, amount = 26900, export_csv = TRUE, filename_to_export = "~/2024-02-04_ledger.csv")
@@ -35,6 +44,14 @@ add_ledger_entry <- function(date,
     date <- lubridate::as_date(date)
   }
 
+  if (!is.null(debit_account)) {
+    debit_account <- as.integer(debit_account)
+  }
+
+  if (!is.null(credit_account)) {
+    credit_account <- as.integer(credit_account)
+  }
+
   last_ledger <- get_last_ledger_version(
     import_csv = import_csv,
     ledger_file = filename_to_import
@@ -48,40 +65,69 @@ add_ledger_entry <- function(date,
     accounts_model_de
   }
 
-  ledger_raw <- last_ledger |>
-    add_row(
+  .counterpart_id <- if (is.null(counterpart_id)) {
+    NA_integer_
+  } else {
+    counterpart_id
+  }
+
+  rm(counterpart_id)
+
+  ledger_raw <-
+    tibble(
       date = date,
       id = if_else(is.na(max(last_ledger$id)), 1L, max(last_ledger$id) + 1L),
-      counterpart_id = counterpart_id,
+      counterpart_id = .counterpart_id,
       description = descr,
       debit_account = debit_account,
       credit_account = credit_account,
       amount = amount
     ) |>
     drop_na(amount) |>
-    mutate(counterpart_id = if_else(is.na(counterpart_id), id, counterpart_id))
+    mutate(counterpart_id = if_else(is.na(.counterpart_id), id, counterpart_id))
 
-  ledger <- if (is.null(filename_to_import)) {
-    ledger_raw |>
-      left_join(account_model,
-        by = c("counterpart_id" = "account_number")
-      )
-  } else {
-    ledger_raw |>
-      rename(account_number = counterpart_id) |>
-      left_join(account_model,
-        by = join_by(
-          account_number,
-          account_description,
-          account_type
+  new_ledger <- if (is.null(filename_to_import)) {
+    if (!is.null(debit_account)) {
+      ledger_raw |>
+        left_join(
+          account_model,
+          by = c(debit_account = "account_number")
         )
-      )
+    } else if (!is.null(credit_account)) {
+      ledger_raw |>
+        left_join(
+          account_model,
+          by = c(credit_account = "account_number")
+        )
+    }
+  } else {
+    if (!is.null(debit_account)) {
+      ledger_raw |>
+        left_join(
+          account_model |>
+            rename(debit_account = account_number),
+          by = join_by(debit_account, account_description, account_type)
+        )
+    } else if (!is.null(credit_account)) {
+      ledger_raw |>
+        left_join(
+          account_model |>
+            rename(credit_account = account_number),
+          by = join_by(credit_account)
+        )
+    }
   }
+
+  ledger <-
+    last_ledger |>
+    bind_rows(
+      new_ledger
+    ) |>
+    drop_na(id)
 
   if (export_csv) {
     ledger |>
-      readr::write_csv(filename_to_export)
+      write_csv(filename_to_export)
   }
-
   ledger
 }
