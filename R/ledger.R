@@ -48,7 +48,7 @@ add_ledger_entry <- function(date,
     accounts_model_de
   }
 
-  ledger <- last_ledger |>
+  ledger_raw <- last_ledger |>
     add_row(
       date = date,
       id = if_else(is.na(max(last_ledger$id)), 1L, max(last_ledger$id) + 1L),
@@ -59,10 +59,24 @@ add_ledger_entry <- function(date,
       amount = amount
     ) |>
     drop_na(amount) |>
-    mutate(counterpart_id = if_else(is.na(counterpart_id), id, counterpart_id)) |>
-    left_join(account_model,
-      by = c("counterpart_id" = "account_number")
-    )
+    mutate(counterpart_id = if_else(is.na(counterpart_id), id, counterpart_id))
+
+  ledger <- if (is.null(filename_to_import)) {
+    ledger_raw |>
+      left_join(account_model,
+        by = c("counterpart_id" = "account_number")
+      )
+  } else {
+    ledger_raw |>
+      rename(account_number = counterpart_id) |>
+      left_join(account_model,
+        by = join_by(
+          account_number,
+          account_description,
+          account_type
+        )
+      )
+  }
 
   if (export_csv) {
     ledger |>
