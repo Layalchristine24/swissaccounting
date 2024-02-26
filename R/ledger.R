@@ -106,7 +106,7 @@ add_ledger_entry <- function(date,
         left_join(
           account_model |>
             rename(debit_account = account_number),
-          by = join_by(debit_account, account_description, account_type)
+          by = join_by(debit_account)
         )
     } else if (!is.null(credit_account)) {
       ledger_raw |>
