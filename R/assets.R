@@ -1,6 +1,5 @@
-
-# ledger_file <- "/Users/Layal//ersatz-production/ersatz-accounting/ersatz.accounting/documents/ledger/ersatz-ledger.csv"
-
+# ledger_file <- "/Users/Layal/github/ersatz-production/ersatz-accounting/ersatz.accounting/documents/ledger/ersatz-ledger.csv"
+# get_assets(ledger_file = "/Users/Layal/github/ersatz-production/ersatz-accounting/ersatz.accounting/documents/ledger/ersatz-ledger.csv")
 get_assets <- function(ledger_file = TRUE,
                        import_csv = TRUE) {
   if (is.null(ledger_file)) {
@@ -19,6 +18,14 @@ get_assets <- function(ledger_file = TRUE,
     )
 
     my_ledger |>
-      dplyr::filter(grepl("^1", debit_account) | (grepl("^1", credit_account)))
+      dplyr::filter(grepl("^1", debit_account) | (grepl("^1", credit_account))) |>
+      dplyr::reframe(
+        amount = dplyr::if_else(!is.na(debit_account), amount, -amount),
+        .by = c(date, id, account_description, debit_account, credit_account)
+      ) |>
+      dplyr::reframe(
+        sum_assets = sum(amount, na.rm = TRUE),
+        .by = account_description
+      )
   }
 }
