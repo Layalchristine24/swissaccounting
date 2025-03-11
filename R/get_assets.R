@@ -15,7 +15,7 @@
 #' \dontrun{
 #' get_assets(ledger_file = my_ledger_directory)
 #' }
-#'
+#' @autoglobal
 #' @export
 get_assets <- function(ledger_file = TRUE,
                        import_csv = TRUE) {

@@ -27,7 +27,7 @@
 #' # Calculate sum of accounts
 #' result <- sum_accounts(ledger_data)
 #' 
-#' @export
+#' @autoglobal
 sum_accounts <- function(my_ledger) {
   my_ledger |>
     filter(!(account_type %in%

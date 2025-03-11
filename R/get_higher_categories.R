@@ -25,7 +25,7 @@
 #' # Returns:
 #' # account_base_category: 1, 2, 3
 #'
-#' @export
+#' @autoglobal
 get_account_base_category <- function(my_ledger) {
   my_ledger |>
     mutate(
@@ -58,7 +58,7 @@ get_account_base_category <- function(my_ledger) {
 #' categorized_ledger <- get_high_category(ledger)
 #' print(categorized_ledger)
 #'
-#' @export
+#' @autoglobal
 get_high_category <- function(my_ledger) {
   my_ledger |>
     mutate(
@@ -91,7 +91,7 @@ get_high_category <- function(my_ledger) {
 #' categorized_ledger <- get_intermediate_category(ledger)
 #' print(categorized_ledger)
 #'
-#' @export
+#' @autoglobal
 get_intermediate_category <- function(my_ledger) {
   my_ledger |>
     mutate(

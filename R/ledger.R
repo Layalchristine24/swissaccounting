@@ -1,7 +1,3 @@
-get_ledger <- function(...) {
-  args <- lst(...)
-}
-
 #' Get Last Ledger Version
 #'
 #' @description
@@ -13,9 +9,9 @@ get_ledger <- function(...) {
 #'
 #' @return A tibble containing ledger data or an empty ledger structure if no file
 #'   is provided
-#'
+#' @autoglobal
 #' @keywords internal
-get_last_ledger_version <- function(ledger_file = NULL,
+get_ledger <- function(ledger_file = NULL,
                                     import_csv = FALSE) {
   if (is.null(ledger_file)) {
     tribble(
@@ -84,7 +80,7 @@ add_ledger_entry <- function(date,
     credit_account <- as.integer(credit_account)
   }
 
-  last_ledger <- get_last_ledger_version(
+  last_ledger <- get_ledger(
     import_csv = import_csv,
     ledger_file = filename_to_import
   )

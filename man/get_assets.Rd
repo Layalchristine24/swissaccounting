@@ -24,5 +24,4 @@ account description, considering both debit and credit entries that start with
 \dontrun{
 get_assets(ledger_file = my_ledger_directory)
 }
-
 }
