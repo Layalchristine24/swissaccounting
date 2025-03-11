@@ -1,14 +1,13 @@
 #' Calculate Total Assets by Account Description
 #'
 #' @description
-#' This function reads a ledger file and calculates the sum of assets for each 
-#' account description, considering both debit and credit entries that start with 
+#' This function reads a ledger file and calculates the sum of assets for each
+#' account description, considering both debit and credit entries that start with
 #' '1'.
 #'
 #' @param ledger_file Path to the CSV ledger file
-#' @param import_csv Logical indicating whether to import CSV (currently unused)
 #'
-#' @return A data frame containing account descriptions and their total asset 
+#' @return A data frame containing account descriptions and their total asset
 #'   values
 #'
 #' @examples
@@ -17,10 +16,9 @@
 #' }
 #' @autoglobal
 #' @export
-get_assets <- function(ledger_file = TRUE,
-                       import_csv = TRUE) {
+get_assets <- function(ledger_file = TRUE) {
   if (is.null(ledger_file)) {
-    cli_abort(".var{ledger_file} is required. Please provide a path to the ledger file.")
+    cli_abort(".var{ledger_file} is required. Please provide a path to the ledger CSV file.")
   } else {
     my_ledger <- read_csv(
       ledger_file,

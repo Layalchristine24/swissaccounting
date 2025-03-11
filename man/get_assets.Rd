@@ -4,12 +4,10 @@
 \alias{get_assets}
 \title{Calculate Total Assets by Account Description}
 \usage{
-get_assets(ledger_file = TRUE, import_csv = TRUE)
+get_assets(ledger_file = TRUE)
 }
 \arguments{
 \item{ledger_file}{Path to the CSV ledger file}
-
-\item{import_csv}{Logical indicating whether to import CSV (currently unused)}
 }
 \value{
 A data frame containing account descriptions and their total asset
