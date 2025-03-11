@@ -10,7 +10,7 @@
 #' @param my_ledger A data frame containing ledger entries with at least one of
 #'   these columns: debit_account or credit_account
 #'
-#' @return A data frame with an additional column 'high_category' containing
+#' @return A data frame with an additional column 'account_base_category' containing
 #'   the base category (1-9) of each account. Uses the first non-NULL account
 #'   between debit and credit accounts.
 #'
@@ -21,15 +21,15 @@
 #'   amount = c(100, 200, 300)
 #' )
 #'
-#' result <- get_account_type(ledger)
+#' result <- get_account_base_category(ledger)
 #' # Returns:
-#' # high_category: 1, 2, 3
+#' # account_base_category: 1, 2, 3
 #'
 #' @export
-get_account_type <- function(my_ledger) {
+get_account_base_category <- function(my_ledger) {
   my_ledger |>
     mutate(
-      high_category = (coalesce(debit_account, credit_account) -
+      account_base_category = (coalesce(debit_account, credit_account) -
         coalesce(debit_account, credit_account) %% 1e3) / 1e3
     )
 }
