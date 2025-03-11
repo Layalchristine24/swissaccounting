@@ -31,16 +31,6 @@ get_assets <- function(ledger_file = TRUE) {
         amount = col_double()
       )
     )
-
-    my_ledger |>
-      filter(grepl("^1", debit_account) | (grepl("^1", credit_account))) |>
-      reframe(
-        amount = if_else(!is.na(debit_account), amount, -amount),
-        .by = c(date, id, account_description, debit_account, credit_account)
-      ) |>
-      reframe(
-        sum_assets = sum(amount, na.rm = TRUE),
-        .by = account_description
-      )
+    sum_accounts(my_ledger)
   }
 }
