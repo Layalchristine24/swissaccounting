@@ -7,12 +7,12 @@
 #' - Account 2000 -> Category 2 (Liabilities)
 #' - Account 3400 -> Category 3 (Revenue)
 #'
-#' @param my_ledger A data frame containing ledger entries with at least one of
-#'   these columns: debit_account or credit_account
+#' @param my_ledger data.frame A data frame containing ledger entries with at least
+#'   one of these columns: debit_account or credit_account
 #'
-#' @return A data frame with an additional column 'account_base_category' containing
-#'   the base category (1-9) of each account. Uses the first non-NULL account
-#'   between debit and credit accounts.
+#' @return data.frame A data frame with an additional integer column 
+#'   'account_base_category' containing the base category (1-9) of each account. 
+#'   Uses the first non-NULL account between debit and credit accounts.
 #'
 #' @examples
 #' ledger <- data.frame(
@@ -29,8 +29,8 @@
 get_account_base_category <- function(my_ledger) {
   my_ledger |>
     mutate(
-      account_base_category = (coalesce(debit_account, credit_account) -
-        coalesce(debit_account, credit_account) %% 1e3) / 1e3
+      account_base_category = as.integer((coalesce(debit_account, credit_account) -
+        coalesce(debit_account, credit_account) %% 1e3) / 1e3)    
     )
 }
 
@@ -40,21 +40,19 @@ get_account_base_category <- function(my_ledger) {
 #' Extracts the high-level category (first digit) from account numbers in a ledger.
 #' For example, account 1234 would be categorized as 12.
 #'
-#' @param my_ledger A data frame containing ledger entries with debit_account
-#'   and/or credit_account columns
+#' @param my_ledger data.frame A data frame containing ledger entries with 
+#'   debit_account and/or credit_account columns
 #'
-#' @return A data frame with an additional column 'high_category' containing
-#'   the high-level category numbers
+#' @return data.frame A data frame with an additional integer column 
+#'   'high_category' containing the high-level category numbers
 #'
 #' @examples
-#' # Create a sample ledger
 #' ledger <- data.frame(
 #'   debit_account = c(1000, 2000, 3000),
 #'   credit_account = c(4000, 5000, NA),
 #'   amount = c(100, 200, 300)
 #' )
 #'
-#' # Get high-level categories
 #' categorized_ledger <- get_high_category(ledger)
 #' print(categorized_ledger)
 #'
@@ -62,8 +60,8 @@ get_account_base_category <- function(my_ledger) {
 get_high_category <- function(my_ledger) {
   my_ledger |>
     mutate(
-      high_category = (coalesce(debit_account, credit_account) -
-        coalesce(debit_account, credit_account) %% 1e3) / 1e2
+      high_category = as.integer((coalesce(debit_account, credit_account) -
+        coalesce(debit_account, credit_account) %% 1e3) / 1e2)
     )
 }
 
@@ -73,21 +71,19 @@ get_high_category <- function(my_ledger) {
 #' Extracts the intermediate category (first two digits) from account numbers in a ledger.
 #' For example, account 1234 would be categorized as 12.
 #'
-#' @param my_ledger A data frame containing ledger entries with debit_account
-#'   and/or credit_account columns
+#' @param my_ledger data.frame A data frame containing ledger entries with 
+#'   debit_account and/or credit_account columns
 #'
-#' @return A data frame with an additional column 'intermediate_category' containing
-#'   the intermediate category numbers
+#' @return data.frame A data frame with an additional integer column 
+#'   'intermediate_category' containing the intermediate category numbers
 #'
 #' @examples
-#' # Create a sample ledger
 #' ledger <- data.frame(
 #'   debit_account = c(1234, 2345, 3456),
 #'   credit_account = c(4567, 5678, NA),
 #'   amount = c(100, 200, 300)
 #' )
 #'
-#' # Get intermediate categories
 #' categorized_ledger <- get_intermediate_category(ledger)
 #' print(categorized_ledger)
 #'
@@ -95,7 +91,7 @@ get_high_category <- function(my_ledger) {
 get_intermediate_category <- function(my_ledger) {
   my_ledger |>
     mutate(
-      intermediate_category = (coalesce(debit_account, credit_account) -
-        coalesce(debit_account, credit_account) %% 1e2) / 1e1
+      intermediate_category = as.integer((coalesce(debit_account, credit_account) -
+        coalesce(debit_account, credit_account) %% 1e2) / 1e1)    
     )
 }

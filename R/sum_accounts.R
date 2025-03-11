@@ -42,8 +42,10 @@ sum_accounts <- function(my_ledger) {
       )
     ) |>
     get_high_category() |>
+    get_intermediate_category() |>
+    get_account_base_category() |>
     reframe(
       sum_assets = sum(amount, na.rm = TRUE),
-      .by = c(high_category, account_description)
+      .by = c(account_base_category, high_category, intermediate_category, account_description)
     )
 }
