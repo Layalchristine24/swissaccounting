@@ -1,3 +1,33 @@
+#' Sum Account Balances by Category
+#' 
+#' @description
+#' Calculates the sum of account balances grouped by high-level categories and 
+#' account descriptions, handling different account types in multiple languages 
+#' (English, French, German).
+#' 
+#' @param my_ledger A data frame containing accounting ledger data with columns for
+#'   account types, debit/credit accounts, amounts, and account descriptions
+#' 
+#' @return A grouped data frame with columns:
+#'   \item{high_category}{The high-level account category}
+#'   \item{account_description}{The account description}
+#'   \item{sum_assets}{The sum of amounts for each category/description 
+#'     combination}
+#'
+#' @examples
+#' # Create sample ledger data
+#' ledger_data <- data.frame(
+#'   account_type = c("Asset", "Liability", "Asset"),
+#'   debit_account = c(1001, NA, 1002),
+#'   credit_account = c(NA, 2001, NA),
+#'   amount = c(1000, 500, 750),
+#'   account_description = c("Cash", "Loan", "Equipment")
+#' )
+#' 
+#' # Calculate sum of accounts
+#' result <- sum_accounts(ledger_data)
+#' 
+#' @export
 sum_accounts <- function(my_ledger) {
   my_ledger |>
     filter(!(account_type %in%

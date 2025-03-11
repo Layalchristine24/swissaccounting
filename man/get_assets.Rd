@@ -12,11 +12,13 @@ get_assets(ledger_file = TRUE, import_csv = TRUE)
 \item{import_csv}{Logical indicating whether to import CSV (currently unused)}
 }
 \value{
-A data frame containing account descriptions and their total asset values
+A data frame containing account descriptions and their total asset
+values
 }
 \description{
-This function reads a ledger file and calculates the sum of assets for each account
-description, considering both debit and credit entries that start with '1'.
+This function reads a ledger file and calculates the sum of assets for each
+account description, considering both debit and credit entries that start with
+'1'.
 }
 \examples{
 \dontrun{

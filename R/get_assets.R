@@ -1,13 +1,15 @@
 #' Calculate Total Assets by Account Description
 #'
 #' @description
-#' This function reads a ledger file and calculates the sum of assets for each account
-#' description, considering both debit and credit entries that start with '1'.
+#' This function reads a ledger file and calculates the sum of assets for each 
+#' account description, considering both debit and credit entries that start with 
+#' '1'.
 #'
 #' @param ledger_file Path to the CSV ledger file
 #' @param import_csv Logical indicating whether to import CSV (currently unused)
 #'
-#' @return A data frame containing account descriptions and their total asset values
+#' @return A data frame containing account descriptions and their total asset 
+#'   values
 #'
 #' @examples
 #' \dontrun{
