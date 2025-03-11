@@ -6,7 +6,8 @@ Authors@R:
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE
 Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
+Roxygen: list(markdown = TRUE, roclets = c("collate", "namespace", "rd",
+    "roxyglobals::global_roclet"))
 RoxygenNote: 7.3.1
 Imports: 
     cli,
@@ -15,3 +16,7 @@ Imports:
     readr,
     tibble,
     tidyr
+Suggests: 
+    roxyglobals
+Config/roxyglobals/filename: globals.R
+Config/roxyglobals/unique: FALSE
