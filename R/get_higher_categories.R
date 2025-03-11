@@ -1,3 +1,39 @@
+#' Get Account Base Category
+#'
+#' @description
+#' Extracts the base category (first digit) from account numbers in a ledger by
+#' removing the last three digits. For example:
+#' - Account 1234 -> Category 1 (Assets)
+#' - Account 2000 -> Category 2 (Liabilities)
+#' - Account 3400 -> Category 3 (Revenue)
+#'
+#' @param my_ledger A data frame containing ledger entries with at least one of
+#'   these columns: debit_account or credit_account
+#'
+#' @return A data frame with an additional column 'high_category' containing
+#'   the base category (1-9) of each account. Uses the first non-NULL account
+#'   between debit and credit accounts.
+#'
+#' @examples
+#' ledger <- data.frame(
+#'   debit_account = c(1000, NA, 3400),
+#'   credit_account = c(NA, 2000, 5000),
+#'   amount = c(100, 200, 300)
+#' )
+#'
+#' result <- get_account_type(ledger)
+#' # Returns:
+#' # high_category: 1, 2, 3
+#'
+#' @export
+get_account_type <- function(my_ledger) {
+  my_ledger |>
+    mutate(
+      high_category = (coalesce(debit_account, credit_account) -
+        coalesce(debit_account, credit_account) %% 1e3) / 1e3
+    )
+}
+
 #' Extract High-Level Account Categories
 #'
 #' @description
