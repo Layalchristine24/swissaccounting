@@ -4,6 +4,7 @@
 ## usethis namespace: start
 #' @importFrom cli cli_abort
 #' @importFrom dplyr bind_rows
+#' @importFrom dplyr coalesce
 #' @importFrom dplyr filter
 #' @importFrom dplyr if_else
 #' @importFrom dplyr join_by
