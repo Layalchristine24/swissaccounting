@@ -7,26 +7,24 @@
 get_high_category(my_ledger)
 }
 \arguments{
-\item{my_ledger}{A data frame containing ledger entries with debit_account
-and/or credit_account columns}
+\item{my_ledger}{data.frame A data frame containing ledger entries with
+debit_account and/or credit_account columns}
 }
 \value{
-A data frame with an additional column 'high_category' containing
-the high-level category numbers
+data.frame A data frame with an additional integer column
+'high_category' containing the high-level category numbers
 }
 \description{
 Extracts the high-level category (first digit) from account numbers in a ledger.
 For example, account 1234 would be categorized as 12.
 }
 \examples{
-# Create a sample ledger
 ledger <- data.frame(
   debit_account = c(1000, 2000, 3000),
   credit_account = c(4000, 5000, NA),
   amount = c(100, 200, 300)
 )
 
-# Get high-level categories
 categorized_ledger <- get_high_category(ledger)
 print(categorized_ledger)
 

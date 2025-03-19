@@ -7,26 +7,24 @@
 get_intermediate_category(my_ledger)
 }
 \arguments{
-\item{my_ledger}{A data frame containing ledger entries with debit_account
-and/or credit_account columns}
+\item{my_ledger}{data.frame A data frame containing ledger entries with
+debit_account and/or credit_account columns}
 }
 \value{
-A data frame with an additional column 'intermediate_category' containing
-the intermediate category numbers
+data.frame A data frame with an additional integer column
+'intermediate_category' containing the intermediate category numbers
 }
 \description{
 Extracts the intermediate category (first two digits) from account numbers in a ledger.
 For example, account 1234 would be categorized as 12.
 }
 \examples{
-# Create a sample ledger
 ledger <- data.frame(
   debit_account = c(1234, 2345, 3456),
   credit_account = c(4567, 5678, NA),
   amount = c(100, 200, 300)
 )
 
-# Get intermediate categories
 categorized_ledger <- get_intermediate_category(ledger)
 print(categorized_ledger)
 

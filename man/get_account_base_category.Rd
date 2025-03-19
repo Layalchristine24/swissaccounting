@@ -7,13 +7,13 @@
 get_account_base_category(my_ledger)
 }
 \arguments{
-\item{my_ledger}{A data frame containing ledger entries with at least one of
-these columns: debit_account or credit_account}
+\item{my_ledger}{data.frame A data frame containing ledger entries with at least
+one of these columns: debit_account or credit_account}
 }
 \value{
-A data frame with an additional column 'account_base_category' containing
-the base category (1-9) of each account. Uses the first non-NULL account
-between debit and credit accounts.
+data.frame A data frame with an additional integer column
+'account_base_category' containing the base category (1-9) of each account.
+Uses the first non-NULL account between debit and credit accounts.
 }
 \description{
 Extracts the base category (first digit) from account numbers in a ledger by
