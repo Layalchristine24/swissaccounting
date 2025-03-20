@@ -14,8 +14,10 @@ Imports:
     dplyr,
     lubridate,
     readr,
+    stringr,
     tibble,
-    tidyr
+    tidyr,
+    tidyselect
 Suggests: 
     roxyglobals
 Config/roxyglobals/filename: globals.R
