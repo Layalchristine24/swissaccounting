@@ -10,8 +10,8 @@
 #' @param my_ledger data.frame A data frame containing ledger entries with at least
 #'   one of these columns: debit_account or credit_account
 #'
-#' @return data.frame A data frame with an additional integer column 
-#'   'account_base_category' containing the base category (1-9) of each account. 
+#' @return data.frame A data frame with an additional integer column
+#'   'account_base_category' containing the base category (1-9) of each account.
 #'   Uses the first non-NULL account between debit and credit accounts.
 #'
 #' @examples
@@ -30,7 +30,7 @@ get_account_base_category <- function(my_ledger) {
   my_ledger |>
     mutate(
       account_base_category = as.integer((coalesce(debit_account, credit_account) -
-        coalesce(debit_account, credit_account) %% 1e3) / 1e3)    
+        coalesce(debit_account, credit_account) %% 1e3) / 1e3)
     )
 }
 
@@ -40,10 +40,10 @@ get_account_base_category <- function(my_ledger) {
 #' Extracts the high-level category (first digit) from account numbers in a ledger.
 #' For example, account 1234 would be categorized as 12.
 #'
-#' @param my_ledger data.frame A data frame containing ledger entries with 
+#' @param my_ledger data.frame A data frame containing ledger entries with
 #'   debit_account and/or credit_account columns
 #'
-#' @return data.frame A data frame with an additional integer column 
+#' @return data.frame A data frame with an additional integer column
 #'   'high_category' containing the high-level category numbers
 #'
 #' @examples
@@ -71,10 +71,10 @@ get_high_category <- function(my_ledger) {
 #' Extracts the intermediate category (first two digits) from account numbers in a ledger.
 #' For example, account 1234 would be categorized as 12.
 #'
-#' @param my_ledger data.frame A data frame containing ledger entries with 
+#' @param my_ledger data.frame A data frame containing ledger entries with
 #'   debit_account and/or credit_account columns
 #'
-#' @return data.frame A data frame with an additional integer column 
+#' @return data.frame A data frame with an additional integer column
 #'   'intermediate_category' containing the intermediate category numbers
 #'
 #' @examples
@@ -92,6 +92,6 @@ get_intermediate_category <- function(my_ledger) {
   my_ledger |>
     mutate(
       intermediate_category = as.integer((coalesce(debit_account, credit_account) -
-        coalesce(debit_account, credit_account) %% 1e2) / 1e1)    
+        coalesce(debit_account, credit_account) %% 1e2) / 1e1)
     )
 }

@@ -10,25 +10,31 @@
 #'   (format: "YYYY-MM-DD")
 #' @param max_date character,Date Optional. Maximum date to filter transactions
 #'   (format: "YYYY-MM-DD")
-#' @param accounts_plan data.frame Account plan to use for mapping descriptions.
-#'   Defaults to accounts_model_en
+#' @param language character Language code for account descriptions. One of "en",
+#'   "fr", "de". Defaults to "fr"
 #'
 #' @return data.frame A data frame containing:
-#'   \item{account_description}{Description of the account}
-#'   \item{sum_assets}{Total asset values}
-#'   \item{account_description_intermediate}{Mapped intermediate descriptions}
+#'   \item{account_base_category}{Integer. First digit of account number (1-9)}
+#'   \item{high_category}{Integer. First two digits of account number}
+#'   \item{intermediate_category}{Integer. First three digits of account number}
+#'   \item{account_number}{Integer. Full account number}
+#'   \item{account_description}{Character. Account description in selected
+#'     language}
+#'   \item{sum_assets}{Numeric. Total asset values}
+#'   \item{account_description_intermediate}{Character. Intermediate level
+#'     description}
 #'
 #' @examples
 #' \dontrun{
-#' # Using default English account model
+#' # Using French account descriptions (default)
 #' get_assets(ledger_file = my_ledger_directory)
 #'
-#' # Using French account model with date range
+#' # Using German account descriptions with date range
 #' get_assets(
 #'   ledger_file = my_ledger_directory,
 #'   min_date = "2024-01-01",
 #'   max_date = "2024-12-31",
-#'   accounts_plan = accounts_model_fr
+#'   language = "de"
 #' )
 #' }
 #'
@@ -38,7 +44,7 @@ get_assets <- function(
     ledger_file = NULL,
     min_date = NULL,
     max_date = NULL,
-    accounts_plan = accounts_model_en) {
+    language = "fr") {
   if (is.null(ledger_file)) {
     cli_abort(".var{ledger_file} is required. Please provide a path to the ledger CSV file.")
   } else {
@@ -68,10 +74,21 @@ get_assets <- function(
         my_ledger_min_filtered
       }
 
+    consolidated_accounts <-
+      consolidate_accounting_plans() |>
+      select(account_number, ends_with(language)) |>
+      rename_with(~ str_remove(., paste0("_", language, "$")))
+
     sum_accounts(my_ledger_filtered) |>
+      select(-account_description) |>
+      left_join(
+        consolidated_accounts |>
+          select(-account_type),
+        by = join_by(account_number)
+      ) |>
       filter(account_base_category == 1L) |>
       left_join(
-        accounts_plan |>
+        consolidated_accounts |>
           rename(
             account_description_intermediate = account_description,
             intermediate_category = account_number

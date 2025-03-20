@@ -12,7 +12,7 @@
 #' @autoglobal
 #' @keywords internal
 get_ledger <- function(ledger_file = NULL,
-                                    import_csv = FALSE) {
+                       import_csv = FALSE) {
   if (is.null(ledger_file)) {
     tribble(
       ~date, ~id, ~counterpart_id, ~description, ~debit_account, ~credit_account, ~amount,
@@ -39,7 +39,7 @@ get_ledger <- function(ledger_file = NULL,
 #' Add Ledger Entry
 #'
 #' @description
-#' Adds a new entry to the accounting ledger with support for multiple languages 
+#' Adds a new entry to the accounting ledger with support for multiple languages
 #' and optional CSV import/export functionality.
 #'
 #' @param date Date of the ledger entry

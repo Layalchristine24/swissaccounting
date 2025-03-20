@@ -1,18 +1,25 @@
 #' Sum Account Balances by Category
-#' 
+#'
 #' @description
-#' Calculates the sum of account balances grouped by high-level categories and 
-#' account descriptions, handling different account types in multiple languages 
+#' Calculates the sum of account balances grouped by high-level categories and
+#' account descriptions, handling different account types in multiple languages
 #' (English, French, German).
-#' 
-#' @param my_ledger A data frame containing accounting ledger data with columns for
-#'   account types, debit/credit accounts, amounts, and account descriptions
-#' 
-#' @return A grouped data frame with columns:
-#'   \item{high_category}{The high-level account category}
-#'   \item{account_description}{The account description}
-#'   \item{sum_assets}{The sum of amounts for each category/description 
-#'     combination}
+#'
+#' @param my_ledger data.frame A data frame containing accounting ledger data with
+#'   columns:
+#'   \item{account_type}{Character. Type of account (Asset, Liability, etc.)}
+#'   \item{debit_account}{Integer. Account number for debit entries}
+#'   \item{credit_account}{Integer. Account number for credit entries}
+#'   \item{amount}{Numeric. Transaction amount}
+#'   \item{account_description}{Character. Description of the account}
+#'
+#' @return data.frame A grouped data frame with columns:
+#'   \item{account_base_category}{Integer. First digit of account number (1-9)}
+#'   \item{high_category}{Integer. First two digits of account number}
+#'   \item{intermediate_category}{Integer. First three digits of account number}
+#'   \item{account_number}{Integer. Full account number}
+#'   \item{account_description}{Character. Description of the account}
+#'   \item{sum_assets}{Numeric. Sum of amounts for each category combination}
 #'
 #' @examples
 #' # Create sample ledger data
@@ -23,10 +30,10 @@
 #'   amount = c(1000, 500, 750),
 #'   account_description = c("Cash", "Loan", "Equipment")
 #' )
-#' 
+#'
 #' # Calculate sum of accounts
 #' result <- sum_accounts(ledger_data)
-#' 
+#'
 #' @autoglobal
 sum_accounts <- function(my_ledger) {
   my_ledger |>
@@ -44,8 +51,9 @@ sum_accounts <- function(my_ledger) {
     get_high_category() |>
     get_intermediate_category() |>
     get_account_base_category() |>
+    mutate(account_number = coalesce(debit_account, credit_account)) |>
     reframe(
       sum_assets = sum(amount, na.rm = TRUE),
-      .by = c(account_base_category, high_category, intermediate_category, account_description)
+      .by = c(account_base_category, high_category, intermediate_category, account_number, account_description)
     )
 }
