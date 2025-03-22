@@ -154,7 +154,6 @@ select_ledger_language <- function(ledger_data, language) {
 #' )
 #' }
 #'
-#' @throws Error if balance_category is NULL or invalid
 #' @autoglobal
 get_balance_category <- function(ledger_data, target_language_ledger, balance_category = NULL) {
   if (is.null(balance_category)) {

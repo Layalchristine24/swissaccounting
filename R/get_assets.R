@@ -43,7 +43,6 @@
 #' \code{\link{select_ledger_language}} for language selection
 #' \code{\link{get_balance_category}} for balance calculation
 #'
-#' @throws Error if ledger_file is NULL
 #' @autoglobal
 #' @export
 get_assets <- function(

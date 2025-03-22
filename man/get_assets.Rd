@@ -36,9 +36,8 @@ language}
 description}
 }
 \description{
-This function reads a ledger file and calculates the sum of assets for each
-account description, considering both debit and credit entries that start with
-'1'.
+Reads a ledger file, filters by date range if specified, and calculates the sum
+of assets for each account description in the selected language.
 }
 \examples{
 \dontrun{
@@ -54,4 +53,10 @@ get_assets(
 )
 }
 
+}
+\seealso{
+\code{\link{read_ledger_csv}} for reading the ledger file
+\code{\link{filter_ledger_date_range}} for date filtering
+\code{\link{select_ledger_language}} for language selection
+\code{\link{get_balance_category}} for balance calculation
 }
