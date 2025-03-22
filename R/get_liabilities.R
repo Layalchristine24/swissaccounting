@@ -1,9 +1,9 @@
-#' Calculate Total Assets by Account Description
+#' Calculate Total Liabilities by Account Description
 #'
 #' @description
 #' Reads a ledger file, filters by date range if specified, and calculates the sum
-#' of assets for each account description in the selected language. This is a
-#' convenience wrapper around get_balance_side() for assets.
+#' of liabilities for each account description in the selected language. This is a
+#' convenience wrapper around get_balance_side() for liabilities.
 #'
 #' @param ledger_file character Path to the CSV ledger file
 #' @param min_date character,Date Optional. Minimum date to filter transactions
@@ -14,23 +14,23 @@
 #'   "fr", "de". Defaults to "fr"
 #'
 #' @return data.frame A data frame containing:
-#'   \item{account_base_category}{Integer. First digit of account number (1-9)}
+#'   \item{account_base_category}{Integer. First digit of account number (2)}
 #'   \item{high_category}{Integer. First two digits of account number}
 #'   \item{intermediate_category}{Integer. First three digits of account number}
 #'   \item{account_number}{Integer. Full account number}
 #'   \item{account_description}{Character. Account description in selected
 #'     language}
-#'   \item{sum_amounts}{Numeric. Total asset values}
+#'   \item{sum_amounts}{Numeric. Total liability values}
 #'   \item{account_description_intermediate}{Character. Intermediate level
 #'     description}
 #'
 #' @examples
 #' \dontrun{
 #' # Using French account descriptions (default)
-#' get_assets(ledger_file = my_ledger_directory)
+#' get_liabilities(ledger_file = my_ledger_directory)
 #'
 #' # Using German account descriptions with date range
-#' get_assets(
+#' get_liabilities(
 #'   ledger_file = my_ledger_directory,
 #'   min_date = "2024-01-01",
 #'   max_date = "2024-12-31",
@@ -43,7 +43,7 @@
 #'
 #' @autoglobal
 #' @export
-get_assets <- function(
+get_liabilities <- function(
     ledger_file = NULL,
     min_date = NULL,
     max_date = NULL,
@@ -56,7 +56,7 @@ get_assets <- function(
       min_date = min_date,
       max_date = max_date,
       language = language,
-      balance_category = "assets"
+      balance_category = "liabilities"
     )
   }
 }
