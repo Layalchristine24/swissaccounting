@@ -167,7 +167,7 @@ get_balance_category <- function(ledger_data, target_language_ledger, balance_ca
     } else {
       cli_abort("Balance category is required. Please provide a balance category, either 'assets' or 'liabilities'.")
     }
-browser()
+
   sum_accounts(ledger_data) |>
     select(-account_description) |>
     left_join(

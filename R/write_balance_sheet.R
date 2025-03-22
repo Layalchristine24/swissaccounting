@@ -51,13 +51,12 @@ write_balance_sheet <- function(
     language = my_language
   )
 
-  liabilities <- get_assets(
+  liabilities <- get_liabilities(
     ledger_file = ledger_file_balance,
     min_date = min_date_balance,
     max_date = max_date_balance,
     language = my_language
   )
 
-  bind_rows(assets, liabilities) 
-
+  bind_rows(assets, liabilities)
 }
