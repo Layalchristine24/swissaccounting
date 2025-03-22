@@ -2,7 +2,8 @@
 #'
 #' @description
 #' Reads a ledger file, filters by date range if specified, and calculates the sum
-#' of assets for each account description in the selected language.
+#' of assets for each account description in the selected language. This is a
+#' convenience wrapper around get_balance_side() for assets.
 #'
 #' @param ledger_file character Path to the CSV ledger file
 #' @param min_date character,Date Optional. Minimum date to filter transactions
@@ -19,7 +20,7 @@
 #'   \item{account_number}{Integer. Full account number}
 #'   \item{account_description}{Character. Account description in selected
 #'     language}
-#'   \item{sum_assets}{Numeric. Total asset values}
+#'   \item{sum_amounts}{Numeric. Total asset values}
 #'   \item{account_description_intermediate}{Character. Intermediate level
 #'     description}
 #'
@@ -37,11 +38,8 @@
 #' )
 #' }
 #'
-#' @seealso 
-#' \code{\link{read_ledger_csv}} for reading the ledger file
-#' \code{\link{filter_ledger_date_range}} for date filtering
-#' \code{\link{select_ledger_language}} for language selection
-#' \code{\link{get_balance_category}} for balance calculation
+#' @seealso
+#' \code{\link{get_balance_side}} for the underlying implementation
 #'
 #' @autoglobal
 #' @export
@@ -53,24 +51,11 @@ get_assets <- function(
   if (is.null(ledger_file)) {
     cli_abort(".var{ledger_file} is required. Please provide a path to the ledger CSV file.")
   } else {
-    my_ledger <- read_ledger_csv(ledger_file)
-
-    my_ledger_filtered <-
-      filter_ledger_date_range(
-        ledger_data = my_ledger,
-        min_date = min_date,
-        max_date = max_date
-      )
-
-    target_language_ledger <-
-      select_ledger_language(
-        ledger_data = my_ledger_filtered,
-        language = language
-      )
-
-    get_balance_category(
-      ledger_data = my_ledger_filtered,
-      target_language_ledger = target_language_ledger,
+    get_balance_side(
+      ledger_file = ledger_file,
+      min_date = min_date,
+      max_date = max_date,
+      language = language,
       balance_category = "assets"
     )
   }

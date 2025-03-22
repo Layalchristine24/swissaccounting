@@ -123,12 +123,12 @@ select_ledger_language <- function(ledger_data, language) {
 #' Get Balance Sheet Category Details
 #'
 #' @description
-#' Calculates and categorizes balance sheet entries for either assets or 
-#' liabilities, including intermediate category descriptions in the specified 
+#' Calculates and categorizes balance sheet entries for either assets or
+#' liabilities, including intermediate category descriptions in the specified
 #' language.
 #'
 #' @param ledger_data data.frame A ledger data frame containing accounting entries
-#' @param target_language_ledger data.frame Account descriptions in the target 
+#' @param target_language_ledger data.frame Account descriptions in the target
 #'   language, as returned by select_ledger_language()
 #' @param balance_category character The balance sheet category to process. Must be
 #'   either "assets" or "liabilities"
@@ -139,8 +139,8 @@ select_ledger_language <- function(ledger_data, language) {
 #'   \item{intermediate_category}{Integer. First three digits of account number}
 #'   \item{account_number}{Integer. Full account number}
 #'   \item{account_description}{Character. Account description in target language}
-#'   \item{sum_assets}{Numeric. Total values for each account}
-#'   \item{account_description_intermediate}{Character. Intermediate category 
+#'   \item{sum_amounts}{Numeric. Total values for each account}
+#'   \item{account_description_intermediate}{Character. Intermediate category
 #'     description}
 #'
 #' @examples
@@ -167,7 +167,7 @@ get_balance_category <- function(ledger_data, target_language_ledger, balance_ca
     } else {
       cli_abort("Balance category is required. Please provide a balance category, either 'assets' or 'liabilities'.")
     }
-
+browser()
   sum_accounts(ledger_data) |>
     select(-account_description) |>
     left_join(
@@ -184,4 +184,73 @@ get_balance_category <- function(ledger_data, target_language_ledger, balance_ca
         ),
       by = join_by(intermediate_category)
     )
+}
+
+#' Get Balance Sheet Side (Assets or Liabilities)
+#'
+#' @description
+#' Processes one side of a balance sheet (assets or liabilities) by reading the
+#' ledger, applying date filters, and calculating totals in the specified
+#' language.
+#'
+#' @param ledger_file character Path to the CSV ledger file
+#' @param min_date character,Date Optional. Minimum date to filter transactions
+#'   (format: "YYYY-MM-DD")
+#' @param max_date character,Date Optional. Maximum date to filter transactions
+#'   (format: "YYYY-MM-DD")
+#' @param language character Language code for account descriptions. One of "en",
+#'   "fr", "de"
+#' @param balance_category character The balance sheet category to process. Must be
+#'   either "assets" or "liabilities"
+#'
+#' @return data.frame A data frame containing:
+#'   \item{account_base_category}{Integer. First digit of account number (1 or 2)}
+#'   \item{high_category}{Integer. First two digits of account number}
+#'   \item{intermediate_category}{Integer. First three digits of account number}
+#'   \item{account_number}{Integer. Full account number}
+#'   \item{account_description}{Character. Account description in target language}
+#'   \item{sum_amounts}{Numeric. Total values for each account}
+#'   \item{account_description_intermediate}{Character. Intermediate category
+#'     description}
+#'
+#' @examples
+#' \dontrun{
+#' # Get assets in French for a specific period
+#' assets <- get_balance_side(
+#'   ledger_file = "path/to/ledger.csv",
+#'   min_date = "2024-01-01",
+#'   max_date = "2024-12-31",
+#'   language = "fr",
+#'   balance_category = "assets"
+#' )
+#' }
+#'
+#' @seealso
+#' \code{\link{read_ledger_csv}} for reading the ledger file
+#' \code{\link{filter_ledger_date_range}} for date filtering
+#' \code{\link{select_ledger_language}} for language selection
+#' \code{\link{get_balance_category}} for balance calculation
+#'
+#' @autoglobal
+get_balance_side <- function(ledger_file, min_date, max_date, language, balance_category) {
+  my_ledger <- read_ledger_csv(ledger_file)
+
+  my_ledger_filtered <-
+    filter_ledger_date_range(
+      ledger_data = my_ledger,
+      min_date = min_date,
+      max_date = max_date
+    )
+
+  target_language_ledger <-
+    select_ledger_language(
+      ledger_data = my_ledger_filtered,
+      language = language
+    )
+
+  get_balance_category(
+    ledger_data = my_ledger_filtered,
+    target_language_ledger = target_language_ledger,
+    balance_category = balance_category
+  )
 }
