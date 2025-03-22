@@ -1,9 +1,8 @@
 #' Calculate Total Assets by Account Description
 #'
 #' @description
-#' This function reads a ledger file and calculates the sum of assets for each
-#' account description, considering both debit and credit entries that start with
-#' '1'.
+#' Reads a ledger file, filters by date range if specified, and calculates the sum
+#' of assets for each account description in the selected language.
 #'
 #' @param ledger_file character Path to the CSV ledger file
 #' @param min_date character,Date Optional. Minimum date to filter transactions
@@ -38,6 +37,13 @@
 #' )
 #' }
 #'
+#' @seealso 
+#' \code{\link{read_ledger_csv}} for reading the ledger file
+#' \code{\link{filter_ledger_date_range}} for date filtering
+#' \code{\link{select_ledger_language}} for language selection
+#' \code{\link{get_balance_category}} for balance calculation
+#'
+#' @throws Error if ledger_file is NULL
 #' @autoglobal
 #' @export
 get_assets <- function(
@@ -48,52 +54,25 @@ get_assets <- function(
   if (is.null(ledger_file)) {
     cli_abort(".var{ledger_file} is required. Please provide a path to the ledger CSV file.")
   } else {
-    my_ledger <- read_csv(
-      ledger_file,
-      col_types = cols(
-        date = col_date(),
-        description = col_character(),
-        account_description = col_character(),
-        account_type = col_character(),
-        .default = col_integer(),
-        amount = col_double()
-      )
-    )
-    my_ledger_min_filtered <-
-      if (!is.null(min_date)) {
-        my_ledger |>
-          filter(date >= ymd(min_date))
-      } else {
-        my_ledger
-      }
+    my_ledger <- read_ledger_csv(ledger_file)
+
     my_ledger_filtered <-
-      if (!is.null(max_date)) {
-        my_ledger_min_filtered |>
-          filter(date <= ymd(max_date))
-      } else {
-        my_ledger_min_filtered
-      }
-
-    consolidated_accounts <-
-      consolidate_accounting_plans() |>
-      select(account_number, ends_with(language)) |>
-      rename_with(~ str_remove(., paste0("_", language, "$")))
-
-    sum_accounts(my_ledger_filtered) |>
-      select(-account_description) |>
-      left_join(
-        consolidated_accounts |>
-          select(-account_type),
-        by = join_by(account_number)
-      ) |>
-      filter(account_base_category == 1L) |>
-      left_join(
-        consolidated_accounts |>
-          rename(
-            account_description_intermediate = account_description,
-            intermediate_category = account_number
-          ),
-        by = join_by(intermediate_category)
+      filter_ledger_date_range(
+        ledger_data = my_ledger,
+        min_date = min_date,
+        max_date = max_date
       )
+
+    target_language_ledger <-
+      select_ledger_language(
+        ledger_data = my_ledger_filtered,
+        language = language
+      )
+
+    get_balance_category(
+      ledger_data = my_ledger_filtered,
+      target_language_ledger = target_language_ledger,
+      balance_category = "assets"
+    )
   }
 }
