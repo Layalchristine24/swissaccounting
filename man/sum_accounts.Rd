@@ -20,9 +20,10 @@ data.frame A grouped data frame with columns:
 \item{account_base_category}{Integer. First digit of account number (1-9)}
 \item{high_category}{Integer. First two digits of account number}
 \item{intermediate_category}{Integer. First three digits of account number}
-\item{account_number}{Integer. Full account number}
+\item{account_number}{Integer. Full account number (from debit or credit)}
 \item{account_description}{Character. Description of the account}
-\item{sum_assets}{Numeric. Sum of amounts for each category combination}
+\item{sum_amounts}{Numeric. Sum of amounts for each category combination,
+with sign adjusted based on account type}
 }
 \description{
 Calculates the sum of account balances grouped by high-level categories and

@@ -26,7 +26,7 @@ data.frame A data frame containing:
 \item{intermediate_category}{Integer. First three digits of account number}
 \item{account_number}{Integer. Full account number}
 \item{account_description}{Character. Account description in target language}
-\item{sum_assets}{Numeric. Total values for each account}
+\item{sum_amounts}{Numeric. Total values for each account}
 \item{account_description_intermediate}{Character. Intermediate category
 description}
 }
