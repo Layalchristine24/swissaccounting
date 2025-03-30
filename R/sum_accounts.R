@@ -54,7 +54,7 @@ sum_accounts <- function(my_ledger) {
     get_account_base_category() |>
     mutate(account_number = coalesce(debit_account, credit_account)) |>
     reframe(
-      sum_amounts = sum(amount, na.rm = TRUE),
+      sum_amounts = round(sum(amount, na.rm = TRUE), 2),
       .by = c(account_base_category, high_category, intermediate_category, account_number, account_description)
     )
 }

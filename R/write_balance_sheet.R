@@ -58,5 +58,6 @@ write_balance_sheet <- function(
     language = my_language
   )
 
-  bind_rows(assets, liabilities)
+  bind_rows(assets, liabilities) |>
+    filter(sum_amounts != 0)
 }
