@@ -25,5 +25,6 @@ utils::globalVariables(c(
   "account_number", # <get_balance_category>
   "account_base_category", # <get_balance_category>
   "intermediate_category", # <get_balance_category>
+  "sum_amounts", # <write_balance_sheet>
   NULL
 ))
