@@ -17,9 +17,10 @@
 #'   \item{account_base_category}{Integer. First digit of account number (1-9)}
 #'   \item{high_category}{Integer. First two digits of account number}
 #'   \item{intermediate_category}{Integer. First three digits of account number}
-#'   \item{account_number}{Integer. Full account number}
+#'   \item{account_number}{Integer. Full account number (from debit or credit)}
 #'   \item{account_description}{Character. Description of the account}
-#'   \item{sum_assets}{Numeric. Sum of amounts for each category combination}
+#'   \item{sum_amounts}{Numeric. Sum of amounts for each category combination,
+#'     with sign adjusted based on account type}
 #'
 #' @examples
 #' # Create sample ledger data
@@ -53,7 +54,7 @@ sum_accounts <- function(my_ledger) {
     get_account_base_category() |>
     mutate(account_number = coalesce(debit_account, credit_account)) |>
     reframe(
-      sum_assets = sum(amount, na.rm = TRUE),
+      sum_amounts = round(sum(amount, na.rm = TRUE), 2),
       .by = c(account_base_category, high_category, intermediate_category, account_number, account_description)
     )
 }

@@ -44,14 +44,20 @@ write_balance_sheet <- function(
     max_date_balance = NULL,
     path_csv = NULL,
     my_language = "fr") {
-
   assets <- get_assets(
     ledger_file = ledger_file_balance,
     min_date = min_date_balance,
     max_date = max_date_balance,
     language = my_language
   )
-  assets
-  #   liabilities <- get_liabilities(ledger_file)
-  #   equity <- get_equity(ledger_file)
+
+  liabilities <- get_liabilities(
+    ledger_file = ledger_file_balance,
+    min_date = min_date_balance,
+    max_date = max_date_balance,
+    language = my_language
+  )
+
+  bind_rows(assets, liabilities) |>
+    filter(sum_amounts != 0)
 }

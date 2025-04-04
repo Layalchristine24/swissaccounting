@@ -4,11 +4,6 @@ utils::globalVariables(c(
   "account_type", # <consolidate_accounting_plans>
   "account_description", # <consolidate_accounting_plans>
   "account_number", # <consolidate_accounting_plans>
-  "account_number", # <get_assets>
-  "account_description", # <get_assets>
-  "account_type", # <get_assets>
-  "account_base_category", # <get_assets>
-  "intermediate_category", # <get_assets>
   "debit_account", # <get_account_base_category>
   "credit_account", # <get_account_base_category>
   "debit_account", # <get_high_category>
@@ -24,5 +19,12 @@ utils::globalVariables(c(
   "intermediate_category", # <sum_accounts>
   "account_number", # <sum_accounts>
   "account_description", # <sum_accounts>
+  "account_number", # <select_ledger_language>
+  "account_description", # <get_balance_category>
+  "account_type", # <get_balance_category>
+  "account_number", # <get_balance_category>
+  "account_base_category", # <get_balance_category>
+  "intermediate_category", # <get_balance_category>
+  "sum_amounts", # <write_balance_sheet>
   NULL
 ))
