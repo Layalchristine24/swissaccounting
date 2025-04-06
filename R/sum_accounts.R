@@ -6,21 +6,21 @@
 #' (English, French, German).
 #'
 #' @param my_ledger data.frame A data frame containing accounting ledger data with
-#'   columns:
-#'   \item{account_type}{Character. Type of account (Asset, Liability, etc.)}
-#'   \item{debit_account}{Integer. Account number for debit entries}
-#'   \item{credit_account}{Integer. Account number for credit entries}
-#'   \item{amount}{Numeric. Transaction amount}
-#'   \item{account_description}{Character. Description of the account}
+#'   the following columns:
+#'   - account_type: Type of account (Asset, Liability, etc.)
+#'   - debit_account: Account number for debit entries
+#'   - credit_account: Account number for credit entries
+#'   - amount: Transaction amount
+#'   - account_description: Description of the account
 #'
-#' @return data.frame A grouped data frame with columns:
-#'   \item{account_base_category}{Integer. First digit of account number (1-9)}
-#'   \item{high_category}{Integer. First two digits of account number}
-#'   \item{intermediate_category}{Integer. First three digits of account number}
-#'   \item{account_number}{Integer. Full account number (from debit or credit)}
-#'   \item{account_description}{Character. Description of the account}
-#'   \item{sum_amounts}{Numeric. Sum of amounts for each category combination,
-#'     with sign adjusted based on account type}
+#' @return data.frame A grouped data frame with the following columns:
+#'   - account_base_category: First digit of account number (1-9)
+#'   - high_category: First two digits of account number
+#'   - intermediate_category: First three digits of account number
+#'   - account_number: Full account number (from debit or credit)
+#'   - account_description: Description of the account
+#'   - sum_amounts: Sum of amounts for each category combination,
+#'     with sign adjusted based on account type
 #'
 #' @examples
 #' # Create sample ledger data
