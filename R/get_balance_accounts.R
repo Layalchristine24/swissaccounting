@@ -1,9 +1,8 @@
-#' Write Balance Sheet Report
+#' Get Balance Sheet Accounts
 #'
 #' @description
 #' Generates a balance sheet report from ledger data for a specified date range.
-#' Currently implements assets calculation, with liabilities and equity planned for
-#' future implementation.
+#' Implements both assets and liabilities calculations.
 #'
 #' @param ledger_file_balance character Path to the CSV ledger file
 #' @param min_date_balance character,Date Optional. Minimum date to filter
@@ -20,12 +19,12 @@
 #'   \item{high_category}{Integer. First two digits of account number}
 #'   \item{account_description}{Character. Account description in selected
 #'     language}
-#'   \item{sum_assets}{Numeric. Total values for each account}
+#'   \item{sum_amounts}{Numeric. Total values for each account}
 #'
 #' @examples
 #' \dontrun{
 #' # Generate balance sheet for specific date range in French
-#' write_balance_sheet(
+#' get_balance_accounts(
 #'   ledger_file_balance = "path/to/ledger.csv",
 #'   min_date_balance = "2024-01-01",
 #'   max_date_balance = "2024-12-31",
@@ -34,11 +33,9 @@
 #' )
 #' }
 #'
-#' @note Currently only implements assets calculation. Liabilities and equity
-#'   calculations are planned for future implementation.
-#'
+#' @export
 #' @autoglobal
-write_balance_sheet <- function(
+get_balance_accounts <- function(
     ledger_file_balance = NULL,
     min_date_balance = NULL,
     max_date_balance = NULL,
