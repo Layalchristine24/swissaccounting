@@ -157,15 +157,19 @@ select_ledger_language <- function(ledger_data, language) {
 #' @autoglobal
 get_account_category <- function(ledger_data, target_language_ledger, account_category_name = NULL) {
   if (is.null(account_category_name)) {
-    cli_abort("Balance category is required. Please provide a balance category, either 'assets' or 'liabilities'.")
+    cli_abort("Balance category is required. Please provide a balance category, either 'assets', 'liabilities', 'income' or 'expense'.")
   }
   account_category_name_integer <-
     if (account_category_name == "assets") {
       1L
     } else if (account_category_name == "liabilities") {
       2L
+    } else if (account_category_name == "income") {
+      3L
+    } else if (account_category_name == "expense") {
+      c(4L, 5L, 6L)
     } else {
-      cli_abort("Balance category is required. Please provide a balance category, either 'assets' or 'liabilities'.")
+      cli_abort("Balance category is required. Please provide a balance category, either 'assets', 'liabilities', 'income' or 'expense'.")
     }
 
   sum_accounts(ledger_data) |>
@@ -175,7 +179,7 @@ get_account_category <- function(ledger_data, target_language_ledger, account_ca
         select(-account_type),
       by = join_by(account_number)
     ) |>
-    filter(account_base_category == account_category_name_integer) |>
+    filter(account_base_category %in% account_category_name_integer) |>
     left_join(
       target_language_ledger |>
         rename(
@@ -185,6 +189,7 @@ get_account_category <- function(ledger_data, target_language_ledger, account_ca
       by = join_by(intermediate_category)
     )
 }
+
 
 #' Get Balance Sheet Side (Assets or Liabilities)
 #'
@@ -235,18 +240,16 @@ get_account_category <- function(ledger_data, target_language_ledger, account_ca
 get_balance_side <- function(ledger_file, min_date, max_date, language, account_category_name) {
   my_ledger <- read_ledger_csv(ledger_file)
 
-  my_ledger_filtered <-
-    filter_ledger_date_range(
-      ledger_data = my_ledger,
-      min_date = min_date,
-      max_date = max_date
-    )
+  my_ledger_filtered <- filter_ledger_date_range(
+    ledger_data = my_ledger,
+    min_date = min_date,
+    max_date = max_date
+  )
 
-  target_language_ledger <-
-    select_ledger_language(
-      ledger_data = my_ledger_filtered,
-      language = language
-    )
+  target_language_ledger <- select_ledger_language(
+    ledger_data = my_ledger_filtered,
+    language = language
+  )
 
   get_account_category(
     ledger_data = my_ledger_filtered,
