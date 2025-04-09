@@ -56,7 +56,7 @@ get_liabilities <- function(
       min_date = min_date,
       max_date = max_date,
       language = language,
-      balance_category = "liabilities"
+      account_category_name = "liabilities"
     )
   }
 }

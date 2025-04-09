@@ -56,7 +56,7 @@ get_assets <- function(
       min_date = min_date,
       max_date = max_date,
       language = language,
-      balance_category = "assets"
+      account_category_name = "assets"
     )
   }
 }

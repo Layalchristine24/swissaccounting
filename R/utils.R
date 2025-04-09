@@ -130,7 +130,7 @@ select_ledger_language <- function(ledger_data, language) {
 #' @param ledger_data data.frame A ledger data frame containing accounting entries
 #' @param target_language_ledger data.frame Account descriptions in the target
 #'   language, as returned by select_ledger_language()
-#' @param balance_category character The balance sheet category to process. Must be
+#' @param account_category_name character The balance sheet category to process. Must be
 #'   either "assets" or "liabilities"
 #'
 #' @return data.frame A data frame containing:
@@ -150,19 +150,19 @@ select_ledger_language <- function(ledger_data, language) {
 #' assets <- get_account_category(
 #'   ledger_data = my_ledger,
 #'   target_language_ledger = french_ledger,
-#'   balance_category = "assets"
+#'   account_category_name = "assets"
 #' )
 #' }
 #'
 #' @autoglobal
-get_account_category <- function(ledger_data, target_language_ledger, balance_category = NULL) {
-  if (is.null(balance_category)) {
+get_account_category <- function(ledger_data, target_language_ledger, account_category_name = NULL) {
+  if (is.null(account_category_name)) {
     cli_abort("Balance category is required. Please provide a balance category, either 'assets' or 'liabilities'.")
   }
-  balance_category_integer <-
-    if (balance_category == "assets") {
+  account_category_name_integer <-
+    if (account_category_name == "assets") {
       1L
-    } else if (balance_category == "liabilities") {
+    } else if (account_category_name == "liabilities") {
       2L
     } else {
       cli_abort("Balance category is required. Please provide a balance category, either 'assets' or 'liabilities'.")
@@ -175,7 +175,7 @@ get_account_category <- function(ledger_data, target_language_ledger, balance_ca
         select(-account_type),
       by = join_by(account_number)
     ) |>
-    filter(account_base_category == balance_category_integer) |>
+    filter(account_base_category == account_category_name_integer) |>
     left_join(
       target_language_ledger |>
         rename(
@@ -200,7 +200,7 @@ get_account_category <- function(ledger_data, target_language_ledger, balance_ca
 #'   (format: "YYYY-MM-DD")
 #' @param language character Language code for account descriptions. One of "en",
 #'   "fr", "de"
-#' @param balance_category character The balance sheet category to process. Must be
+#' @param account_category_name character The balance sheet category to process. Must be
 #'   either "assets" or "liabilities"
 #'
 #' @return data.frame A data frame containing:
@@ -221,7 +221,7 @@ get_account_category <- function(ledger_data, target_language_ledger, balance_ca
 #'   min_date = "2024-01-01",
 #'   max_date = "2024-12-31",
 #'   language = "fr",
-#'   balance_category = "assets"
+#'   account_category_name = "assets"
 #' )
 #' }
 #'
@@ -232,7 +232,7 @@ get_account_category <- function(ledger_data, target_language_ledger, balance_ca
 #' \code{\link{get_account_category}} for balance calculation
 #'
 #' @autoglobal
-get_balance_side <- function(ledger_file, min_date, max_date, language, balance_category) {
+get_balance_side <- function(ledger_file, min_date, max_date, language, account_category_name) {
   my_ledger <- read_ledger_csv(ledger_file)
 
   my_ledger_filtered <-
@@ -251,6 +251,6 @@ get_balance_side <- function(ledger_file, min_date, max_date, language, balance_
   get_account_category(
     ledger_data = my_ledger_filtered,
     target_language_ledger = target_language_ledger,
-    balance_category = balance_category
+    account_category_name = account_category_name
   )
 }
