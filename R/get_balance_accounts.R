@@ -41,18 +41,20 @@ get_balance_accounts <- function(
     max_date_balance = NULL,
     path_csv = NULL,
     my_language = "fr") {
-  assets <- get_assets(
-    ledger_file = ledger_file_balance,
-    min_date = min_date_balance,
-    max_date = max_date_balance,
-    language = my_language
+  assets <- get_category_total(
+    ledger_file = ledger_file,
+    min_date = min_date,
+    max_date = max_date,
+    language = language,
+    account_category_name = "assets"
   )
 
-  liabilities <- get_liabilities(
-    ledger_file = ledger_file_balance,
-    min_date = min_date_balance,
-    max_date = max_date_balance,
-    language = my_language
+  liabilities <- get_category_total(
+    ledger_file = ledger_file,
+    min_date = min_date,
+    max_date = max_date,
+    language = language,
+    account_category_name = "liabilities"
   )
 
   bind_rows(assets, liabilities) |>
