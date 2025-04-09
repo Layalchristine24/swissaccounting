@@ -3,31 +3,58 @@
 #' @description
 #' Combines accounting plans from different languages (English, French, German)
 #' into a single consolidated data frame, matching accounts by their account
-#' numbers.
+#' numbers. This function is used internally to provide multi-language support
+#' for account descriptions and types throughout the package.
 #'
 #' @param my_accounts_model_en data.frame English account plan with columns:
-#'   account_number, account_type, account_description. Defaults to
-#'   accounts_model_en
+#'   \itemize{
+#'     \item{account_number}{Integer. The account identifier}
+#'     \item{account_type}{Character. Account type in English}
+#'     \item{account_description}{Character. Account description in English}
+#'   }
+#'   Defaults to accounts_model_en
 #' @param my_accounts_model_fr data.frame French account plan with columns:
-#'   account_number, account_type, account_description. Defaults to
-#'   accounts_model_fr
+#'   \itemize{
+#'     \item{account_number}{Integer. The account identifier}
+#'     \item{account_type}{Character. Account type in French}
+#'     \item{account_description}{Character. Account description in French}
+#'   }
+#'   Defaults to accounts_model_fr
 #' @param my_accounts_model_de data.frame German account plan with columns:
-#'   account_number, account_type, account_description. Defaults to
-#'   accounts_model_de
+#'   \itemize{
+#'     \item{account_number}{Integer. The account identifier}
+#'     \item{account_type}{Character. Account type in German}
+#'     \item{account_description}{Character. Account description in German}
+#'   }
+#'   Defaults to accounts_model_de
 #'
 #' @return data.frame A consolidated data frame with columns:
-#'   \item{account_number}{Integer. Unique account identifier}
-#'   \item{account_type_en}{Character. Account type in English}
-#'   \item{account_description_en}{Character. Account description in English}
-#'   \item{account_type_fr}{Character. Account type in French}
-#'   \item{account_description_fr}{Character. Account description in French}
-#'   \item{account_type_de}{Character. Account type in German}
-#'   \item{account_description_de}{Character. Account description in German}
+#'   \itemize{
+#'     \item{account_number}{Integer. Unique account identifier}
+#'     \item{account_type_en}{Character. Account type in English}
+#'     \item{account_description_en}{Character. Account description in English}
+#'     \item{account_type_fr}{Character. Account type in French}
+#'     \item{account_description_fr}{Character. Account description in French}
+#'     \item{account_type_de}{Character. Account type in German}
+#'     \item{account_description_de}{Character. Account description in German}
+#'   }
 #'
 #' @examples
+#' # Consolidate default account plans
 #' consolidated <- consolidate_accounting_plans()
-#' # View first few accounts in all languages
 #' head(consolidated)
+#'
+#' # Use custom account plans
+#' custom_consolidated <- consolidate_accounting_plans(
+#'   my_accounts_model_en = custom_en_plan,
+#'   my_accounts_model_fr = custom_fr_plan,
+#'   my_accounts_model_de = custom_de_plan
+#' )
+#'
+#' @seealso
+#' \code{\link{accounts_model_en}} for English account plan
+#' \code{\link{accounts_model_fr}} for French account plan
+#' \code{\link{accounts_model_de}} for German account plan
 #'
 #' @autoglobal
 consolidate_accounting_plans <- function(

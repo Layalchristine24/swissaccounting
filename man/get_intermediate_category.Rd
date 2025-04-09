@@ -15,8 +15,13 @@ data.frame A data frame with an additional integer column
 'intermediate_category' containing the intermediate category numbers
 }
 \description{
-Extracts the intermediate category (first two digits) from account numbers in a ledger.
-For example, account 1234 would be categorized as 12.
+Extracts the intermediate category (first three digits) from account numbers in a ledger.
+For example:
+\itemize{
+\item Account 1234 -> Category 123
+\item Account 2000 -> Category 200
+\item Account 3400 -> Category 340
+}
 }
 \examples{
 ledger <- data.frame(
@@ -26,6 +31,11 @@ ledger <- data.frame(
 )
 
 categorized_ledger <- get_intermediate_category(ledger)
-print(categorized_ledger)
+# Returns:
+# intermediate_category: 123, 234, 345
 
+}
+\seealso{
+\code{\link{get_account_base_category}} for getting the first digit
+\code{\link{get_high_category}} for getting the first two digits
 }

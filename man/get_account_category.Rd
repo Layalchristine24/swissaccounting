@@ -21,6 +21,7 @@ either "assets" or "liabilities"}
 }
 \value{
 data.frame A data frame containing:
+\itemize{
 \item{account_base_category}{Integer. First digit of account number (1 or 2)}
 \item{high_category}{Integer. First two digits of account number}
 \item{intermediate_category}{Integer. First three digits of account number}
@@ -30,10 +31,11 @@ data.frame A data frame containing:
 \item{account_description_intermediate}{Character. Intermediate category
 description}
 }
+}
 \description{
 Calculates and categorizes balance sheet entries for either assets or
 liabilities, including intermediate category descriptions in the specified
-language.
+language. This function is used internally to support balance sheet generation.
 }
 \examples{
 \dontrun{
@@ -46,4 +48,8 @@ assets <- get_account_category(
 )
 }
 
+}
+\seealso{
+\code{\link{get_balance_accounts}} for generating balance sheets
+\code{\link{select_ledger_language}} for language selection
 }

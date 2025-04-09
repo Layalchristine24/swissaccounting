@@ -36,3 +36,7 @@ result <- get_account_base_category(ledger)
 # account_base_category: 1, 2, 3
 
 }
+\seealso{
+\code{\link{get_high_category}} for getting the first two digits
+\code{\link{get_intermediate_category}} for getting the first three digits
+}

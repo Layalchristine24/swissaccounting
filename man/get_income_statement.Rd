@@ -22,19 +22,30 @@ statement period (format: "YYYY-MM-DD")}
 \item{max_date}{character,Date Optional. End date for the income
 statement period (format: "YYYY-MM-DD")}
 
-\item{path_csv}{character Optional. Alternative path for CSV output}
+\item{path_csv}{character Optional. Path where to save the income statement CSV
+file. If provided, the function will write the results to this file.}
 
 \item{language}{character Language code for account descriptions. One of
 "en", "fr", "de". Defaults to "fr"}
 }
 \value{
 data.frame A data frame containing income and expense entries with
-non-zero amounts, including account categories and descriptions in the
-specified language
+non-zero amounts, including:
+\itemize{
+\item{account_base_category}{Integer. First digit of account number (3-6)}
+\item{high_category}{Integer. First two digits of account number}
+\item{intermediate_category}{Integer. First three digits of account number}
+\item{account_number}{Integer. Full account number}
+\item{account_description}{Character. Account description in selected language}
+\item{sum_amounts}{Numeric. Total values for each account}
+}
 }
 \description{
 Creates an income statement by combining income and expense data from a ledger
-file for a specified period, filtering out zero-amount entries.
+file for a specified period, filtering out zero-amount entries. The function
+supports multiple languages and optional CSV export. It calculates both revenue
+and expense categories to provide a comprehensive view of the company's financial
+performance.
 }
 \examples{
 \dontrun{
@@ -45,9 +56,19 @@ income_statement <- get_income_statement(
   max_date = "2024-12-31",
   language = "fr"
 )
+
+# Generate and save to CSV
+get_income_statement(
+  ledger_file = "path/to/ledger.csv",
+  min_date = "2024-01-01",
+  max_date = "2024-12-31",
+  path_csv = "path/to/income_statement.csv",
+  language = "fr"
+)
 }
 
 }
 \seealso{
 \code{\link{get_category_total}} for detailed category calculations
+\code{\link{get_balance_accounts}} for generating balance sheets
 }

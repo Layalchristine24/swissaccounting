@@ -10,29 +10,31 @@ sum_accounts(my_ledger)
 \item{my_ledger}{data.frame A data frame containing accounting ledger data with
 the following columns:
 \itemize{
-\item account_type: Type of account (Asset, Liability, etc.)
-\item debit_account: Account number for debit entries
-\item credit_account: Account number for credit entries
-\item amount: Transaction amount
-\item account_description: Description of the account
+\item{account_type}{Character. Type of account (Asset, Liability, etc.)}
+\item{debit_account}{Integer. Account number for debit entries}
+\item{credit_account}{Integer. Account number for credit entries}
+\item{amount}{Numeric. Transaction amount}
+\item{account_description}{Character. Description of the account}
 }}
 }
 \value{
 data.frame A grouped data frame with the following columns:
 \itemize{
-\item account_base_category: First digit of account number (1-9)
-\item high_category: First two digits of account number
-\item intermediate_category: First three digits of account number
-\item account_number: Full account number (from debit or credit)
-\item account_description: Description of the account
-\item sum_amounts: Sum of amounts for each category combination,
-with sign adjusted based on account type
+\item{account_base_category}{Integer. First digit of account number (1-9)}
+\item{high_category}{Integer. First two digits of account number}
+\item{intermediate_category}{Integer. First three digits of account number}
+\item{account_number}{Integer. Full account number (from debit or credit)}
+\item{account_description}{Character. Description of the account}
+\item{sum_amounts}{Numeric. Sum of amounts for each category combination,
+with sign adjusted based on account type}
 }
 }
 \description{
 Calculates the sum of account balances grouped by high-level categories and
 account descriptions, handling different account types in multiple languages
-(English, French, German).
+(English, French, German). The function automatically adjusts the sign of
+amounts based on the account type (debit/credit) and filters out closing
+and income/expense accounts.
 }
 \examples{
 # Create sample ledger data
@@ -46,5 +48,16 @@ ledger_data <- data.frame(
 
 # Calculate sum of accounts
 result <- sum_accounts(ledger_data)
+# Returns:
+# account_base_category: 1, 2
+# high_category: 10, 20
+# intermediate_category: 100, 200
+# account_number: 1001, 1002, 2001
+# sum_amounts: 1750, -500
 
+}
+\seealso{
+\code{\link{get_account_base_category}} for extracting base categories
+\code{\link{get_high_category}} for extracting high-level categories
+\code{\link{get_intermediate_category}} for extracting intermediate categories
 }

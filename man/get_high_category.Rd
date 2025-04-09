@@ -15,8 +15,13 @@ data.frame A data frame with an additional integer column
 'high_category' containing the high-level category numbers
 }
 \description{
-Extracts the high-level category (first digit) from account numbers in a ledger.
-For example, account 1234 would be categorized as 12.
+Extracts the high-level category (first two digits) from account numbers in a ledger.
+For example:
+\itemize{
+\item Account 1234 -> Category 12
+\item Account 2000 -> Category 20
+\item Account 3400 -> Category 34
+}
 }
 \examples{
 ledger <- data.frame(
@@ -26,6 +31,11 @@ ledger <- data.frame(
 )
 
 categorized_ledger <- get_high_category(ledger)
-print(categorized_ledger)
+# Returns:
+# high_category: 10, 20, 30
 
+}
+\seealso{
+\code{\link{get_account_base_category}} for getting the first digit
+\code{\link{get_intermediate_category}} for getting the first three digits
 }

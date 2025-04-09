@@ -21,7 +21,8 @@ provided, returns the original data frame
 }
 \description{
 Filters a ledger data frame by an optional date range. If no dates are
-provided, returns the original data frame unchanged.
+provided, returns the original data frame unchanged. This function is used
+internally to support date-based filtering in financial reports.
 }
 \examples{
 \dontrun{
@@ -39,4 +40,8 @@ from_date <- filter_ledger_date_range(
 )
 }
 
+}
+\seealso{
+\code{\link{get_balance_accounts}} for generating balance sheets
+\code{\link{get_income_statement}} for generating income statements
 }

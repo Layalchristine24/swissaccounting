@@ -7,16 +7,32 @@
 get_ledger(ledger_file = NULL, import_csv = FALSE)
 }
 \arguments{
-\item{ledger_file}{Path to the CSV ledger file}
+\item{ledger_file}{character Path to the CSV ledger file. If NULL, returns an empty ledger structure.}
 
-\item{import_csv}{Logical indicating whether to import from CSV}
+\item{import_csv}{logical Whether to import from CSV file. Defaults to FALSE.}
 }
 \value{
-A tibble containing ledger data or an empty ledger structure if no file
-is provided
+tibble A tibble containing ledger data with columns:
+\item{date}{Date. Transaction date}
+\item{id}{Integer. Unique transaction identifier}
+\item{counterpart_id}{Integer. ID of the counterpart entry}
+\item{description}{Character. Transaction description}
+\item{debit_account}{Integer. Account number for debit entry}
+\item{credit_account}{Integer. Account number for credit entry}
+\item{amount}{Numeric. Transaction amount}
 }
 \description{
 Retrieves the most recent version of the ledger, either creating an empty one or
-importing from a CSV file.
+importing from a CSV file. This is an internal function used by add_ledger_entry.
+}
+\examples{
+\dontrun{
+# Create empty ledger
+empty_ledger <- get_ledger()
+
+# Import from CSV
+ledger_data <- get_ledger("path/to/ledger.csv", import_csv = TRUE)
+}
+
 }
 \keyword{internal}

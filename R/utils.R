@@ -3,23 +3,30 @@
 #' @description
 #' Reads a CSV ledger file with predefined column types for accounting data.
 #' Automatically converts dates, numeric values, and text fields to appropriate
-#' data types.
+#' data types. This function is used internally by other functions in the package
+#' to ensure consistent data reading.
 #'
 #' @param ledger_file character Path to the CSV ledger file to read
 #'
 #' @return data.frame A data frame with the following columns:
-#'   \item{date}{Date. Transaction date}
-#'   \item{description}{Character. Transaction description}
-#'   \item{account_description}{Character. Description of the account}
-#'   \item{account_type}{Character. Type of account}
-#'   \item{amount}{Numeric. Transaction amount}
-#'   \item{Other integer columns}{Integer. Additional numeric columns default to
-#'     integer type}
+#'   \itemize{
+#'     \item{date}{Date. Transaction date}
+#'     \item{description}{Character. Transaction description}
+#'     \item{account_description}{Character. Description of the account}
+#'     \item{account_type}{Character. Type of account}
+#'     \item{amount}{Numeric. Transaction amount}
+#'     \item{Other integer columns}{Integer. Additional numeric columns default to
+#'       integer type}
+#'   }
 #'
 #' @examples
 #' \dontrun{
+#' # Read a ledger file
 #' ledger_data <- read_ledger_csv("path/to/ledger.csv")
 #' }
+#'
+#' @seealso
+#' \code{\link{add_ledger_entry}} for adding entries to the ledger
 #'
 #' @autoglobal
 read_ledger_csv <- function(ledger_file) {
@@ -41,7 +48,8 @@ read_ledger_csv <- function(ledger_file) {
 #'
 #' @description
 #' Filters a ledger data frame by an optional date range. If no dates are
-#' provided, returns the original data frame unchanged.
+#' provided, returns the original data frame unchanged. This function is used
+#' internally to support date-based filtering in financial reports.
 #'
 #' @param ledger_data data.frame A ledger data frame containing a 'date' column
 #' @param min_date character,Date Optional. Minimum date to include in filter
@@ -68,6 +76,10 @@ read_ledger_csv <- function(ledger_file) {
 #' )
 #' }
 #'
+#' @seealso
+#' \code{\link{get_balance_accounts}} for generating balance sheets
+#' \code{\link{get_income_statement}} for generating income statements
+#'
 #' @autoglobal
 filter_ledger_date_range <- function(ledger_data, min_date, max_date) {
   my_ledger_min_filtered <-
@@ -91,17 +103,20 @@ filter_ledger_date_range <- function(ledger_data, min_date, max_date) {
 #'
 #' @description
 #' Filters the consolidated accounting plans to return account descriptions in the
-#' specified language, removing language suffixes from column names.
+#' specified language, removing language suffixes from column names. This function
+#' is used internally to support multi-language account descriptions in reports.
 #'
 #' @param ledger_data data.frame A ledger data frame with account information
 #' @param language character Language code for account descriptions. One of "en",
 #'   "fr", "de"
 #'
 #' @return data.frame A data frame with columns:
-#'   \item{account_number}{Integer. The account identifier}
-#'   \item{account_type}{Character. Account type in selected language}
-#'   \item{account_description}{Character. Account description in selected
-#'     language}
+#'   \itemize{
+#'     \item{account_number}{Integer. The account identifier}
+#'     \item{account_type}{Character. Account type in selected language}
+#'     \item{account_description}{Character. Account description in selected
+#'       language}
+#'   }
 #'
 #' @examples
 #' \dontrun{
@@ -111,6 +126,9 @@ filter_ledger_date_range <- function(ledger_data, min_date, max_date) {
 #' # Get German account descriptions
 #' german_accounts <- select_ledger_language(my_ledger, "de")
 #' }
+#'
+#' @seealso
+#' \code{\link{consolidate_accounting_plans}} for combining language plans
 #'
 #' @autoglobal
 select_ledger_language <- function(ledger_data, language) {
@@ -125,7 +143,7 @@ select_ledger_language <- function(ledger_data, language) {
 #' @description
 #' Calculates and categorizes balance sheet entries for either assets or
 #' liabilities, including intermediate category descriptions in the specified
-#' language.
+#' language. This function is used internally to support balance sheet generation.
 #'
 #' @param ledger_data data.frame A ledger data frame containing accounting entries
 #' @param target_language_ledger data.frame Account descriptions in the target
@@ -134,14 +152,16 @@ select_ledger_language <- function(ledger_data, language) {
 #'   either "assets" or "liabilities"
 #'
 #' @return data.frame A data frame containing:
-#'   \item{account_base_category}{Integer. First digit of account number (1 or 2)}
-#'   \item{high_category}{Integer. First two digits of account number}
-#'   \item{intermediate_category}{Integer. First three digits of account number}
-#'   \item{account_number}{Integer. Full account number}
-#'   \item{account_description}{Character. Account description in target language}
-#'   \item{sum_amounts}{Numeric. Total values for each account}
-#'   \item{account_description_intermediate}{Character. Intermediate category
-#'     description}
+#'   \itemize{
+#'     \item{account_base_category}{Integer. First digit of account number (1 or 2)}
+#'     \item{high_category}{Integer. First two digits of account number}
+#'     \item{intermediate_category}{Integer. First three digits of account number}
+#'     \item{account_number}{Integer. Full account number}
+#'     \item{account_description}{Character. Account description in target language}
+#'     \item{sum_amounts}{Numeric. Total values for each account}
+#'     \item{account_description_intermediate}{Character. Intermediate category
+#'       description}
+#'   }
 #'
 #' @examples
 #' \dontrun{
@@ -154,8 +174,15 @@ select_ledger_language <- function(ledger_data, language) {
 #' )
 #' }
 #'
+#' @seealso
+#' \code{\link{get_balance_accounts}} for generating balance sheets
+#' \code{\link{select_ledger_language}} for language selection
+#'
 #' @autoglobal
-get_account_category <- function(ledger_data, target_language_ledger, account_category_name = NULL) {
+get_account_category <- function(
+    ledger_data,
+    target_language_ledger,
+    account_category_name = NULL) {
   if (is.null(account_category_name)) {
     cli_abort("Balance category is required. Please provide a balance category, either 'assets', 'liabilities', 'income' or 'expense'.")
   }
@@ -196,7 +223,7 @@ get_account_category <- function(ledger_data, target_language_ledger, account_ca
 #' @description
 #' Processes one side of a balance sheet (assets or liabilities) by reading the
 #' ledger, applying date filters, and calculating totals in the specified
-#' language.
+#' language. This function is used internally to support balance sheet generation.
 #'
 #' @param ledger_file character Path to the CSV ledger file
 #' @param min_date character,Date Optional. Minimum date to filter transactions
@@ -209,14 +236,16 @@ get_account_category <- function(ledger_data, target_language_ledger, account_ca
 #'   either "assets" or "liabilities"
 #'
 #' @return data.frame A data frame containing:
-#'   \item{account_base_category}{Integer. First digit of account number (1 or 2)}
-#'   \item{high_category}{Integer. First two digits of account number}
-#'   \item{intermediate_category}{Integer. First three digits of account number}
-#'   \item{account_number}{Integer. Full account number}
-#'   \item{account_description}{Character. Account description in target language}
-#'   \item{sum_amounts}{Numeric. Total values for each account}
-#'   \item{account_description_intermediate}{Character. Intermediate category
-#'     description}
+#'   \itemize{
+#'     \item{account_base_category}{Integer. First digit of account number (1 or 2)}
+#'     \item{high_category}{Integer. First two digits of account number}
+#'     \item{intermediate_category}{Integer. First three digits of account number}
+#'     \item{account_number}{Integer. Full account number}
+#'     \item{account_description}{Character. Account description in target language}
+#'     \item{sum_amounts}{Numeric. Total values for each account}
+#'     \item{account_description_intermediate}{Character. Intermediate category
+#'       description}
+#'   }
 #'
 #' @examples
 #' \dontrun{

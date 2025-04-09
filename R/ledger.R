@@ -2,15 +2,31 @@
 #'
 #' @description
 #' Retrieves the most recent version of the ledger, either creating an empty one or
-#' importing from a CSV file.
+#' importing from a CSV file. This is an internal function used by add_ledger_entry.
 #'
-#' @param ledger_file Path to the CSV ledger file
-#' @param import_csv Logical indicating whether to import from CSV
+#' @param ledger_file character Path to the CSV ledger file. If NULL, returns an empty ledger structure.
+#' @param import_csv logical Whether to import from CSV file. Defaults to FALSE.
 #'
-#' @return A tibble containing ledger data or an empty ledger structure if no file
-#'   is provided
-#' @autoglobal
+#' @return tibble A tibble containing ledger data with columns:
+#'   \item{date}{Date. Transaction date}
+#'   \item{id}{Integer. Unique transaction identifier}
+#'   \item{counterpart_id}{Integer. ID of the counterpart entry}
+#'   \item{description}{Character. Transaction description}
+#'   \item{debit_account}{Integer. Account number for debit entry}
+#'   \item{credit_account}{Integer. Account number for credit entry}
+#'   \item{amount}{Numeric. Transaction amount}
+#'
+#' @examples
+#' \dontrun{
+#' # Create empty ledger
+#' empty_ledger <- get_ledger()
+#'
+#' # Import from CSV
+#' ledger_data <- get_ledger("path/to/ledger.csv", import_csv = TRUE)
+#' }
+#'
 #' @keywords internal
+#' @autoglobal
 get_ledger <- function(ledger_file = NULL,
                        import_csv = FALSE) {
   if (is.null(ledger_file)) {
@@ -40,23 +56,54 @@ get_ledger <- function(ledger_file = NULL,
 #'
 #' @description
 #' Adds a new entry to the accounting ledger with support for multiple languages
-#' and optional CSV import/export functionality.
+#' and optional CSV import/export functionality. The function handles both debit
+#' and credit entries, with automatic account type and description lookup based
+#' on the specified language.
 #'
-#' @param date Date of the ledger entry
-#' @param language Language code for account descriptions ("en", "fr", or "de")
-#' @param counterpart_id ID of the counterpart entry
-#' @param debit_account Account number for debit entry
-#' @param credit_account Account number for credit entry
-#' @param descr Description of the transaction
-#' @param amount Transaction amount
-#' @param import_csv Logical indicating whether to import from CSV
-#' @param filename_to_import Path to import CSV file
-#' @param export_csv Logical indicating whether to export to CSV
-#' @param filename_to_export Path to export CSV file
+#' @param date Date,character Date of the ledger entry. If character, will be converted to Date.
+#' @param language character Language code for account descriptions. One of "en", "fr", "de".
+#'   Defaults to "en".
+#' @param counterpart_id integer Optional. ID of the counterpart entry for double-entry bookkeeping.
+#' @param debit_account integer Optional. Account number for debit entry.
+#' @param credit_account integer Optional. Account number for credit entry.
+#' @param descr character Description of the transaction.
+#' @param amount numeric Transaction amount.
+#' @param import_csv logical Whether to import from CSV file. Defaults to FALSE.
+#' @param filename_to_import character Optional. Path to import CSV file.
+#' @param export_csv logical Whether to export to CSV file. Defaults to FALSE.
+#' @param filename_to_export character Optional. Path to export CSV file.
 #'
-#' @return A tibble containing the updated ledger with the new entry
+#' @return tibble A tibble containing the updated ledger with the new entry.
+#'   See get_ledger() for column descriptions.
+#'
+#' @examples
+#' \dontrun{
+#' # Add a simple debit entry
+#' ledger <- add_ledger_entry(
+#'   date = "2024-01-01",
+#'   descr = "Office supplies",
+#'   debit_account = 4000,
+#'   amount = 100
+#' )
+#'
+#' # Add a credit entry with counterpart
+#' ledger <- add_ledger_entry(
+#'   date = "2024-01-01",
+#'   descr = "Payment for office supplies",
+#'   credit_account = 1020,
+#'   amount = 100,
+#'   counterpart_id = 1
+#' )
+#' }
+#'
+#' @seealso
+#' \code{\link{get_ledger}} for retrieving ledger data
+#' \code{\link{accounts_model_en}} for English account descriptions
+#' \code{\link{accounts_model_fr}} for French account descriptions
+#' \code{\link{accounts_model_de}} for German account descriptions
 #'
 #' @export
+#' @autoglobal
 add_ledger_entry <- function(date,
                              language = "en",
                              counterpart_id = NULL,
