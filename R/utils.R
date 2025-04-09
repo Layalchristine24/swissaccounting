@@ -147,7 +147,7 @@ select_ledger_language <- function(ledger_data, language) {
 #' \dontrun{
 #' # Get French language assets
 #' french_ledger <- select_ledger_language(my_ledger, "fr")
-#' assets <- get_balance_category(
+#' assets <- get_account_category(
 #'   ledger_data = my_ledger,
 #'   target_language_ledger = french_ledger,
 #'   balance_category = "assets"
@@ -155,7 +155,7 @@ select_ledger_language <- function(ledger_data, language) {
 #' }
 #'
 #' @autoglobal
-get_balance_category <- function(ledger_data, target_language_ledger, balance_category = NULL) {
+get_account_category <- function(ledger_data, target_language_ledger, balance_category = NULL) {
   if (is.null(balance_category)) {
     cli_abort("Balance category is required. Please provide a balance category, either 'assets' or 'liabilities'.")
   }
@@ -229,7 +229,7 @@ get_balance_category <- function(ledger_data, target_language_ledger, balance_ca
 #' \code{\link{read_ledger_csv}} for reading the ledger file
 #' \code{\link{filter_ledger_date_range}} for date filtering
 #' \code{\link{select_ledger_language}} for language selection
-#' \code{\link{get_balance_category}} for balance calculation
+#' \code{\link{get_account_category}} for balance calculation
 #'
 #' @autoglobal
 get_balance_side <- function(ledger_file, min_date, max_date, language, balance_category) {
@@ -248,7 +248,7 @@ get_balance_side <- function(ledger_file, min_date, max_date, language, balance_
       language = language
     )
 
-  get_balance_category(
+  get_account_category(
     ledger_data = my_ledger_filtered,
     target_language_ledger = target_language_ledger,
     balance_category = balance_category
