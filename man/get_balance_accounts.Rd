@@ -5,26 +5,26 @@
 \title{Get Balance Sheet Accounts}
 \usage{
 get_balance_accounts(
-  ledger_file_balance = NULL,
-  min_date_balance = NULL,
-  max_date_balance = NULL,
-  path_csv = NULL,
-  my_language = "fr"
+  ledger_file,
+  min_date,
+  max_date,
+  path_csv,
+  language = "fr"
 )
 }
 \arguments{
-\item{ledger_file_balance}{character Path to the CSV ledger file}
+\item{ledger_file}{character Path to the CSV ledger file}
 
-\item{min_date_balance}{character,Date Optional. Minimum date to filter
+\item{min_date}{character,Date Optional. Minimum date to filter
 transactions (format: "YYYY-MM-DD")}
 
-\item{max_date_balance}{character,Date Optional. Maximum date to filter
+\item{max_date}{character,Date Optional. Maximum date to filter
 transactions (format: "YYYY-MM-DD")}
 
 \item{path_csv}{character Optional. Path where to save the balance sheet CSV
 file}
 
-\item{my_language}{character Language code for account descriptions. One of
+\item{language}{character Language code for account descriptions. One of
 "en", "fr", "de". Defaults to "fr"}
 }
 \value{
@@ -43,11 +43,11 @@ Implements both assets and liabilities calculations.
 \dontrun{
 # Generate balance sheet for specific date range in French
 get_balance_accounts(
-  ledger_file_balance = "path/to/ledger.csv",
-  min_date_balance = "2024-01-01",
-  max_date_balance = "2024-12-31",
+  ledger_file = "path/to/ledger.csv",
+  min_date = "2024-01-01",
+  max_date = "2024-12-31",
   path_csv = "path/to/output.csv",
-  my_language = "fr"
+  language = "fr"
 )
 }
 
