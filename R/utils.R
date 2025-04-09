@@ -221,7 +221,7 @@ get_account_category <- function(ledger_data, target_language_ledger, account_ca
 #' @examples
 #' \dontrun{
 #' # Get assets in French for a specific period
-#' assets <- get_balance_side(
+#' assets <- get_category_total(
 #'   ledger_file = "path/to/ledger.csv",
 #'   min_date = "2024-01-01",
 #'   max_date = "2024-12-31",
@@ -237,7 +237,7 @@ get_account_category <- function(ledger_data, target_language_ledger, account_ca
 #' \code{\link{get_account_category}} for balance calculation
 #'
 #' @autoglobal
-get_balance_side <- function(ledger_file, min_date, max_date, language, account_category_name) {
+get_category_total <- function(ledger_file, min_date, max_date, language, account_category_name) {
   my_ledger <- read_ledger_csv(ledger_file)
 
   my_ledger_filtered <- filter_ledger_date_range(

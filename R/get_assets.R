@@ -3,7 +3,7 @@
 #' @description
 #' Reads a ledger file, filters by date range if specified, and calculates the sum
 #' of assets for each account description in the selected language. This is a
-#' convenience wrapper around get_balance_side() for assets.
+#' convenience wrapper around get_category_total() for assets.
 #'
 #' @param ledger_file character Path to the CSV ledger file
 #' @param min_date character,Date Optional. Minimum date to filter transactions
@@ -39,7 +39,7 @@
 #' }
 #'
 #' @seealso
-#' \code{\link{get_balance_side}} for the underlying implementation
+#' \code{\link{get_category_total}} for the underlying implementation
 #'
 #' @autoglobal
 #' @export
@@ -51,7 +51,7 @@ get_assets <- function(
   if (is.null(ledger_file)) {
     cli_abort(".var{ledger_file} is required. Please provide a path to the ledger CSV file.")
   } else {
-    get_balance_side(
+    get_category_total(
       ledger_file = ledger_file,
       min_date = min_date,
       max_date = max_date,
