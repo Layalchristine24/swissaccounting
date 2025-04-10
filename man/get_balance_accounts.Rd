@@ -43,14 +43,6 @@ balance_sheet <- get_balance_accounts(
   max_date = "2024-12-31",
   language = "fr"
 )
-
-# Generate and save to CSV
-get_balance_accounts(
-  ledger_file = "path/to/ledger.csv",
-  min_date = "2024-01-01",
-  max_date = "2024-12-31",
-  language = "fr"
-)
 }
 
 }
