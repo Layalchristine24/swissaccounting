@@ -2,7 +2,7 @@
 % Please edit documentation in R/ledger.R
 \name{add_ledger_entry}
 \alias{add_ledger_entry}
-\title{Add Ledger Entry}
+\title{Add Entry to Accounting Ledger}
 \usage{
 add_ledger_entry(
   date,

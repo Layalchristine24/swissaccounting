@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_higher_categories.R
 \name{get_account_base_category}
 \alias{get_account_base_category}
-\title{Get Account Base Category}
+\title{Extract Account Base Category}
 \usage{
 get_account_base_category(my_ledger)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/sum_accounts.R
 \name{sum_accounts}
 \alias{sum_accounts}
-\title{Sum Account Balances by Category}
+\title{Calculate Account Balances by Category}
 \usage{
 sum_accounts(my_ledger)
 }

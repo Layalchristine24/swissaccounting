@@ -2,7 +2,7 @@
 % Please edit documentation in R/ledger.R
 \name{get_ledger}
 \alias{get_ledger}
-\title{Get Last Ledger Version}
+\title{Retrieve Ledger Data}
 \usage{
 get_ledger(ledger_file = NULL, import_csv = FALSE)
 }
@@ -13,6 +13,7 @@ get_ledger(ledger_file = NULL, import_csv = FALSE)
 }
 \value{
 tibble A tibble containing ledger data with columns:
+\itemize{
 \item{date}{Date. Transaction date}
 \item{id}{Integer. Unique transaction identifier}
 \item{counterpart_id}{Integer. ID of the counterpart entry}
@@ -20,6 +21,7 @@ tibble A tibble containing ledger data with columns:
 \item{debit_account}{Integer. Account number for debit entry}
 \item{credit_account}{Integer. Account number for credit entry}
 \item{amount}{Numeric. Transaction amount}
+}
 }
 \description{
 Retrieves the most recent version of the ledger, either creating an empty one or

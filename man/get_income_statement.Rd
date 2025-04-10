@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_income_statement.R
 \name{get_income_statement}
 \alias{get_income_statement}
-\title{Generate Income Statement}
+\title{Generate Income Statement Report}
 \usage{
 get_income_statement(
   ledger_file,
@@ -41,11 +41,10 @@ non-zero amounts, including:
 }
 }
 \description{
-Creates an income statement by combining income and expense data from a ledger
+Creates a comprehensive income statement by combining income and expense data from a ledger
 file for a specified period, filtering out zero-amount entries. The function
-supports multiple languages and optional CSV export. It calculates both revenue
-and expense categories to provide a comprehensive view of the company's financial
-performance.
+supports multiple languages and calculates both revenue and expense categories
+to provide a complete view of the company's financial performance.
 }
 \examples{
 \dontrun{
