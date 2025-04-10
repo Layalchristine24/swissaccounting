@@ -1,4 +1,4 @@
-#' Sum Account Balances by Category
+#' Calculate Account Balances by Category
 #'
 #' @description
 #' Calculates the sum of account balances grouped by high-level categories and
@@ -57,6 +57,38 @@ sum_accounts <- function(my_ledger) {
   my_ledger |>
     filter(!(account_type %in%
       c("Income/Expense", "Closing", "Produit/Charge", "Cl\u00f4ture", "Einnahmen/Ausgabe", "Abschluss"))) |>
+    aggregate_accounts()
+}
+
+#' Aggregate Account Categories
+#'
+#' @description
+#' Internal helper function that extracts and aggregates account categories
+#' (base, high, and intermediate) from ledger entries. This function is used
+#' internally by other functions to standardize the category extraction process.
+#'
+#' @param my_ledger_filtered data.frame A filtered ledger data frame with
+#'   debit_account and/or credit_account columns
+#'
+#' @return data.frame A data frame with additional category columns:
+#'   \itemize{
+#'     \item{account_base_category}{Integer. First digit of account number}
+#'     \item{high_category}{Integer. First two digits of account number}
+#'     \item{intermediate_category}{Integer. First three digits of account number}
+#'     \item{account_number}{Integer. Full account number}
+#'     \item{sum_amounts}{Numeric. Sum of amounts for each category}
+#'   }
+#'
+#' @examples
+#' \dontrun{
+#' # Used internally by sum_accounts()
+#' aggregated <- aggregate_accounts(filtered_ledger)
+#' }
+#'
+#' @keywords internal
+#' @autoglobal
+aggregate_accounts <- function(my_ledger_filtered) {
+  my_ledger_filtered |>
     mutate(
       amount = case_when(
         account_type %in% c("Asset", "Expense", "Actif", "Charge", "Aktivkonto", "Ausgabe") &

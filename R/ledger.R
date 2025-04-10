@@ -1,4 +1,4 @@
-#' Get Last Ledger Version
+#' Retrieve Ledger Data
 #'
 #' @description
 #' Retrieves the most recent version of the ledger, either creating an empty one or
@@ -8,13 +8,15 @@
 #' @param import_csv logical Whether to import from CSV file. Defaults to FALSE.
 #'
 #' @return tibble A tibble containing ledger data with columns:
-#'   \item{date}{Date. Transaction date}
-#'   \item{id}{Integer. Unique transaction identifier}
-#'   \item{counterpart_id}{Integer. ID of the counterpart entry}
-#'   \item{description}{Character. Transaction description}
-#'   \item{debit_account}{Integer. Account number for debit entry}
-#'   \item{credit_account}{Integer. Account number for credit entry}
-#'   \item{amount}{Numeric. Transaction amount}
+#'   \itemize{
+#'     \item{date}{Date. Transaction date}
+#'     \item{id}{Integer. Unique transaction identifier}
+#'     \item{counterpart_id}{Integer. ID of the counterpart entry}
+#'     \item{description}{Character. Transaction description}
+#'     \item{debit_account}{Integer. Account number for debit entry}
+#'     \item{credit_account}{Integer. Account number for credit entry}
+#'     \item{amount}{Numeric. Transaction amount}
+#'   }
 #'
 #' @examples
 #' \dontrun{
@@ -52,7 +54,7 @@ get_ledger <- function(ledger_file = NULL,
 # add_ledger_entry(date = today(), counterpart_id = 1L, descr = "Social contributions month of December", credit_account = 5700, amount = 1680, import_csv = TRUE, filename_to_import = "~/2024-02-04_ledger.csv", export_csv = TRUE, filename_to_export = "~/2024-02-04_ledger.csv")
 # add_ledger_entry(date = today(), counterpart_id = 1L, descr = "Contributions accident insurance paid by the employee", credit_account = 5730, amount = 890, import_csv = TRUE, filename_to_import = "~/2024-02-04_ledger.csv", export_csv = TRUE, filename_to_export = "~/2024-02-04_ledger.csv")
 
-#' Add Ledger Entry
+#' Add Entry to Accounting Ledger
 #'
 #' @description
 #' Adds a new entry to the accounting ledger with support for multiple languages

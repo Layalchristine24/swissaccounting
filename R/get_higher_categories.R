@@ -1,4 +1,4 @@
-#' Get Account Base Category
+#' Extract Account Base Category
 #'
 #' @description
 #' Extracts the base category (first digit) from account numbers in a ledger by

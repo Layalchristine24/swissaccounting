@@ -1,11 +1,10 @@
-#' Generate Income Statement
+#' Generate Income Statement Report
 #'
 #' @description
-#' Creates an income statement by combining income and expense data from a ledger
+#' Creates a comprehensive income statement by combining income and expense data from a ledger
 #' file for a specified period, filtering out zero-amount entries. The function
-#' supports multiple languages and optional CSV export. It calculates both revenue
-#' and expense categories to provide a comprehensive view of the company's financial
-#' performance.
+#' supports multiple languages and calculates both revenue and expense categories
+#' to provide a complete view of the company's financial performance.
 #'
 #' @param ledger_file character Path to the CSV ledger file containing
 #'   financial transactions
