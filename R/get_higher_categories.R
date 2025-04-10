@@ -1,4 +1,4 @@
-#' Get Account Base Category
+#' Extract Account Base Category
 #'
 #' @description
 #' Extracts the base category (first digit) from account numbers in a ledger by
@@ -25,6 +25,10 @@
 #' # Returns:
 #' # account_base_category: 1, 2, 3
 #'
+#' @seealso
+#' \code{\link{get_high_category}} for getting the first two digits
+#' \code{\link{get_intermediate_category}} for getting the first three digits
+#'
 #' @autoglobal
 get_account_base_category <- function(my_ledger) {
   my_ledger |>
@@ -37,8 +41,11 @@ get_account_base_category <- function(my_ledger) {
 #' Extract High-Level Account Categories
 #'
 #' @description
-#' Extracts the high-level category (first digit) from account numbers in a ledger.
-#' For example, account 1234 would be categorized as 12.
+#' Extracts the high-level category (first two digits) from account numbers in a ledger.
+#' For example:
+#' - Account 1234 -> Category 12
+#' - Account 2000 -> Category 20
+#' - Account 3400 -> Category 34
 #'
 #' @param my_ledger data.frame A data frame containing ledger entries with
 #'   debit_account and/or credit_account columns
@@ -54,7 +61,12 @@ get_account_base_category <- function(my_ledger) {
 #' )
 #'
 #' categorized_ledger <- get_high_category(ledger)
-#' print(categorized_ledger)
+#' # Returns:
+#' # high_category: 10, 20, 30
+#'
+#' @seealso
+#' \code{\link{get_account_base_category}} for getting the first digit
+#' \code{\link{get_intermediate_category}} for getting the first three digits
 #'
 #' @autoglobal
 get_high_category <- function(my_ledger) {
@@ -68,8 +80,11 @@ get_high_category <- function(my_ledger) {
 #' Extract Intermediate Account Categories
 #'
 #' @description
-#' Extracts the intermediate category (first two digits) from account numbers in a ledger.
-#' For example, account 1234 would be categorized as 12.
+#' Extracts the intermediate category (first three digits) from account numbers in a ledger.
+#' For example:
+#' - Account 1234 -> Category 123
+#' - Account 2000 -> Category 200
+#' - Account 3400 -> Category 340
 #'
 #' @param my_ledger data.frame A data frame containing ledger entries with
 #'   debit_account and/or credit_account columns
@@ -85,7 +100,12 @@ get_high_category <- function(my_ledger) {
 #' )
 #'
 #' categorized_ledger <- get_intermediate_category(ledger)
-#' print(categorized_ledger)
+#' # Returns:
+#' # intermediate_category: 123, 234, 345
+#'
+#' @seealso
+#' \code{\link{get_account_base_category}} for getting the first digit
+#' \code{\link{get_high_category}} for getting the first two digits
 #'
 #' @autoglobal
 get_intermediate_category <- function(my_ledger) {

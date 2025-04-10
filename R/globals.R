@@ -4,27 +4,34 @@ utils::globalVariables(c(
   "account_type", # <consolidate_accounting_plans>
   "account_description", # <consolidate_accounting_plans>
   "account_number", # <consolidate_accounting_plans>
-  "sum_amounts", # <get_balance_accounts>
+  "account_base_category", # <get_balance_accounts>
+  "account_number", # <get_balance_accounts>
   "debit_account", # <get_account_base_category>
   "credit_account", # <get_account_base_category>
   "debit_account", # <get_high_category>
   "credit_account", # <get_high_category>
   "debit_account", # <get_intermediate_category>
   "credit_account", # <get_intermediate_category>
+  "sum_amounts", # <get_income_statement>
+  "account_base_category", # <get_operating_result>
+  "sum_amounts", # <get_operating_result>
+  "account_number", # <get_private_account>
+  "id", # <add_ledger_entry>
+  "account_number", # <add_ledger_entry>
   "account_type", # <sum_accounts>
-  "amount", # <sum_accounts>
-  "debit_account", # <sum_accounts>
-  "credit_account", # <sum_accounts>
-  "account_base_category", # <sum_accounts>
-  "high_category", # <sum_accounts>
-  "intermediate_category", # <sum_accounts>
-  "account_number", # <sum_accounts>
-  "account_description", # <sum_accounts>
+  "amount", # <aggregate_accounts>
+  "debit_account", # <aggregate_accounts>
+  "credit_account", # <aggregate_accounts>
+  "account_base_category", # <aggregate_accounts>
+  "high_category", # <aggregate_accounts>
+  "intermediate_category", # <aggregate_accounts>
+  "account_number", # <aggregate_accounts>
+  "account_description", # <aggregate_accounts>
   "account_number", # <select_ledger_language>
-  "account_description", # <get_balance_category>
-  "account_type", # <get_balance_category>
-  "account_number", # <get_balance_category>
-  "account_base_category", # <get_balance_category>
-  "intermediate_category", # <get_balance_category>
+  "account_description", # <get_account_category>
+  "account_type", # <get_account_category>
+  "account_number", # <get_account_category>
+  "account_base_category", # <get_account_category>
+  "intermediate_category", # <get_account_category>
   NULL
 ))

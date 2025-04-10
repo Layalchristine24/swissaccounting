@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_higher_categories.R
 \name{get_account_base_category}
 \alias{get_account_base_category}
-\title{Get Account Base Category}
+\title{Extract Account Base Category}
 \usage{
 get_account_base_category(my_ledger)
 }
@@ -35,4 +35,8 @@ result <- get_account_base_category(ledger)
 # Returns:
 # account_base_category: 1, 2, 3
 
+}
+\seealso{
+\code{\link{get_high_category}} for getting the first two digits
+\code{\link{get_intermediate_category}} for getting the first three digits
 }

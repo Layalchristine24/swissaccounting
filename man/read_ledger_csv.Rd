@@ -11,6 +11,7 @@ read_ledger_csv(ledger_file)
 }
 \value{
 data.frame A data frame with the following columns:
+\itemize{
 \item{date}{Date. Transaction date}
 \item{description}{Character. Transaction description}
 \item{account_description}{Character. Description of the account}
@@ -19,14 +20,20 @@ data.frame A data frame with the following columns:
 \item{Other integer columns}{Integer. Additional numeric columns default to
 integer type}
 }
+}
 \description{
 Reads a CSV ledger file with predefined column types for accounting data.
 Automatically converts dates, numeric values, and text fields to appropriate
-data types.
+data types. This function is used internally by other functions in the package
+to ensure consistent data reading.
 }
 \examples{
 \dontrun{
+# Read a ledger file
 ledger_data <- read_ledger_csv("path/to/ledger.csv")
 }
 
+}
+\seealso{
+\code{\link{add_ledger_entry}} for adding entries to the ledger
 }

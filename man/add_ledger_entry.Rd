@@ -2,7 +2,7 @@
 % Please edit documentation in R/ledger.R
 \name{add_ledger_entry}
 \alias{add_ledger_entry}
-\title{Add Ledger Entry}
+\title{Add Entry to Accounting Ledger}
 \usage{
 add_ledger_entry(
   date,
@@ -19,32 +19,63 @@ add_ledger_entry(
 )
 }
 \arguments{
-\item{date}{Date of the ledger entry}
+\item{date}{Date,character Date of the ledger entry. If character, will be converted to Date.}
 
-\item{language}{Language code for account descriptions ("en", "fr", or "de")}
+\item{language}{character Language code for account descriptions. One of "en", "fr", "de".
+Defaults to "en".}
 
-\item{counterpart_id}{ID of the counterpart entry}
+\item{counterpart_id}{integer Optional. ID of the counterpart entry for double-entry bookkeeping.}
 
-\item{debit_account}{Account number for debit entry}
+\item{debit_account}{integer Optional. Account number for debit entry.}
 
-\item{credit_account}{Account number for credit entry}
+\item{credit_account}{integer Optional. Account number for credit entry.}
 
-\item{descr}{Description of the transaction}
+\item{descr}{character Description of the transaction.}
 
-\item{amount}{Transaction amount}
+\item{amount}{numeric Transaction amount.}
 
-\item{import_csv}{Logical indicating whether to import from CSV}
+\item{import_csv}{logical Whether to import from CSV file. Defaults to FALSE.}
 
-\item{filename_to_import}{Path to import CSV file}
+\item{filename_to_import}{character Optional. Path to import CSV file.}
 
-\item{export_csv}{Logical indicating whether to export to CSV}
+\item{export_csv}{logical Whether to export to CSV file. Defaults to FALSE.}
 
-\item{filename_to_export}{Path to export CSV file}
+\item{filename_to_export}{character Optional. Path to export CSV file.}
 }
 \value{
-A tibble containing the updated ledger with the new entry
+tibble A tibble containing the updated ledger with the new entry.
+See get_ledger() for column descriptions.
 }
 \description{
 Adds a new entry to the accounting ledger with support for multiple languages
-and optional CSV import/export functionality.
+and optional CSV import/export functionality. The function handles both debit
+and credit entries, with automatic account type and description lookup based
+on the specified language.
+}
+\examples{
+\dontrun{
+# Add a simple debit entry
+ledger <- add_ledger_entry(
+  date = "2024-01-01",
+  descr = "Office supplies",
+  debit_account = 4000,
+  amount = 100
+)
+
+# Add a credit entry with counterpart
+ledger <- add_ledger_entry(
+  date = "2024-01-01",
+  descr = "Payment for office supplies",
+  credit_account = 1020,
+  amount = 100,
+  counterpart_id = 1
+)
+}
+
+}
+\seealso{
+\code{\link{get_ledger}} for retrieving ledger data
+\code{\link{accounts_model_en}} for English account descriptions
+\code{\link{accounts_model_fr}} for French account descriptions
+\code{\link{accounts_model_de}} for German account descriptions
 }
