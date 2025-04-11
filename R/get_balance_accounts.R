@@ -4,7 +4,9 @@
 #' Generates a comprehensive balance sheet report from ledger data for a specified date range.
 #' Implements both assets and liabilities calculations, with support for multiple languages.
 #' The function filters out zero-amount entries to provide a clean balance sheet view.
-#' Includes private account calculations and operating results.
+#' Includes private account calculations and operating results. The balance sheet is generated
+#' by aggregating all accounts that are not in the income statement (accounts 1-3 for assets
+#' and 4-5 for liabilities).
 #'
 #' @param ledger_file character Path to the CSV ledger file containing
 #'   financial transactions
@@ -19,6 +21,8 @@
 #'   \itemize{
 #'     \item{account_base_category}{Integer. First digit of account number (1 or 2)}
 #'     \item{high_category}{Integer. First two digits of account number}
+#'     \item{intermediate_category}{Integer. First three digits of account number}
+#'     \item{account_number}{Integer. Full account number}
 #'     \item{account_description}{Character. Account description in selected language}
 #'     \item{sum_amounts}{Numeric. Total values for each account}
 #'   }
