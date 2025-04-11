@@ -59,6 +59,13 @@ get_balance_accounts <- function(
     account_category_name = "assets"
   )
 
+  total_assets <-
+    assets |>
+    reframe(
+      total = sum(sum_amounts, na.rm = TRUE),
+      .by = "account_base_category"
+    )
+
   private_account <- get_private_account(
     ledger_file = ledger_file,
     min_date = min_date,
@@ -75,11 +82,31 @@ get_balance_accounts <- function(
   ) |>
     bind_rows(private_account)
 
-  assets |>
+  total_liabilities <-
+    liabilities |>
+    reframe(
+      total = sum(sum_amounts, na.rm = TRUE),
+      .by = "account_base_category"
+    )
+
+  balance_accounts <-
+    assets |>
     bind_rows(liabilities) |>
     reframe(
       sum_amounts = sum(sum_amounts, na.rm = TRUE),
-      .by = c("account_base_category", "high_category", "intermediate_category", "account_number", "account_description")
+      .by = c(
+        "account_base_category", "high_category", "intermediate_category",
+        "account_number", "account_description"
+      )
     ) |>
     filter(sum_amounts != 0)
+
+  total <-
+    total_assets |>
+    bind_rows(total_liabilities)
+
+  list(
+    balance_accounts = balance_accounts,
+    total = total
+  )
 }
