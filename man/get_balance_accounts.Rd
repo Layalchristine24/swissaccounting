@@ -8,31 +8,48 @@ get_balance_accounts(ledger_file, min_date, max_date, language = "fr")
 }
 \arguments{
 \item{ledger_file}{character Path to the CSV ledger file containing
-financial transactions}
+financial transactions. The file should contain columns for account numbers,
+dates, and amounts.}
 
 \item{min_date}{character,Date Optional. Minimum date to filter
-transactions (format: "YYYY-MM-DD")}
+transactions (format: "YYYY-MM-DD"). If not provided, includes all transactions
+from the beginning of the ledger.}
 
 \item{max_date}{character,Date Optional. Maximum date to filter
-transactions (format: "YYYY-MM-DD")}
+transactions (format: "YYYY-MM-DD"). If not provided, includes all transactions
+up to the end of the ledger.}
 
 \item{language}{character Language code for account descriptions. One of
 "en", "fr", "de". Defaults to "fr"}
 }
 \value{
-data.frame A data frame containing balance sheet data with columns:
+A list containing two elements:
+\itemize{
+\item{balance_accounts}{A data frame containing balance sheet data with columns:
 \itemize{
 \item{account_base_category}{Integer. First digit of account number (1 or 2)}
 \item{high_category}{Integer. First two digits of account number}
+\item{intermediate_category}{Integer. First three digits of account number}
+\item{account_number}{Integer. Full account number}
 \item{account_description}{Character. Account description in selected language}
 \item{sum_amounts}{Numeric. Total values for each account}
+}
+}
+\item{total}{A data frame containing total amounts by base category with columns:
+\itemize{
+\item{account_base_category}{Integer. First digit of account number (1 or 2)}
+\item{total}{Numeric. Total amount for the base category}
+}
+}
 }
 }
 \description{
 Generates a comprehensive balance sheet report from ledger data for a specified date range.
 Implements both assets and liabilities calculations, with support for multiple languages.
 The function filters out zero-amount entries to provide a clean balance sheet view.
-Includes private account calculations and operating results.
+Includes private account calculations and operating results. The balance sheet is generated
+by aggregating all accounts that are not in the income statement (accounts 1-3 for assets
+and 4-5 for liabilities).
 }
 \examples{
 \dontrun{
@@ -43,6 +60,12 @@ balance_sheet <- get_balance_accounts(
   max_date = "2024-12-31",
   language = "fr"
 )
+
+# Access the balance accounts data
+balance_accounts <- balance_sheet$balance_accounts
+
+# Access the total amounts by category
+totals <- balance_sheet$total
 }
 
 }
