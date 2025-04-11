@@ -9,22 +9,35 @@
 #' and 4-5 for liabilities).
 #'
 #' @param ledger_file character Path to the CSV ledger file containing
-#'   financial transactions
+#'   financial transactions. The file should contain columns for account numbers,
+#'   dates, and amounts.
 #' @param min_date character,Date Optional. Minimum date to filter
-#'   transactions (format: "YYYY-MM-DD")
+#'   transactions (format: "YYYY-MM-DD"). If not provided, includes all transactions
+#'   from the beginning of the ledger.
 #' @param max_date character,Date Optional. Maximum date to filter
-#'   transactions (format: "YYYY-MM-DD")
+#'   transactions (format: "YYYY-MM-DD"). If not provided, includes all transactions
+#'   up to the end of the ledger.
 #' @param language character Language code for account descriptions. One of
 #'   "en", "fr", "de". Defaults to "fr"
 #'
-#' @return data.frame A data frame containing balance sheet data with columns:
+#' @return A list containing two elements:
 #'   \itemize{
-#'     \item{account_base_category}{Integer. First digit of account number (1 or 2)}
-#'     \item{high_category}{Integer. First two digits of account number}
-#'     \item{intermediate_category}{Integer. First three digits of account number}
-#'     \item{account_number}{Integer. Full account number}
-#'     \item{account_description}{Character. Account description in selected language}
-#'     \item{sum_amounts}{Numeric. Total values for each account}
+#'     \item{balance_accounts}{A data frame containing balance sheet data with columns:
+#'       \itemize{
+#'         \item{account_base_category}{Integer. First digit of account number (1 or 2)}
+#'         \item{high_category}{Integer. First two digits of account number}
+#'         \item{intermediate_category}{Integer. First three digits of account number}
+#'         \item{account_number}{Integer. Full account number}
+#'         \item{account_description}{Character. Account description in selected language}
+#'         \item{sum_amounts}{Numeric. Total values for each account}
+#'       }
+#'     }
+#'     \item{total}{A data frame containing total amounts by base category with columns:
+#'       \itemize{
+#'         \item{account_base_category}{Integer. First digit of account number (1 or 2)}
+#'         \item{total}{Numeric. Total amount for the base category}
+#'       }
+#'     }
 #'   }
 #'
 #' @examples
@@ -36,6 +49,12 @@
 #'   max_date = "2024-12-31",
 #'   language = "fr"
 #' )
+#' 
+#' # Access the balance accounts data
+#' balance_accounts <- balance_sheet$balance_accounts
+#' 
+#' # Access the total amounts by category
+#' totals <- balance_sheet$total
 #' }
 #'
 #' @seealso
@@ -59,6 +78,13 @@ get_balance_accounts <- function(
     account_category_name = "assets"
   )
 
+  total_assets <-
+    assets |>
+    reframe(
+      total = sum(sum_amounts, na.rm = TRUE),
+      .by = "account_base_category"
+    )
+
   private_account <- get_private_account(
     ledger_file = ledger_file,
     min_date = min_date,
@@ -75,11 +101,31 @@ get_balance_accounts <- function(
   ) |>
     bind_rows(private_account)
 
-  assets |>
+  total_liabilities <-
+    liabilities |>
+    reframe(
+      total = sum(sum_amounts, na.rm = TRUE),
+      .by = "account_base_category"
+    )
+
+  balance_accounts <-
+    assets |>
     bind_rows(liabilities) |>
     reframe(
       sum_amounts = sum(sum_amounts, na.rm = TRUE),
-      .by = c("account_base_category", "high_category", "intermediate_category", "account_number", "account_description")
+      .by = c(
+        "account_base_category", "high_category", "intermediate_category",
+        "account_number", "account_description"
+      )
     ) |>
     filter(sum_amounts != 0)
+
+  total <-
+    total_assets |>
+    bind_rows(total_liabilities)
+
+  list(
+    balance_accounts = balance_accounts,
+    total = total
+  )
 }
