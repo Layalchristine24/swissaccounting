@@ -71,6 +71,11 @@ get_balance_accounts <- function(
   ) |>
     bind_rows(private_account)
 
-  bind_rows(assets, liabilities) |>
+  assets |>
+    bind_rows(liabilities) |>
+    reframe(
+      sum_amounts = sum(sum_amounts, na.rm = TRUE),
+      .by = c("account_base_category", "high_category", "intermediate_category", "account_number", "account_description")
+    ) |>
     filter(sum_amounts != 0)
 }
