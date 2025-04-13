@@ -1,5 +1,10 @@
 <!-- NEWS.md is maintained by https://fledge.cynkra.com, contributors should not edit this file -->
 
+# swissaccounting 0.1.0.9001 (2025-04-13)
+
+- Internal changes only.
+
+
 # swissaccounting 0.1.0.9000 (2025-04-11)
 
 - Switching to development version.
