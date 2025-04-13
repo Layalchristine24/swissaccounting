@@ -7,12 +7,12 @@
 get_intermediate_category(my_ledger)
 }
 \arguments{
-\item{my_ledger}{data.frame A data frame containing ledger entries with
-debit_account and/or credit_account columns}
+\item{my_ledger}{A data frame containing ledger entries with
+\code{debit_account} and/or \code{credit_account} columns}
 }
 \value{
-data.frame A data frame with an additional integer column
-'intermediate_category' containing the intermediate category numbers
+A data frame with an additional integer column
+\code{intermediate_category} containing the intermediate category numbers
 }
 \description{
 Extracts the intermediate category (first three digits) from account numbers in a ledger.
@@ -36,6 +36,6 @@ categorized_ledger <- get_intermediate_category(ledger)
 
 }
 \seealso{
-\code{\link{get_account_base_category}} for getting the first digit
-\code{\link{get_high_category}} for getting the first two digits
+\code{\link[=get_account_base_category]{get_account_base_category()}} for getting the first digit
+\code{\link[=get_high_category]{get_high_category()}} for getting the first two digits
 }
