@@ -27,7 +27,7 @@
 #' @export
 accounts_model_fr <- tribble(
   ~account_number, ~account_description, ~account_type,
-  1, "Actifs", "Actif",
+  1, "Actif", "Actif",
   10, "Actifs circulants", "Actif",
   100, "Liquidités", "Actif",
   1000, "Caisse", "Actif",
