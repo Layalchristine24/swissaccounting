@@ -1,5 +1,7 @@
 ---
 output: github_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -174,11 +176,15 @@ add_ledger_entry(
   filename_to_export = ledger_file
 )
 
+balance_docs <-
+  get_balance_accounts(
+    ledger_file = ledger_file,
+    min_date = "2024-01-01",
+    max_date = "2024-12-31",
+    language = "fr"
+  )
 
-get_balance_accounts(
-  ledger_file = ledger_file,
-  min_date = "2024-01-01",
-  max_date = "2024-12-31",
-  language = "fr"
-)
+balance_docs$balance_accounts
+
+balance_docs$total
 ```

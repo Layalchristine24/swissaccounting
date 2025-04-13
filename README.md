@@ -320,18 +320,30 @@ add_ledger_entry(
 
 ``` r
 
+balance_docs <-
+  get_balance_accounts(
+    ledger_file = ledger_file,
+    min_date = "2024-01-01",
+    max_date = "2024-12-31",
+    language = "fr"
+  )
 
-get_balance_accounts(
-  ledger_file = ledger_file,
-  min_date = "2024-01-01",
-  max_date = "2024-12-31",
-  language = "fr"
-)
+balance_docs$balance_accounts
 #> # A tibble: 3 × 6
 #>   account_base_category high_category intermediate_category account_number
 #>                   <int>         <int>                 <int>          <int>
-#> 1                     1            10                   100           1020
+#> 1                     1            10                   102           1020
 #> 2                     1            10                   100           1000
-#> 3                     2            20                   280           2850
+#> 3                     2            28                   285           2850
 #> # ℹ 2 more variables: account_description <chr>, sum_amounts <dbl>
+```
+
+``` r
+
+balance_docs$total
+#> # A tibble: 2 × 2
+#>   account_base_category  total
+#>                   <int>  <dbl>
+#> 1                     1 10526.
+#> 2                     2   526.
 ```
