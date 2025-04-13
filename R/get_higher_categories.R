@@ -7,11 +7,11 @@
 #' - Account 2000 -> Category 2 (Liabilities)
 #' - Account 3400 -> Category 3 (Revenue)
 #'
-#' @param my_ledger data.frame A data frame containing ledger entries with at least
-#'   one of these columns: debit_account or credit_account
+#' @param my_ledger A data frame containing ledger entries with at least
+#'   one of these columns: `debit_account` or `credit_account`
 #'
-#' @return data.frame A data frame with an additional integer column
-#'   'account_base_category' containing the base category (1-9) of each account.
+#' @return A data frame with an additional integer column
+#'   `account_base_category` containing the base category (1-9) of each account.
 #'   Uses the first non-NULL account between debit and credit accounts.
 #'
 #' @examples
@@ -26,15 +26,15 @@
 #' # account_base_category: 1, 2, 3
 #'
 #' @seealso
-#' \code{\link{get_high_category}} for getting the first two digits
-#' \code{\link{get_intermediate_category}} for getting the first three digits
+#' [get_high_category()] for getting the first two digits
+#' [get_intermediate_category()] for getting the first three digits
 #'
+#' @export
 #' @autoglobal
 get_account_base_category <- function(my_ledger) {
   my_ledger |>
     mutate(
-      account_base_category = as.integer((coalesce(debit_account, credit_account) -
-        coalesce(debit_account, credit_account) %% 1e3) / 1e3)
+      account_base_category = as.integer(coalesce(debit_account, credit_account) %/% 1e3)
     )
 }
 
@@ -47,11 +47,11 @@ get_account_base_category <- function(my_ledger) {
 #' - Account 2000 -> Category 20
 #' - Account 3400 -> Category 34
 #'
-#' @param my_ledger data.frame A data frame containing ledger entries with
-#'   debit_account and/or credit_account columns
+#' @param my_ledger A data frame containing ledger entries with
+#'   `debit_account` and/or `credit_account` columns
 #'
-#' @return data.frame A data frame with an additional integer column
-#'   'high_category' containing the high-level category numbers
+#' @return A data frame with an additional integer column
+#'   `high_category` containing the high-level category numbers
 #'
 #' @examples
 #' ledger <- data.frame(
@@ -65,15 +65,15 @@ get_account_base_category <- function(my_ledger) {
 #' # high_category: 10, 20, 30
 #'
 #' @seealso
-#' \code{\link{get_account_base_category}} for getting the first digit
-#' \code{\link{get_intermediate_category}} for getting the first three digits
+#' [get_account_base_category()] for getting the first digit
+#' [get_intermediate_category()] for getting the first three digits
 #'
+#' @export
 #' @autoglobal
 get_high_category <- function(my_ledger) {
   my_ledger |>
     mutate(
-      high_category = as.integer((coalesce(debit_account, credit_account) -
-        coalesce(debit_account, credit_account) %% 1e3) / 1e2)
+      high_category = as.integer(coalesce(debit_account, credit_account) %/% 1e2)
     )
 }
 
@@ -86,11 +86,11 @@ get_high_category <- function(my_ledger) {
 #' - Account 2000 -> Category 200
 #' - Account 3400 -> Category 340
 #'
-#' @param my_ledger data.frame A data frame containing ledger entries with
-#'   debit_account and/or credit_account columns
+#' @param my_ledger A data frame containing ledger entries with
+#'   `debit_account` and/or `credit_account` columns
 #'
-#' @return data.frame A data frame with an additional integer column
-#'   'intermediate_category' containing the intermediate category numbers
+#' @return A data frame with an additional integer column
+#'   `intermediate_category` containing the intermediate category numbers
 #'
 #' @examples
 #' ledger <- data.frame(
@@ -104,14 +104,14 @@ get_high_category <- function(my_ledger) {
 #' # intermediate_category: 123, 234, 345
 #'
 #' @seealso
-#' \code{\link{get_account_base_category}} for getting the first digit
-#' \code{\link{get_high_category}} for getting the first two digits
+#' [get_account_base_category()] for getting the first digit
+#' [get_high_category()] for getting the first two digits
 #'
+#' @export
 #' @autoglobal
 get_intermediate_category <- function(my_ledger) {
   my_ledger |>
     mutate(
-      intermediate_category = as.integer((coalesce(debit_account, credit_account) -
-        coalesce(debit_account, credit_account) %% 1e2) / 1e1)
+      intermediate_category = as.integer(coalesce(debit_account, credit_account) %/% 1e1)
     )
 }

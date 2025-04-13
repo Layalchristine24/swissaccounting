@@ -49,10 +49,10 @@
 #'   max_date = "2024-12-31",
 #'   language = "fr"
 #' )
-#' 
+#'
 #' # Access the balance accounts data
 #' balance_accounts <- balance_sheet$balance_accounts
-#' 
+#'
 #' # Access the total amounts by category
 #' totals <- balance_sheet$total
 #' }
