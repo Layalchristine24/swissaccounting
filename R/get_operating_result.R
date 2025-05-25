@@ -43,7 +43,7 @@ get_operating_result <- function(
     ledger_file = ledger_file,
     min_date = min_date,
     max_date = max_date,
-    language = language,
+    language = language
   ) |>
     mutate(
       sum_amounts = if_else(account_base_category == 3L,
