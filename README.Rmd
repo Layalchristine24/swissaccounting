@@ -1,6 +1,6 @@
 ---
 output: github_document
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 
@@ -30,6 +30,12 @@ You can install the development version of swissaccounting from [GitHub](https:/
 # install.packages("devtools")
 devtools::install_github("Layalchristine24/swissaccounting")
 ```
+or
+
+``` r
+# install.packages("pak")
+pak::pak("Layalchristine24/swissaccounting")
+```
 
 ## Example
 
@@ -49,6 +55,7 @@ ledger_file <- file.path(here::here(), "documents", "ledger", "sample-ledger.csv
 # Initial cash deposit
 add_ledger_entry(
   date = "2024-01-01",
+  language = "en", #or "fr" or "de"
   descr = "Initial cash deposit",
   debit_account = 1020,
   amount = 10000,
@@ -59,6 +66,7 @@ add_ledger_entry(
 # Office supplies purchase
 add_ledger_entry(
   date = "2024-01-15",
+  language = "en", #or "fr" or "de"
   descr = "Office supplies",
   debit_account = 4000,
   amount = 500,
@@ -71,6 +79,7 @@ add_ledger_entry(
 add_ledger_entry(
   date = "2024-01-15",
   counterpart_id = 2L,
+  language = "en", #or "fr" or "de"
   descr = "Office supplies payment",
   credit_account = 1020,
   amount = 500,
@@ -83,6 +92,7 @@ add_ledger_entry(
 # Monthly rent
 add_ledger_entry(
   date = "2024-01-31",
+  language = "en", #or "fr" or "de"
   descr = "Monthly rent",
   debit_account = 6000,
   amount = 2000,
@@ -95,6 +105,7 @@ add_ledger_entry(
 add_ledger_entry(
   date = "2024-01-31",
   counterpart_id = 4L,
+  language = "en", #or "fr" or "de"
   descr = "Monthly rent payment",
   credit_account = 1020,
   amount = 2000,
@@ -107,6 +118,7 @@ add_ledger_entry(
 # Service revenue
 add_ledger_entry(
   date = "2024-02-15",
+  language = "en", #or "fr" or "de"
   descr = "Service revenue",
   debit_account = 1020,
   amount = 3000,
@@ -119,6 +131,7 @@ add_ledger_entry(
 add_ledger_entry(
   date = "2024-02-15",
   counterpart_id = 6L,
+  language = "en", #or "fr" or "de"
   descr = "Service revenue",
   credit_account = 3000,
   amount = 3000,
@@ -131,6 +144,7 @@ add_ledger_entry(
 # Equipment purchase
 add_ledger_entry(
   date = "2024-03-01",
+  language = "en", #or "fr" or "de"
   descr = "Computer equipment",
   debit_account = 1000,
   amount = 1500,
@@ -143,6 +157,7 @@ add_ledger_entry(
 add_ledger_entry(
   date = "2024-03-01",
   counterpart_id = 8L,
+  language = "en", #or "fr" or "de"
   descr = "Computer equipment payment",
   credit_account = 1020,
   amount = 1500,
@@ -155,6 +170,7 @@ add_ledger_entry(
 # Bank interest
 add_ledger_entry(
   date = "2024-03-31",
+  language = "en", #or "fr" or "de"
   descr = "Bank interest",
   debit_account = 1020,
   amount = 25.50,
@@ -167,9 +183,36 @@ add_ledger_entry(
 add_ledger_entry(
   date = "2024-03-31",
   counterpart_id = 10L,
+  language = "en", #or "fr" or "de"
   descr = "Bank interest",
   credit_account = 2850,
   amount = 25.50,
+  import_csv = TRUE,
+  filename_to_import = ledger_file,
+  export_csv = TRUE,
+  filename_to_export = ledger_file
+)
+
+# Bank loan
+add_ledger_entry(
+  date = "2024-04-01",
+  language = "en", #or "fr" or "de"
+  descr = "Bank loan",
+  debit_account = 1020,
+  amount = 10000,
+  import_csv = TRUE,
+  filename_to_import = ledger_file,
+  export_csv = TRUE,
+  filename_to_export = ledger_file
+)
+
+add_ledger_entry(
+  date = "2024-04-01",
+  counterpart_id = 12L,
+  language = "en", #or "fr" or "de"
+  descr = "Bank loan",
+  credit_account = 2000,
+  amount = 10000,
   import_csv = TRUE,
   filename_to_import = ledger_file,
   export_csv = TRUE,
@@ -181,7 +224,7 @@ balance_docs <-
     ledger_file = ledger_file,
     min_date = "2024-01-01",
     max_date = "2024-12-31",
-    language = "fr"
+    language = "en" # or "fr" or "de"
   )
 
 balance_docs$balance_accounts
