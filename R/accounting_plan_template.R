@@ -25,6 +25,7 @@
 #'
 #' @keywords dataset
 #' @export
+# fmt: skip
 accounts_model_fr <- tribble(
   ~account_number, ~account_description, ~account_type,
   1, "Actif", "Actif",
@@ -224,6 +225,7 @@ accounts_model_fr <- tribble(
 #'
 #' @keywords dataset
 #' @export
+# fmt: skip
 accounts_model_en <- tribble(
   ~account_number, ~account_description, ~account_type,
   1, "Assets", "Asset",
@@ -423,6 +425,7 @@ accounts_model_en <- tribble(
 #'
 #' @keywords dataset
 #' @export
+# fmt: skip
 accounts_model_de <- tribble(
   ~account_number, ~account_description, ~account_type,
   1, "Aktiva", "Aktivkonto",

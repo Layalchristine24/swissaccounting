@@ -44,10 +44,11 @@
 #' @export
 #' @autoglobal
 get_income_statement <- function(
-    ledger_file,
-    min_date,
-    max_date,
-    language = "fr") {
+  ledger_file,
+  min_date,
+  max_date,
+  language = "fr"
+) {
   income <- get_category_total(
     ledger_file = ledger_file,
     min_date = min_date,

@@ -29,15 +29,16 @@
 #'
 #' @keywords internal
 #' @autoglobal
-get_ledger <- function(ledger_file = NULL,
-                       import_csv = FALSE) {
+get_ledger <- function(ledger_file = NULL, import_csv = FALSE) {
   if (is.null(ledger_file)) {
+    # fmt: skip
     tribble(
       ~date, ~id, ~counterpart_id, ~description, ~debit_account, ~credit_account, ~amount,
       NA_Date_, NA_integer_, NA_integer_, NA_character_, NA_integer_, NA_integer_, NA_real_
     )
   } else if (import_csv) {
-    read_csv(ledger_file,
+    read_csv(
+      ledger_file,
       col_types = cols(
         date = col_date(),
         description = col_character(),
@@ -106,17 +107,19 @@ get_ledger <- function(ledger_file = NULL,
 #'
 #' @export
 #' @autoglobal
-add_ledger_entry <- function(date,
-                             language = "en",
-                             counterpart_id = NULL,
-                             debit_account = NULL,
-                             credit_account = NULL,
-                             descr = NULL,
-                             amount,
-                             import_csv = FALSE,
-                             filename_to_import = NULL,
-                             export_csv = FALSE,
-                             filename_to_export = NULL) {
+add_ledger_entry <- function(
+  date,
+  language = "en",
+  counterpart_id = NULL,
+  debit_account = NULL,
+  credit_account = NULL,
+  descr = NULL,
+  amount,
+  import_csv = FALSE,
+  filename_to_import = NULL,
+  export_csv = FALSE,
+  filename_to_export = NULL
+) {
   if (is.character(date)) {
     date <- lubridate::as_date(date)
   }

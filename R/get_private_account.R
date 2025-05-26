@@ -42,10 +42,11 @@
 #' @export
 #' @autoglobal
 get_private_account <- function(
-    ledger_file,
-    min_date,
-    max_date,
-    language = "fr") {
+  ledger_file,
+  min_date,
+  max_date,
+  language = "fr"
+) {
   my_ledger <- read_ledger_csv(ledger_file)
   selected_ledger <- select_ledger_language(my_ledger, language)
 
@@ -60,8 +61,16 @@ get_private_account <- function(
   abs(operating_result) |>
     mutate(
       account_number = 2850L,
-      debit_account = if_else(operating_result < 0, account_number, NA_integer_),
-      credit_account = if_else(operating_result >= 0, account_number, NA_integer_)
+      debit_account = if_else(
+        operating_result < 0,
+        account_number,
+        NA_integer_
+      ),
+      credit_account = if_else(
+        operating_result >= 0,
+        account_number,
+        NA_integer_
+      )
     ) |>
     left_join(selected_ledger, by = join_by(account_number)) |>
     aggregate_accounts()
