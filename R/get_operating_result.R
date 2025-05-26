@@ -35,18 +35,20 @@
 #' @export
 #' @autoglobal
 get_operating_result <- function(
-    ledger_file,
-    min_date,
-    max_date,
-    language = "fr") {
+  ledger_file,
+  min_date,
+  max_date,
+  language = "fr"
+) {
   get_income_statement(
     ledger_file = ledger_file,
     min_date = min_date,
     max_date = max_date,
-    language = language,
+    language = language
   ) |>
     mutate(
-      sum_amounts = if_else(account_base_category == 3L,
+      sum_amounts = if_else(
+        account_base_category == 3L,
         sum_amounts,
         -sum_amounts
       )

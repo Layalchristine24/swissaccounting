@@ -58,9 +58,10 @@
 #'
 #' @autoglobal
 consolidate_accounting_plans <- function(
-    my_accounts_model_en = accounts_model_en,
-    my_accounts_model_fr = accounts_model_fr,
-    my_accounts_model_de = accounts_model_de) {
+  my_accounts_model_en = accounts_model_en,
+  my_accounts_model_fr = accounts_model_fr,
+  my_accounts_model_de = accounts_model_de
+) {
   my_accounts_model_en |>
     rename(
       account_type_en = account_type,

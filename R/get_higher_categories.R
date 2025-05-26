@@ -34,7 +34,9 @@
 get_account_base_category <- function(my_ledger) {
   my_ledger |>
     mutate(
-      account_base_category = as.integer(coalesce(debit_account, credit_account) %/% 1e3)
+      account_base_category = as.integer(
+        coalesce(debit_account, credit_account) %/% 1e3
+      )
     )
 }
 
@@ -73,7 +75,9 @@ get_account_base_category <- function(my_ledger) {
 get_high_category <- function(my_ledger) {
   my_ledger |>
     mutate(
-      high_category = as.integer(coalesce(debit_account, credit_account) %/% 1e2)
+      high_category = as.integer(
+        coalesce(debit_account, credit_account) %/% 1e2
+      )
     )
 }
 
@@ -112,6 +116,8 @@ get_high_category <- function(my_ledger) {
 get_intermediate_category <- function(my_ledger) {
   my_ledger |>
     mutate(
-      intermediate_category = as.integer(coalesce(debit_account, credit_account) %/% 1e1)
+      intermediate_category = as.integer(
+        coalesce(debit_account, credit_account) %/% 1e1
+      )
     )
 }

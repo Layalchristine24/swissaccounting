@@ -180,11 +180,14 @@ select_ledger_language <- function(ledger_data, language) {
 #'
 #' @autoglobal
 get_account_category <- function(
-    ledger_data,
-    target_language_ledger,
-    account_category_name = NULL) {
+  ledger_data,
+  target_language_ledger,
+  account_category_name = NULL
+) {
   if (is.null(account_category_name)) {
-    cli_abort("Balance category is required. Please provide a balance category, either 'assets', 'liabilities', 'income' or 'expense'.")
+    cli_abort(
+      "Balance category is required. Please provide a balance category, either 'assets', 'liabilities', 'income' or 'expense'."
+    )
   }
   account_category_name_integer <-
     if (account_category_name == "assets") {
@@ -196,7 +199,9 @@ get_account_category <- function(
     } else if (account_category_name == "expense") {
       c(4L, 5L, 6L)
     } else {
-      cli_abort("Balance category is required. Please provide a balance category, either 'assets', 'liabilities', 'income' or 'expense'.")
+      cli_abort(
+        "Balance category is required. Please provide a balance category, either 'assets', 'liabilities', 'income' or 'expense'."
+      )
     }
 
   sum_accounts(ledger_data) |>
@@ -266,7 +271,13 @@ get_account_category <- function(
 #' \code{\link{get_account_category}} for balance calculation
 #'
 #' @autoglobal
-get_category_total <- function(ledger_file, min_date, max_date, language, account_category_name) {
+get_category_total <- function(
+  ledger_file,
+  min_date,
+  max_date,
+  language,
+  account_category_name
+) {
   my_ledger <- read_ledger_csv(ledger_file)
 
   my_ledger_filtered <- filter_ledger_date_range(

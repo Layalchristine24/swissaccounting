@@ -66,10 +66,11 @@
 #' @export
 #' @autoglobal
 get_balance_accounts <- function(
-    ledger_file,
-    min_date,
-    max_date,
-    language = "fr") {
+  ledger_file,
+  min_date,
+  max_date,
+  language = "fr"
+) {
   assets <- get_category_total(
     ledger_file = ledger_file,
     min_date = min_date,
@@ -114,8 +115,11 @@ get_balance_accounts <- function(
     reframe(
       sum_amounts = sum(sum_amounts, na.rm = TRUE),
       .by = c(
-        "account_base_category", "high_category", "intermediate_category",
-        "account_number", "account_description"
+        "account_base_category",
+        "high_category",
+        "intermediate_category",
+        "account_number",
+        "account_description"
       )
     ) |>
     filter(sum_amounts != 0)
