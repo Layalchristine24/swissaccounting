@@ -19,6 +19,8 @@ Imports:
     tidyr,
     tidyselect
 Suggests: 
+    gt,
+    knitr,
     roxyglobals
 Config/roxyglobals/filename: globals.R
 Config/roxyglobals/unique: FALSE
