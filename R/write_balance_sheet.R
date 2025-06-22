@@ -287,6 +287,10 @@ write_balance_sheet <- function(
         gt::tab_header(
             title = paste(trans$balance_sheet, max_date)
         ) |>
+        gt::tab_style(
+            style = gt::cell_text(weight = "bold"),
+            locations = gt::cells_title(groups = "title")
+        ) |>
         gt::cols_label(
             Actif = trans$assets,
             Montant_Actif = "",
