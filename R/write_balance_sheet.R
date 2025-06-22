@@ -225,6 +225,37 @@ write_balance_sheet <- function(
         )
     )
 
+    # Function to make all translation elements bold
+    make_translations_bold <- function(gt_table, translations_list) {
+        # Get all values from the translations list
+        trans_values <- unlist(translations_list)
+
+        # For each column that might contain translations
+        for (col in c("Actif", "Passif")) {
+            # Find rows where the column value matches any translation value
+            for (i in seq_along(trans_values)) {
+                # Find rows where this specific translation appears
+                matching_rows <- which(
+                    balance_sheet_table[[col]] == trans_values[i]
+                )
+
+                if (length(matching_rows) > 0) {
+                    # Apply bold style to these cells
+                    gt_table <- gt_table |>
+                        gt::tab_style(
+                            style = gt::cell_text(weight = "bold"),
+                            locations = gt::cells_body(
+                                columns = col,
+                                rows = matching_rows
+                            )
+                        )
+                }
+            }
+        }
+
+        return(gt_table)
+    }
+
     balance_sheet_table |>
         gt::gt() |>
         gt::tab_header(
@@ -247,6 +278,9 @@ write_balance_sheet <- function(
             style = gt::cell_text(weight = "bold"),
             locations = gt::cells_column_labels()
         ) |>
+        # Make translations bold
+        make_translations_bold(trans) |>
+        # Add other styling
         gt::tab_options(
             table.width = "125%",
             table.align = "left"
