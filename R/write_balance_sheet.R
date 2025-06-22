@@ -225,31 +225,57 @@ write_balance_sheet <- function(
         )
     )
 
-    # Function to make all translation elements bold
+    # Function to make all translation elements bold and also bold elements from specific tibbles
     make_translations_bold <- function(gt_table, translations_list) {
         # Get all values from the translations list
         trans_values <- unlist(translations_list)
 
-        # For each column that might contain translations
-        for (col in c("Actif", "Passif")) {
-            # Find rows where the column value matches any translation value
-            for (i in seq_along(trans_values)) {
-                # Find rows where this specific translation appears
-                matching_rows <- which(
-                    balance_sheet_table[[col]] == trans_values[i]
-                )
+        # Get all column names from the table
+        table_cols <- names(balance_sheet_table)
 
-                if (length(matching_rows) > 0) {
-                    # Apply bold style to these cells
-                    gt_table <- gt_table |>
-                        gt::tab_style(
-                            style = gt::cell_text(weight = "bold"),
-                            locations = gt::cells_body(
-                                columns = col,
-                                rows = matching_rows
-                            )
+        # For each column in the table
+        for (col in table_cols) {
+            # Skip amount columns as they don't contain text to bold
+            if (grepl("Montant", col)) {
+                next
+            }
+
+            # 1. Make all translation values bold
+            for (trans_val in trans_values) {
+                gt_table <- gt_table |>
+                    gt::tab_style(
+                        style = gt::cell_text(weight = "bold"),
+                        locations = gt::cells_body(
+                            columns = col,
+                            rows = balance_sheet_table[[col]] == trans_val
                         )
-                }
+                    )
+            }
+
+            # 2. Make all elements from balance_sheet_data_high bold
+            high_values <- balance_sheet_data_high$high_category_description
+            for (high_val in high_values) {
+                gt_table <- gt_table |>
+                    gt::tab_style(
+                        style = gt::cell_text(weight = "bold"),
+                        locations = gt::cells_body(
+                            columns = col,
+                            rows = balance_sheet_table[[col]] == high_val
+                        )
+                    )
+            }
+
+            # 3. Make all elements from balance_sheet_data_base bold
+            base_values <- balance_sheet_data_base$account_base_category_description
+            for (base_val in base_values) {
+                gt_table <- gt_table |>
+                    gt::tab_style(
+                        style = gt::cell_text(weight = "bold"),
+                        locations = gt::cells_body(
+                            columns = col,
+                            rows = balance_sheet_table[[col]] == base_val
+                        )
+                    )
             }
         }
 
