@@ -5,7 +5,7 @@ write_balance_sheet <- function(
         "ledger",
         "sample-ledger.csv"
     ),
-    language = "fr",
+    language = "en",
     min_date = lubridate::floor_date(
         Sys.Date() - lubridate::years(1),
         "year"
@@ -20,6 +20,14 @@ write_balance_sheet <- function(
     stopifnot(is.Date(max_date))
     stopifnot(file.exists(ledger_file))
     stopifnot(language %in% c("en", "fr", "de"))
+
+    accounts_tmpl <-
+        switch(
+            language,
+            "en" = accounts_model_en,
+            "fr" = accounts_model_fr,
+            "de" = accounts_model_de
+        )
 
     translations <- list(
         en = list(
@@ -61,7 +69,7 @@ write_balance_sheet <- function(
     balance_sheet_data_base <-
         balance_accounts$balance_accounts |>
         left_join(
-            accounts_model_fr |>
+            accounts_tmpl |>
                 select(
                     account_base_category = account_number,
                     account_base_category_description = account_description
@@ -90,7 +98,7 @@ write_balance_sheet <- function(
             .by = "high_category"
         ) |>
         left_join(
-            accounts_model_fr |>
+            accounts_tmpl |>
                 select(
                     high_category = account_number,
                     high_category_description = account_description
@@ -115,7 +123,7 @@ write_balance_sheet <- function(
             .by = "intermediate_category"
         ) |>
         left_join(
-            accounts_model_fr |>
+            accounts_tmpl |>
                 select(
                     intermediate_category = account_number,
                     intermediate_category_description = account_description
