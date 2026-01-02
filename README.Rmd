@@ -231,3 +231,312 @@ balance_docs$balance_accounts
 
 balance_docs$total
 ```
+
+## Year-End Closing and Opening Balances
+
+### Why Year-End Closing is Needed
+
+When working with multi-year accounting data, you need a formal mechanism to:
+1. **Close profit and loss accounts** at fiscal year-end
+2. **Transfer the net result** to equity accounts
+3. **Create opening balances** for the new fiscal year
+4. **Enable accurate multi-year queries**
+
+Without this mechanism, querying just one fiscal year (e.g., 2025-01-01 to 2025-12-31) will miss the opening balances from the previous year, resulting in incorrect financial statements.
+
+### Swiss Accounting Standards Compliance
+
+The swissaccounting package follows **Swiss GAAP** (Generally Accepted Accounting Principles) for year-end closing:
+
+- **Account 9200**: Current Year Profit/Loss - standard Swiss account
+- **Account 9100**: Opening Balance - custom extension (permitted by Swiss standards)
+- **Account 2891**: Balance Sheet Profit/Loss - intermediate transfer account
+- **Double-entry bookkeeping**: All entries maintain the fundamental accounting equation
+
+### The Problem Illustrated
+
+**Scenario**: You have transactions from 2024 and 2025 in your ledger.
+
+**Without closing/opening entries**:
+```r
+# Query 2024 only (2024-01-01 to 2024-12-31)
+get_balance_accounts(ledger_file, "2024-01-01", "2024-12-31", "en")
+# Result: 256.45 CHF ✓
+
+# Query 2025 only (2025-01-01 to 2025-12-31)
+get_balance_accounts(ledger_file, "2025-01-01", "2025-12-31", "en")
+# Result: 181.55 CHF ✗ (WRONG - missing 256.45 opening balance)
+
+# Query both years (2024-01-01 to 2025-12-31)
+get_balance_accounts(ledger_file, "2024-01-01", "2025-12-31", "en")
+# Result: 438.00 CHF ✓
+```
+
+**With closing/opening entries**:
+```r
+# After running close_fiscal_year() and create_opening_balances()
+
+# Query 2025 only (2025-01-01 to 2025-12-31)
+get_balance_accounts(ledger_file, "2025-01-01", "2025-12-31", "en")
+# Result: 438.00 CHF ✓ (CORRECT - includes 256.45 opening + 181.55 from 2025)
+```
+
+### Step-by-Step Workflow
+
+#### 1. Close the Fiscal Year
+
+At the end of your fiscal year (e.g., 2024-12-31), run:
+
+```r
+library(swissaccounting)
+
+ledger_file <- "path/to/your/ledger.csv"
+
+# Close fiscal year 2024
+close_fiscal_year(
+  ledger_file = ledger_file,
+  closing_date = "2024-12-31",
+  language = "en"  # Options: "en", "fr", "de"
+)
+```
+
+**What this does**:
+1. Closes all income accounts (category 3) to account 9200
+2. Closes all expense accounts (categories 4-8) to account 9200
+3. Transfers account 9200 to account 2891 (Balance Sheet Profit/Loss)
+4. Transfers account 2891 to account 2850 (Private Account) or your specified equity account
+5. Creates permanent ledger entries dated 2024-12-31 with account_type = "Closing"
+
+**Parameters**:
+- `ledger_file`: Path to your ledger CSV file
+- `closing_date`: Date of fiscal year-end (e.g., "2024-12-31")
+- `language`: Language for account descriptions ("en", "fr", or "de") - auto-detected if not specified
+- `transfer_to_account`: Equity account for final transfer (default: 2850L)
+- `overwrite`: Allow overwriting existing closing entries (default: FALSE)
+
+#### 2. Create Opening Balances
+
+At the start of your new fiscal year (e.g., 2025-01-01), run:
+
+```r
+# Create opening balances for 2025
+create_opening_balances(
+  ledger_file = ledger_file,
+  opening_date = "2025-01-01",
+  language = "en"  # Options: "en", "fr", "de"
+)
+```
+
+**What this does**:
+1. Reads all balance sheet accounts (categories 1-2) from the previous closing date
+2. Creates opening balance entries dated 2025-01-01
+3. Uses account 9100 (Opening Balance) as the counterpart account
+4. Maintains original account types (Asset/Liability) for proper balance calculation
+
+**Parameters**:
+- `ledger_file`: Path to your ledger CSV file
+- `opening_date`: Date of new fiscal year start (e.g., "2025-01-01")
+- `previous_closing_date`: Date of previous fiscal year-end (auto-calculated as opening_date - 1 day if not specified)
+- `language`: Language for account descriptions ("en", "fr", or "de") - auto-detected if not specified
+- `overwrite`: Allow overwriting existing opening entries (default: FALSE)
+
+#### 3. Generate Financial Statements
+
+After closing and opening entries are created, generate statements for any period:
+
+```r
+# Balance sheet for 2025 only (now includes opening balances)
+balance_2025 <- get_balance_accounts(
+  ledger_file = ledger_file,
+  min_date = "2025-01-01",
+  max_date = "2025-12-31",
+  language = "en"
+)
+
+# Income statement for 2025
+income_2025 <- get_income_statement(
+  ledger_file = ledger_file,
+  min_date = "2025-01-01",
+  max_date = "2025-12-31",
+  language = "en"
+)
+
+# Operating result for 2025
+operating_2025 <- get_operating_result(
+  ledger_file = ledger_file,
+  min_date = "2025-01-01",
+  max_date = "2025-12-31",
+  language = "en"
+)
+```
+
+### Complete Example
+
+```r
+library(swissaccounting)
+
+ledger_file <- "documents/ledger/my-ledger.csv"
+
+# ===================================
+# YEAR-END 2024
+# ===================================
+
+# Step 1: Close fiscal year 2024
+close_fiscal_year(
+  ledger_file = ledger_file,
+  closing_date = "2024-12-31",
+  language = "en"
+)
+
+# Step 2: Create opening balances for 2025
+create_opening_balances(
+  ledger_file = ledger_file,
+  opening_date = "2025-01-01",
+  language = "en"
+)
+
+# ===================================
+# VERIFY RESULTS
+# ===================================
+
+# Before closing/opening:
+# Query 2025 only → 181.55 CHF (missing opening balance)
+
+# After closing/opening:
+# Query 2025 only → 438.00 CHF ✓ (includes 256.45 opening + 181.55 from 2025)
+
+balance_2025 <- get_balance_accounts(
+  ledger_file = ledger_file,
+  min_date = "2025-01-01",
+  max_date = "2025-12-31",
+  language = "en"
+)
+
+print(balance_2025$total)
+# Expected: 438.00 CHF
+```
+
+### Multilingual Support
+
+All functions support English, French, and German:
+
+```r
+# French
+close_fiscal_year(ledger_file, "2024-12-31", language = "fr")
+# Account descriptions will be in French
+
+# German
+close_fiscal_year(ledger_file, "2024-12-31", language = "de")
+# Account descriptions will be in German
+
+# English
+close_fiscal_year(ledger_file, "2024-12-31", language = "en")
+# Account descriptions will be in English
+```
+
+If you don't specify a language, the functions will automatically detect the language used in your existing ledger.
+
+### Troubleshooting
+
+#### Duplicate Closing Entries
+
+**Error**: "Closing entries already exist for 2024-12-31. Use overwrite = TRUE to replace."
+
+**Solution**: You've already run `close_fiscal_year()` for this date. Either:
+- Set `overwrite = TRUE` to recreate the entries
+- Skip this step if closing was already done correctly
+
+```r
+# Overwrite existing closing
+close_fiscal_year(ledger_file, "2024-12-31", language = "en", overwrite = TRUE)
+```
+
+#### Duplicate Opening Entries
+
+**Error**: "Opening entries already exist for 2025-01-01. Use overwrite = TRUE to replace."
+
+**Solution**: Similar to closing entries, set `overwrite = TRUE` or skip if already done.
+
+```r
+# Overwrite existing opening
+create_opening_balances(ledger_file, "2025-01-01", language = "en", overwrite = TRUE)
+```
+
+#### Account 9100 Not Found
+
+**Error**: "Account 9100 (Opening Balance) not found in account model."
+
+**Solution**: Update your swissaccounting package to the latest version. Account 9100 was added in the latest version.
+
+```r
+# Update package
+pak::pak("Layalchristine24/swissaccounting")
+```
+
+#### Incorrect Balance After Opening
+
+**Issue**: The 2025 balance doesn't match expectations after creating opening entries.
+
+**Solution**: Verify that:
+1. You ran `close_fiscal_year()` for 2024-12-31 first
+2. You ran `create_opening_balances()` for 2025-01-01 second
+3. There are no duplicate entries in your ledger
+4. The closing date and opening date are sequential (2024-12-31 → 2025-01-01)
+
+### Important Notes
+
+1. **Run once per fiscal year**: Closing and opening functions create permanent ledger entries. Don't run them multiple times unless you use `overwrite = TRUE`.
+
+2. **ID management**: The functions automatically assign the next available ID to new entries. Make sure your ledger IDs are sequential.
+
+3. **Filtered from balance sheets**: Closing entries (account_type = "Closing") are automatically filtered out from balance sheet calculations.
+
+4. **Double-entry integrity**: All entries maintain double-entry bookkeeping. Each transaction has a debit and credit entry with the same counterpart_id.
+
+5. **Backup your ledger**: Before running closing/opening functions on production data, create a backup of your ledger CSV file.
+
+### Advanced Usage
+
+#### Custom Equity Account
+
+Transfer the year-end result to a different equity account:
+
+```r
+close_fiscal_year(
+  ledger_file = ledger_file,
+  closing_date = "2024-12-31",
+  language = "en",
+  transfer_to_account = 2800L  # Use account 2800 instead of 2850
+)
+```
+
+#### Specify Previous Closing Date
+
+Explicitly set the previous closing date for opening balances:
+
+```r
+create_opening_balances(
+  ledger_file = ledger_file,
+  opening_date = "2025-01-01",
+  previous_closing_date = "2024-12-31",
+  language = "en"
+)
+```
+
+#### Check Before Running
+
+Verify balances before creating closing/opening entries:
+
+```r
+# Check 2024 balance before closing
+balance_2024 <- get_balance_accounts(ledger_file, "2024-01-01", "2024-12-31", "en")
+print(balance_2024$total)
+
+# Run closing
+close_fiscal_year(ledger_file, "2024-12-31", "en")
+
+# Verify closing worked correctly
+income_2024 <- get_income_statement(ledger_file, "2024-01-01", "2024-12-31", "en")
+print(income_2024)  # Should now show P&L accounts are closed
+```
+

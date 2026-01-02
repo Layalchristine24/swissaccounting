@@ -193,6 +193,9 @@ accounts_model_fr <- tribble(
   8510, "Produits extraordinaires, exceptionnels ou hors période", "Produit",
   8900, "Impôts directs", "Charge",
   9, "Clôture", "Clôture",
+  91, "Ouverture", "Clôture",
+  9100, "Bilan d'ouverture", "Clôture",
+  92, "Bénéfice / perte", "Clôture",
   9200, "Bénéfice / perte de l'exercice", "Produit/Charge"
 ) |>
   mutate(account_number = as.integer(account_number))
@@ -393,6 +396,9 @@ accounts_model_en <- tribble(
   8510, "Extraordinary, Exceptional, or Out-of-Period Income", "Income",
   8900, "Direct Taxes", "Expense",
   9, "Closing", "Closing",
+  91, "Opening", "Closing",
+  9100, "Opening Balance", "Closing",
+  92, "Profit / Loss", "Closing",
   9200, "Current Year's Profit / Loss", "Income/Expense"
 ) |>
   mutate(account_number = as.integer(account_number))
@@ -593,6 +599,9 @@ accounts_model_de <- tribble(
   8510, "Außerordentliche Einnahmen, Einnahmen oder außerhalb des Zeitraums", "Einnahmen",
   8900, "Direkte Steuern", "Ausgabe",
   9, "Abschluss", "Abschluss",
+  91, "Eröffnung", "Abschluss",
+  9100, "Eröffnungsbilanz", "Abschluss",
+  92, "Gewinn / Verlust", "Abschluss",
   9200, "Gewinn / Verlust des Geschäftsjahres", "Einnahmen/Ausgabe"
 ) |>
   mutate(account_number = as.integer(account_number))
