@@ -66,7 +66,10 @@ get_ledger <- function(ledger_file = NULL, import_csv = FALSE) {
 #' @param date Date,character Date of the ledger entry. If character, will be converted to Date.
 #' @param language character Language code for account descriptions. One of "en", "fr", "de".
 #'   Defaults to "en".
-#' @param counterpart_id integer Optional. ID of the counterpart entry for double-entry bookkeeping.
+#' @param counterpart_id integer Optional. ID to link related ledger entries together.
+#'   If NULL and import_csv is FALSE, defaults to the entry's own ID (first entry in a transaction).
+#'   If NULL and import_csv is TRUE, automatically links to the previous entry's ID (subsequent entries).
+#'   For multi-entry transactions (>2 entries), you can explicitly provide the first entry's ID.
 #' @param debit_account integer Optional. Account number for debit entry.
 #' @param credit_account integer Optional. Account number for credit entry.
 #' @param descr character Description of the transaction.
@@ -145,8 +148,22 @@ add_ledger_entry <- function(
     accounts_model_de
   }
 
+  # Determine next ID
+  next_id <- if_else(is.na(max(last_ledger$id)), 1L, max(last_ledger$id) + 1L)
+
+  # Automatic counterpart_id assignment logic
   .counterpart_id <- if (is.null(counterpart_id)) {
-    NA_integer_
+    if (import_csv && !is.null(filename_to_import)) {
+      # For subsequent entries in a transaction: link to the previous entry
+      if (nrow(last_ledger) > 0) {
+        max(last_ledger$id, na.rm = TRUE)
+      } else {
+        next_id  # Empty ledger, first entry ever
+      }
+    } else {
+      # For first entry in a transaction: self-link
+      next_id
+    }
   } else {
     counterpart_id
   }
@@ -156,15 +173,14 @@ add_ledger_entry <- function(
   ledger_raw <-
     tibble(
       date = date,
-      id = if_else(is.na(max(last_ledger$id)), 1L, max(last_ledger$id) + 1L),
+      id = next_id,
       counterpart_id = .counterpart_id,
       description = descr,
       debit_account = debit_account,
       credit_account = credit_account,
       amount = amount
     ) |>
-    drop_na(amount) |>
-    mutate(counterpart_id = if_else(is.na(.counterpart_id), id, counterpart_id))
+    drop_na(amount)
 
   new_ledger <- if (is.null(filename_to_import)) {
     if (!is.null(debit_account)) {

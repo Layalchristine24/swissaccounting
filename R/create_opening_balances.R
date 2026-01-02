@@ -104,12 +104,8 @@ create_opening_balances <- function(ledger_file,
     "Closing"
   }
 
-  # Get next available ID
-  next_id <- get_next_ledger_id(ledger_file)
-
   # Initialize entries list
   opening_entries <- list()
-  current_id <- next_id
 
   # Create opening entries for each balance sheet account
   for (i in seq_len(nrow(bs_balances))) {
@@ -127,8 +123,6 @@ create_opening_balances <- function(ledger_file,
         # Entry 1: Debit the asset account
         opening_entries[[length(opening_entries) + 1]] <- tibble(
           date = opening_date_parsed,
-          id = current_id,
-          counterpart_id = current_id,
           description = paste(opening_desc_prefix, account_desc),
           debit_account = account_num,
           credit_account = NA_integer_,
@@ -140,8 +134,6 @@ create_opening_balances <- function(ledger_file,
         # Entry 2: Credit account 9100
         opening_entries[[length(opening_entries) + 1]] <- tibble(
           date = opening_date_parsed,
-          id = current_id + 1L,
-          counterpart_id = current_id,
           description = opening_desc,
           debit_account = NA_integer_,
           credit_account = 9100L,
@@ -154,8 +146,6 @@ create_opening_balances <- function(ledger_file,
         # Entry 1: Debit account 9100
         opening_entries[[length(opening_entries) + 1]] <- tibble(
           date = opening_date_parsed,
-          id = current_id,
-          counterpart_id = current_id,
           description = opening_desc,
           debit_account = 9100L,
           credit_account = NA_integer_,
@@ -167,8 +157,6 @@ create_opening_balances <- function(ledger_file,
         # Entry 2: Credit the asset account
         opening_entries[[length(opening_entries) + 1]] <- tibble(
           date = opening_date_parsed,
-          id = current_id + 1L,
-          counterpart_id = current_id,
           description = paste(opening_desc_prefix, account_desc),
           debit_account = NA_integer_,
           credit_account = account_num,
@@ -184,8 +172,6 @@ create_opening_balances <- function(ledger_file,
         # Entry 1: Debit account 9100
         opening_entries[[length(opening_entries) + 1]] <- tibble(
           date = opening_date_parsed,
-          id = current_id,
-          counterpart_id = current_id,
           description = opening_desc,
           debit_account = 9100L,
           credit_account = NA_integer_,
@@ -197,8 +183,6 @@ create_opening_balances <- function(ledger_file,
         # Entry 2: Credit the liability account
         opening_entries[[length(opening_entries) + 1]] <- tibble(
           date = opening_date_parsed,
-          id = current_id + 1L,
-          counterpart_id = current_id,
           description = paste(opening_desc_prefix, account_desc),
           debit_account = NA_integer_,
           credit_account = account_num,
@@ -211,8 +195,6 @@ create_opening_balances <- function(ledger_file,
         # Entry 1: Debit the liability account
         opening_entries[[length(opening_entries) + 1]] <- tibble(
           date = opening_date_parsed,
-          id = current_id,
-          counterpart_id = current_id,
           description = paste(opening_desc_prefix, account_desc),
           debit_account = account_num,
           credit_account = NA_integer_,
@@ -224,8 +206,6 @@ create_opening_balances <- function(ledger_file,
         # Entry 2: Credit account 9100
         opening_entries[[length(opening_entries) + 1]] <- tibble(
           date = opening_date_parsed,
-          id = current_id + 1L,
-          counterpart_id = current_id,
           description = opening_desc,
           debit_account = NA_integer_,
           credit_account = 9100L,
@@ -235,8 +215,6 @@ create_opening_balances <- function(ledger_file,
         )
       }
     }
-
-    current_id <- current_id + 2L
   }
 
   # Combine all entries

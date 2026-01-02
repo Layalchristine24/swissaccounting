@@ -106,12 +106,8 @@ close_fiscal_year <- function(ledger_file,
     "Transfer to Private Account"
   }
 
-  # Get next available ID
-  next_id <- get_next_ledger_id(ledger_file)
-
   # Initialize entries list
   closing_entries <- list()
-  current_id <- next_id
 
   # Create closing entries for each P&L account
   for (i in seq_len(nrow(pl_balances))) {
@@ -128,8 +124,6 @@ close_fiscal_year <- function(ledger_file,
       # Entry 1: Debit the income account
       closing_entries[[length(closing_entries) + 1]] <- tibble(
         date = closing_date_parsed,
-        id = current_id,
-        counterpart_id = current_id,
         description = paste(closing_desc_prefix, account_desc),
         debit_account = account_num,
         credit_account = NA_integer_,
@@ -141,8 +135,6 @@ close_fiscal_year <- function(ledger_file,
       # Entry 2: Credit account 9200
       closing_entries[[length(closing_entries) + 1]] <- tibble(
         date = closing_date_parsed,
-        id = current_id + 1L,
-        counterpart_id = current_id,
         description = paste(closing_desc_prefix, account_desc),
         debit_account = NA_integer_,
         credit_account = 9200L,
@@ -155,8 +147,6 @@ close_fiscal_year <- function(ledger_file,
       # Entry 1: Debit account 9200
       closing_entries[[length(closing_entries) + 1]] <- tibble(
         date = closing_date_parsed,
-        id = current_id,
-        counterpart_id = current_id,
         description = paste(closing_desc_prefix, account_desc),
         debit_account = 9200L,
         credit_account = NA_integer_,
@@ -168,8 +158,6 @@ close_fiscal_year <- function(ledger_file,
       # Entry 2: Credit the expense account
       closing_entries[[length(closing_entries) + 1]] <- tibble(
         date = closing_date_parsed,
-        id = current_id + 1L,
-        counterpart_id = current_id,
         description = paste(closing_desc_prefix, account_desc),
         debit_account = NA_integer_,
         credit_account = account_num,
@@ -178,8 +166,6 @@ close_fiscal_year <- function(ledger_file,
         account_type = closing_type
       )
     }
-
-    current_id <- current_id + 2L
   }
 
   # Calculate net P&L (sum of all balances)
@@ -199,8 +185,6 @@ close_fiscal_year <- function(ledger_file,
     # Profit: DR 9200, CR 2891
     closing_entries[[length(closing_entries) + 1]] <- tibble(
       date = closing_date_parsed,
-      id = current_id,
-      counterpart_id = current_id,
       description = transfer_desc,
       debit_account = 9200L,
       credit_account = NA_integer_,
@@ -211,8 +195,6 @@ close_fiscal_year <- function(ledger_file,
 
     closing_entries[[length(closing_entries) + 1]] <- tibble(
       date = closing_date_parsed,
-      id = current_id + 1L,
-      counterpart_id = current_id,
       description = transfer_desc,
       debit_account = NA_integer_,
       credit_account = 2891L,
@@ -224,8 +206,6 @@ close_fiscal_year <- function(ledger_file,
     # Loss: DR 2891, CR 9200
     closing_entries[[length(closing_entries) + 1]] <- tibble(
       date = closing_date_parsed,
-      id = current_id,
-      counterpart_id = current_id,
       description = transfer_desc,
       debit_account = 2891L,
       credit_account = NA_integer_,
@@ -236,8 +216,6 @@ close_fiscal_year <- function(ledger_file,
 
     closing_entries[[length(closing_entries) + 1]] <- tibble(
       date = closing_date_parsed,
-      id = current_id + 1L,
-      counterpart_id = current_id,
       description = transfer_desc,
       debit_account = NA_integer_,
       credit_account = 9200L,
@@ -246,8 +224,6 @@ close_fiscal_year <- function(ledger_file,
       account_type = closing_type
     )
   }
-
-  current_id <- current_id + 2L
 
   # Get transfer_to_account description
   transfer_account <- account_model |>
@@ -262,8 +238,6 @@ close_fiscal_year <- function(ledger_file,
     # Profit: DR 2891, CR 2850
     closing_entries[[length(closing_entries) + 1]] <- tibble(
       date = closing_date_parsed,
-      id = current_id,
-      counterpart_id = current_id,
       description = transfer_to_private_desc,
       debit_account = 2891L,
       credit_account = NA_integer_,
@@ -274,8 +248,6 @@ close_fiscal_year <- function(ledger_file,
 
     closing_entries[[length(closing_entries) + 1]] <- tibble(
       date = closing_date_parsed,
-      id = current_id + 1L,
-      counterpart_id = current_id,
       description = transfer_to_private_desc,
       debit_account = NA_integer_,
       credit_account = transfer_to_account,
@@ -287,8 +259,6 @@ close_fiscal_year <- function(ledger_file,
     # Loss: DR 2850, CR 2891
     closing_entries[[length(closing_entries) + 1]] <- tibble(
       date = closing_date_parsed,
-      id = current_id,
-      counterpart_id = current_id,
       description = transfer_to_private_desc,
       debit_account = transfer_to_account,
       credit_account = NA_integer_,
@@ -299,8 +269,6 @@ close_fiscal_year <- function(ledger_file,
 
     closing_entries[[length(closing_entries) + 1]] <- tibble(
       date = closing_date_parsed,
-      id = current_id + 1L,
-      counterpart_id = current_id,
       description = transfer_to_private_desc,
       debit_account = NA_integer_,
       credit_account = 2891L,

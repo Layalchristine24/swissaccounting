@@ -55,11 +55,12 @@ get_next_ledger_id <- function(ledger_file) {
 #'
 #' Internal helper function to append new entries to the ledger CSV file.
 #' Automatically detects the language used in the existing ledger.
+#' Also handles automatic counterpart_id assignment for batch entries.
 #'
 #' @param ledger_file Path to the ledger CSV file
-#' @param new_entries Tibble with new entries to append (must have all required columns:
-#'   date, id, counterpart_id, description, debit_account, credit_account,
-#'   amount, account_description, account_type)
+#' @param new_entries Tibble with new entries to append. Can include:
+#'   - Entries with explicit counterpart_id (will be used as-is)
+#'   - Entries without id/counterpart_id columns (will be auto-assigned sequentially)
 #'
 #' @return Updated ledger tibble (invisibly)
 #' @keywords internal
@@ -73,6 +74,25 @@ append_ledger_entries <- function(ledger_file, new_entries) {
 
     # Verify new entries use the same language by checking account types
     # (The calling function should have already set the correct language)
+  }
+
+  # Check if new_entries have id/counterpart_id columns
+  # If not, assign them automatically
+  if (!"id" %in% colnames(new_entries)) {
+    # Get next available ID
+    next_id <- get_next_ledger_id(ledger_file)
+
+    # Assign sequential IDs
+    new_entries <- new_entries |>
+      mutate(id = seq(from = next_id, length.out = n()))
+  }
+
+  if (!"counterpart_id" %in% colnames(new_entries)) {
+    # Assign counterpart_ids: first entry of each pair links to itself
+    # Subsequent entries link to the previous entry
+    # Assumes entries come in pairs
+    new_entries <- new_entries |>
+      mutate(counterpart_id = if_else(row_number() %% 2 == 1, id, lag(id)))
   }
 
   updated_ledger <- bind_rows(existing_ledger, new_entries)
