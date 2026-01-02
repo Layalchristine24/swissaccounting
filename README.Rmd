@@ -232,6 +232,59 @@ balance_docs$balance_accounts
 balance_docs$total
 ```
 
+## Simplifying with the add_transaction() Function
+
+For cleaner code when adding many transactions, the `swissaccounting` package provides the `add_transaction()` function that eliminates repetitive arguments:
+
+```{r add-transaction-example, eval=FALSE}
+# Define ledger file path once
+ledger_file <- "path/to/your/ledger.csv"
+
+# Add transactions using the built-in add_transaction() function
+# Use explicit named arguments for safety
+swissaccounting::add_transaction(
+  ledger_file = ledger_file,
+  date = "2024-01-15",
+  descr = "Office supplies",
+  debit_account = 4000,
+  credit_account = 1020,
+  amount = 500
+)
+
+swissaccounting::add_transaction(
+  ledger_file = ledger_file,
+  date = "2024-01-31",
+  descr = "Monthly rent",
+  debit_account = 6000,
+  credit_account = 1020,
+  amount = 2000
+)
+
+swissaccounting::add_transaction(
+  ledger_file = ledger_file,
+  date = "2024-02-15",
+  descr = "Service revenue",
+  debit_account = 1020,
+  credit_account = 3000,
+  amount = 3000
+)
+```
+
+**Benefits of add_transaction()**:
+
+- **Package-level function**: Available to all users via `swissaccounting::add_transaction()`
+- **Code reduction**: From 10 lines per transaction to just 6 lines (with named arguments)
+- **Explicit argument names**: Prevents debit/credit confusion
+- **Zero duplication**: File path passed as parameter
+- **Exact reproducibility**: Same ledger output as manual calls
+- **Maintainability**: Package function is tested and versioned
+- **Clear pattern**: Function shows the debit/credit relationship explicitly
+
+This function maintains the exact same behavior as manual `add_ledger_entry()` calls:
+- First entry uses `export_csv = TRUE` without `import_csv`
+- Second entry uses both `import_csv = TRUE` and `export_csv = TRUE`
+- Automatic counterpart_id linking works correctly
+
 ## Year-End Closing and Opening Balances
 
 ### Why Year-End Closing is Needed

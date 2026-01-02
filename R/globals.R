@@ -15,8 +15,8 @@ utils::globalVariables(c(
   "account_base_category", # <get_operating_result>
   "sum_amounts", # <get_operating_result>
   "account_number", # <get_private_account>
-  "id", # <add_ledger_entry>
   "account_number", # <add_ledger_entry>
+  "id", # <add_ledger_entry>
   "account_type", # <sum_accounts>
   "amount", # <aggregate_accounts>
   "debit_account", # <aggregate_accounts>

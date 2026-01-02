@@ -24,7 +24,10 @@ add_ledger_entry(
 \item{language}{character Language code for account descriptions. One of "en", "fr", "de".
 Defaults to "en".}
 
-\item{counterpart_id}{integer Optional. ID of the counterpart entry for double-entry bookkeeping.}
+\item{counterpart_id}{integer Optional. ID to link related ledger entries together.
+If NULL and import_csv is FALSE, defaults to the entry's own ID (first entry in a transaction).
+If NULL and import_csv is TRUE, automatically links to the previous entry's ID (subsequent entries).
+For multi-entry transactions (>2 entries), you can explicitly provide the first entry's ID.}
 
 \item{debit_account}{integer Optional. Account number for debit entry.}
 

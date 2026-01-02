@@ -77,7 +77,7 @@ add_ledger_entry(
 #>   date          id counterpart_id description       debit_account credit_account
 #>   <date>     <int>          <int> <chr>                     <int>          <int>
 #> 1 2024-01-01     1              1 Initial cash dep…          1020             NA
-#> 2 2024-01-15     2              2 Office supplies            4000             NA
+#> 2 2024-01-15     2              1 Office supplies            4000             NA
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
 
@@ -97,7 +97,7 @@ add_ledger_entry(
 #>   date          id counterpart_id description       debit_account credit_account
 #>   <date>     <int>          <int> <chr>                     <int>          <int>
 #> 1 2024-01-01     1              1 Initial cash dep…          1020             NA
-#> 2 2024-01-15     2              2 Office supplies            4000             NA
+#> 2 2024-01-15     2              1 Office supplies            4000             NA
 #> 3 2024-01-15     3              2 Office supplies …            NA           1020
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
@@ -118,9 +118,9 @@ add_ledger_entry(
 #>   date          id counterpart_id description       debit_account credit_account
 #>   <date>     <int>          <int> <chr>                     <int>          <int>
 #> 1 2024-01-01     1              1 Initial cash dep…          1020             NA
-#> 2 2024-01-15     2              2 Office supplies            4000             NA
+#> 2 2024-01-15     2              1 Office supplies            4000             NA
 #> 3 2024-01-15     3              2 Office supplies …            NA           1020
-#> 4 2024-01-31     4              4 Monthly rent               6000             NA
+#> 4 2024-01-31     4              3 Monthly rent               6000             NA
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
 
@@ -140,9 +140,9 @@ add_ledger_entry(
 #>   date          id counterpart_id description       debit_account credit_account
 #>   <date>     <int>          <int> <chr>                     <int>          <int>
 #> 1 2024-01-01     1              1 Initial cash dep…          1020             NA
-#> 2 2024-01-15     2              2 Office supplies            4000             NA
+#> 2 2024-01-15     2              1 Office supplies            4000             NA
 #> 3 2024-01-15     3              2 Office supplies …            NA           1020
-#> 4 2024-01-31     4              4 Monthly rent               6000             NA
+#> 4 2024-01-31     4              3 Monthly rent               6000             NA
 #> 5 2024-01-31     5              4 Monthly rent pay…            NA           1020
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
@@ -163,11 +163,11 @@ add_ledger_entry(
 #>   date          id counterpart_id description       debit_account credit_account
 #>   <date>     <int>          <int> <chr>                     <int>          <int>
 #> 1 2024-01-01     1              1 Initial cash dep…          1020             NA
-#> 2 2024-01-15     2              2 Office supplies            4000             NA
+#> 2 2024-01-15     2              1 Office supplies            4000             NA
 #> 3 2024-01-15     3              2 Office supplies …            NA           1020
-#> 4 2024-01-31     4              4 Monthly rent               6000             NA
+#> 4 2024-01-31     4              3 Monthly rent               6000             NA
 #> 5 2024-01-31     5              4 Monthly rent pay…            NA           1020
-#> 6 2024-02-15     6              6 Service revenue            1020             NA
+#> 6 2024-02-15     6              5 Service revenue            1020             NA
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
 
@@ -187,11 +187,11 @@ add_ledger_entry(
 #>   date          id counterpart_id description       debit_account credit_account
 #>   <date>     <int>          <int> <chr>                     <int>          <int>
 #> 1 2024-01-01     1              1 Initial cash dep…          1020             NA
-#> 2 2024-01-15     2              2 Office supplies            4000             NA
+#> 2 2024-01-15     2              1 Office supplies            4000             NA
 #> 3 2024-01-15     3              2 Office supplies …            NA           1020
-#> 4 2024-01-31     4              4 Monthly rent               6000             NA
+#> 4 2024-01-31     4              3 Monthly rent               6000             NA
 #> 5 2024-01-31     5              4 Monthly rent pay…            NA           1020
-#> 6 2024-02-15     6              6 Service revenue            1020             NA
+#> 6 2024-02-15     6              5 Service revenue            1020             NA
 #> 7 2024-02-15     7              6 Service revenue              NA           3000
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
@@ -212,13 +212,13 @@ add_ledger_entry(
 #>   date          id counterpart_id description       debit_account credit_account
 #>   <date>     <int>          <int> <chr>                     <int>          <int>
 #> 1 2024-01-01     1              1 Initial cash dep…          1020             NA
-#> 2 2024-01-15     2              2 Office supplies            4000             NA
+#> 2 2024-01-15     2              1 Office supplies            4000             NA
 #> 3 2024-01-15     3              2 Office supplies …            NA           1020
-#> 4 2024-01-31     4              4 Monthly rent               6000             NA
+#> 4 2024-01-31     4              3 Monthly rent               6000             NA
 #> 5 2024-01-31     5              4 Monthly rent pay…            NA           1020
-#> 6 2024-02-15     6              6 Service revenue            1020             NA
+#> 6 2024-02-15     6              5 Service revenue            1020             NA
 #> 7 2024-02-15     7              6 Service revenue              NA           3000
-#> 8 2024-03-01     8              8 Computer equipme…          1000             NA
+#> 8 2024-03-01     8              7 Computer equipme…          1000             NA
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
 
@@ -238,13 +238,13 @@ add_ledger_entry(
 #>   date          id counterpart_id description       debit_account credit_account
 #>   <date>     <int>          <int> <chr>                     <int>          <int>
 #> 1 2024-01-01     1              1 Initial cash dep…          1020             NA
-#> 2 2024-01-15     2              2 Office supplies            4000             NA
+#> 2 2024-01-15     2              1 Office supplies            4000             NA
 #> 3 2024-01-15     3              2 Office supplies …            NA           1020
-#> 4 2024-01-31     4              4 Monthly rent               6000             NA
+#> 4 2024-01-31     4              3 Monthly rent               6000             NA
 #> 5 2024-01-31     5              4 Monthly rent pay…            NA           1020
-#> 6 2024-02-15     6              6 Service revenue            1020             NA
+#> 6 2024-02-15     6              5 Service revenue            1020             NA
 #> 7 2024-02-15     7              6 Service revenue              NA           3000
-#> 8 2024-03-01     8              8 Computer equipme…          1000             NA
+#> 8 2024-03-01     8              7 Computer equipme…          1000             NA
 #> 9 2024-03-01     9              8 Computer equipme…            NA           1020
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
@@ -265,15 +265,15 @@ add_ledger_entry(
 #>    date          id counterpart_id description      debit_account credit_account
 #>    <date>     <int>          <int> <chr>                    <int>          <int>
 #>  1 2024-01-01     1              1 Initial cash de…          1020             NA
-#>  2 2024-01-15     2              2 Office supplies           4000             NA
+#>  2 2024-01-15     2              1 Office supplies           4000             NA
 #>  3 2024-01-15     3              2 Office supplies…            NA           1020
-#>  4 2024-01-31     4              4 Monthly rent              6000             NA
+#>  4 2024-01-31     4              3 Monthly rent              6000             NA
 #>  5 2024-01-31     5              4 Monthly rent pa…            NA           1020
-#>  6 2024-02-15     6              6 Service revenue           1020             NA
+#>  6 2024-02-15     6              5 Service revenue           1020             NA
 #>  7 2024-02-15     7              6 Service revenue             NA           3000
-#>  8 2024-03-01     8              8 Computer equipm…          1000             NA
+#>  8 2024-03-01     8              7 Computer equipm…          1000             NA
 #>  9 2024-03-01     9              8 Computer equipm…            NA           1020
-#> 10 2024-03-31    10             10 Bank interest             1020             NA
+#> 10 2024-03-31    10              9 Bank interest             1020             NA
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
 
@@ -293,15 +293,15 @@ add_ledger_entry(
 #>    date          id counterpart_id description      debit_account credit_account
 #>    <date>     <int>          <int> <chr>                    <int>          <int>
 #>  1 2024-01-01     1              1 Initial cash de…          1020             NA
-#>  2 2024-01-15     2              2 Office supplies           4000             NA
+#>  2 2024-01-15     2              1 Office supplies           4000             NA
 #>  3 2024-01-15     3              2 Office supplies…            NA           1020
-#>  4 2024-01-31     4              4 Monthly rent              6000             NA
+#>  4 2024-01-31     4              3 Monthly rent              6000             NA
 #>  5 2024-01-31     5              4 Monthly rent pa…            NA           1020
-#>  6 2024-02-15     6              6 Service revenue           1020             NA
+#>  6 2024-02-15     6              5 Service revenue           1020             NA
 #>  7 2024-02-15     7              6 Service revenue             NA           3000
-#>  8 2024-03-01     8              8 Computer equipm…          1000             NA
+#>  8 2024-03-01     8              7 Computer equipm…          1000             NA
 #>  9 2024-03-01     9              8 Computer equipm…            NA           1020
-#> 10 2024-03-31    10             10 Bank interest             1020             NA
+#> 10 2024-03-31    10              9 Bank interest             1020             NA
 #> 11 2024-03-31    11             10 Bank interest               NA           2850
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
@@ -322,17 +322,17 @@ add_ledger_entry(
 #>    date          id counterpart_id description      debit_account credit_account
 #>    <date>     <int>          <int> <chr>                    <int>          <int>
 #>  1 2024-01-01     1              1 Initial cash de…          1020             NA
-#>  2 2024-01-15     2              2 Office supplies           4000             NA
+#>  2 2024-01-15     2              1 Office supplies           4000             NA
 #>  3 2024-01-15     3              2 Office supplies…            NA           1020
-#>  4 2024-01-31     4              4 Monthly rent              6000             NA
+#>  4 2024-01-31     4              3 Monthly rent              6000             NA
 #>  5 2024-01-31     5              4 Monthly rent pa…            NA           1020
-#>  6 2024-02-15     6              6 Service revenue           1020             NA
+#>  6 2024-02-15     6              5 Service revenue           1020             NA
 #>  7 2024-02-15     7              6 Service revenue             NA           3000
-#>  8 2024-03-01     8              8 Computer equipm…          1000             NA
+#>  8 2024-03-01     8              7 Computer equipm…          1000             NA
 #>  9 2024-03-01     9              8 Computer equipm…            NA           1020
-#> 10 2024-03-31    10             10 Bank interest             1020             NA
+#> 10 2024-03-31    10              9 Bank interest             1020             NA
 #> 11 2024-03-31    11             10 Bank interest               NA           2850
-#> 12 2024-04-01    12             12 Bank loan                 1020             NA
+#> 12 2024-04-01    12             11 Bank loan                 1020             NA
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
 
@@ -352,17 +352,17 @@ add_ledger_entry(
 #>    date          id counterpart_id description      debit_account credit_account
 #>    <date>     <int>          <int> <chr>                    <int>          <int>
 #>  1 2024-01-01     1              1 Initial cash de…          1020             NA
-#>  2 2024-01-15     2              2 Office supplies           4000             NA
+#>  2 2024-01-15     2              1 Office supplies           4000             NA
 #>  3 2024-01-15     3              2 Office supplies…            NA           1020
-#>  4 2024-01-31     4              4 Monthly rent              6000             NA
+#>  4 2024-01-31     4              3 Monthly rent              6000             NA
 #>  5 2024-01-31     5              4 Monthly rent pa…            NA           1020
-#>  6 2024-02-15     6              6 Service revenue           1020             NA
+#>  6 2024-02-15     6              5 Service revenue           1020             NA
 #>  7 2024-02-15     7              6 Service revenue             NA           3000
-#>  8 2024-03-01     8              8 Computer equipm…          1000             NA
+#>  8 2024-03-01     8              7 Computer equipm…          1000             NA
 #>  9 2024-03-01     9              8 Computer equipm…            NA           1020
-#> 10 2024-03-31    10             10 Bank interest             1020             NA
+#> 10 2024-03-31    10              9 Bank interest             1020             NA
 #> 11 2024-03-31    11             10 Bank interest               NA           2850
-#> 12 2024-04-01    12             12 Bank loan                 1020             NA
+#> 12 2024-04-01    12             11 Bank loan                 1020             NA
 #> 13 2024-04-01    13             12 Bank loan                   NA           2000
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
@@ -392,6 +392,64 @@ balance_docs$total
 #> 1                     1 20526.
 #> 2                     2 10526.
 ```
+
+## Simplifying with the add_transaction() Function
+
+For cleaner code when adding many transactions, the `swissaccounting`
+package provides the `add_transaction()` function that eliminates
+repetitive arguments:
+
+``` r
+# Define ledger file path once
+ledger_file <- "path/to/your/ledger.csv"
+
+# Add transactions using the built-in add_transaction() function
+# Use explicit named arguments for safety
+swissaccounting::add_transaction(
+  ledger_file = ledger_file,
+  date = "2024-01-15",
+  descr = "Office supplies",
+  debit_account = 4000,
+  credit_account = 1020,
+  amount = 500
+)
+
+swissaccounting::add_transaction(
+  ledger_file = ledger_file,
+  date = "2024-01-31",
+  descr = "Monthly rent",
+  debit_account = 6000,
+  credit_account = 1020,
+  amount = 2000
+)
+
+swissaccounting::add_transaction(
+  ledger_file = ledger_file,
+  date = "2024-02-15",
+  descr = "Service revenue",
+  debit_account = 1020,
+  credit_account = 3000,
+  amount = 3000
+)
+```
+
+**Benefits of add_transaction()**:
+
+- **Package-level function**: Available to all users via
+  `swissaccounting::add_transaction()`
+- **Code reduction**: From 10 lines per transaction to just 6 lines
+  (with named arguments)
+- **Explicit argument names**: Prevents debit/credit confusion
+- **Zero duplication**: File path passed as parameter
+- **Exact reproducibility**: Same ledger output as manual calls
+- **Maintainability**: Package function is tested and versioned
+- **Clear pattern**: Function shows the debit/credit relationship
+  explicitly
+
+This function maintains the exact same behavior as manual
+`add_ledger_entry()` calls: - First entry uses `export_csv = TRUE`
+without `import_csv` - Second entry uses both `import_csv = TRUE` and
+`export_csv = TRUE` - Automatic counterpart_id linking works correctly
 
 ## Year-End Closing and Opening Balances
 

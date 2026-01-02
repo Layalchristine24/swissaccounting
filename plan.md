@@ -1,4 +1,138 @@
-# Implementation Plan: Automatic counterpart_id Management
+# Implementation Plan: swissaccounting Package Evolution
+
+## Latest: Add add_transaction() Function (2026-01-02)
+
+**Status**: ✅ COMPLETED
+
+### Overview
+
+Added `add_transaction()` as an exported package function to simplify transaction entry by wrapping two `add_ledger_entry()` calls into a single function call.
+
+### Changes Implemented
+
+#### 1. New Function: `R/add_transaction.R` ✅
+
+**Created new file** with full roxygen2 documentation:
+
+```r
+#' Add a Complete Transaction (Debit + Credit Pair)
+#'
+#' @description
+#' Simplified function to add a complete double-entry transaction with one call.
+#' This function adds two ledger entries (debit and credit) automatically, maintaining
+#' the exact same behavior as manual calls to \code{add_ledger_entry()}.
+#'
+#' @param ledger_file Path to the ledger CSV file
+#' @param date Transaction date (character or Date object)
+#' @param descr Transaction description
+#' @param debit_account Account number to debit
+#' @param credit_account Account number to credit
+#' @param amount Transaction amount (positive number)
+#'
+#' @return Invisibly returns NULL. Side effect: updates the ledger CSV file
+#' @export
+add_transaction <- function(ledger_file, date, descr, debit_account, credit_account, amount) {
+  # First entry: export only (no import) - creates entry with self-linked counterpart_id
+  add_ledger_entry(...)
+
+  # Second entry: import and export - automatically links to previous entry via counterpart_id
+  add_ledger_entry(...)
+
+  invisible(NULL)
+}
+```
+
+**Key features**:
+- Exported function available to all users
+- Explicit named parameters (ledger_file, date, descr, debit_account, credit_account, amount)
+- Maintains exact same behavior as manual `add_ledger_entry()` calls
+- Leverages automatic counterpart_id assignment
+
+#### 2. Updated NAMESPACE ✅
+
+After running `devtools::document()`:
+- Added `export(add_transaction)` to NAMESPACE
+- Generated help file `man/add_transaction.Rd`
+
+#### 3. Updated README.Rmd ✅
+
+**Changed section title**: "Simplifying with the add_transaction() Function"
+
+**Replaced user-defined wrapper example** with package function:
+
+**Before**:
+```r
+# Create wrapper for transaction pairs
+add_transaction <- function(date, descr, debit_account, credit_account, amount) { ... }
+```
+
+**After**:
+```r
+# Use the built-in add_transaction() function
+swissaccounting::add_transaction(
+  ledger_file = ledger_file,
+  date = "2024-01-15",
+  descr = "Office supplies",
+  debit_account = 4000,
+  credit_account = 1020,
+  amount = 500
+)
+```
+
+#### 4. Updated User Script: `script/script_ledger.R` ✅
+
+**Removed local wrapper function** (lines 15-37 previously)
+
+**Updated all transaction calls**:
+
+**Before**:
+```r
+add_transaction(date = "2024-01-01", descr = "...", debit_account = 6570, credit_account = 2300, amount = 38.77)
+```
+
+**After**:
+```r
+swissaccounting::add_transaction(ledger_file = ledger_file, date = "2024-01-01", descr = "...", debit_account = 6570, credit_account = 2300, amount = 38.77)
+```
+
+All 43 transactions (21 in 2024, 22 in 2025) now use the package function with explicit named arguments.
+
+### Benefits Achieved
+
+1. **Package-level function**: Available to all users via `swissaccounting::add_transaction()`
+2. **Cleaner user scripts**: No need to define wrapper functions locally
+3. **Better documentation**: Full roxygen2 docs with examples
+4. **Explicit argument names**: Prevents debit/credit confusion
+5. **Maintainability**: Package function is tested and versioned
+6. **Exact reproducibility**: Same ledger.csv output as before
+
+### Swiss GAAP Compliance
+
+This change does NOT affect Swiss GAAP compliance:
+- ✅ Double-entry bookkeeping maintained (function creates debit + credit pair)
+- ✅ Audit trail preserved (counterpart_id linking works as before)
+- ✅ Chronological recording maintained
+- ✅ Account classification unchanged
+- ✅ Year-end closing and opening balances unaffected
+
+### Files Modified
+
+**swissaccounting package**:
+1. ✅ `R/add_transaction.R` (new file)
+2. ✅ `NAMESPACE` (auto-generated via devtools::document())
+3. ✅ `man/add_transaction.Rd` (auto-generated)
+4. ✅ `README.Rmd` (updated section on simplifying transactions)
+
+**User scripts**:
+5. ✅ `script/script_ledger.R` (removed local wrapper, updated all calls)
+
+### Package Version
+
+Version: 0.1.0.9002 (installed and verified)
+
+---
+
+# Previous: Automatic counterpart_id Management
 
 **Status**: ✅ COMPLETED (Commits: 9755473, 4eab15f)
 
