@@ -1,6 +1,118 @@
 # Implementation Plan: swissaccounting Package Evolution
 
-## Latest: Add add_transaction() Function (2026-01-02)
+## Latest: README.Rmd Example Alignment (2026-01-03)
+
+**Status**: ✅ COMPLETED
+
+### Overview
+
+Aligned the `add_ledger_entry()` and `add_transaction()` examples in README.Rmd to produce identical ledger outputs.
+
+### Changes Made
+
+1. **Added credit entry for "Initial cash deposit"** in the `add_ledger_entry()` section
+   - Previously only had a single debit entry (incomplete double-entry)
+   - Now credits account 2850 (Private Account) to match `add_transaction()` behavior
+
+2. **Updated counterpart_id values** to reflect the new entry sequence:
+   - Office supplies: counterpart_id = 3L (was 2L)
+   - Monthly rent: counterpart_id = 5L (was 4L)
+   - Service revenue: counterpart_id = 7L (was 6L)
+   - Computer equipment: counterpart_id = 9L (was 8L)
+   - Bank interest: counterpart_id = 11L (was 10L)
+   - Bank loan: counterpart_id = 13L (was 12L)
+
+3. **Fixed R Markdown chunk syntax error**
+   - Changed `{r example, eval=TRUE}}` to `{r example, eval=TRUE}` (removed extra `}`)
+
+4. **Updated sample-ledger.csv and transactions-ledger.csv** to be identical
+
+### Files Modified
+
+1. ✅ `README.Rmd` - Added credit entry for initial deposit, updated counterpart_ids, fixed chunk syntax
+2. ✅ `documents/ledger/sample-ledger.csv` - Updated to match new 14-entry structure
+3. ✅ `documents/ledger/transactions-ledger.csv` - Updated to match sample-ledger.csv
+
+---
+
+## Previous: Bug Fixes for add_transaction and close_fiscal_year (2026-01-03)
+
+**Status**: ✅ COMPLETED
+
+### Overview
+
+Fixed two critical bugs:
+1. Multiple `add_transaction()` calls only preserved the last transaction
+2. `close_fiscal_year()` threw error `'debit_account' not found`
+
+### Bug 1: Only Last Transaction Appearing in Ledger
+
+**Root Cause**: The first `add_ledger_entry()` call in `add_transaction()` did not use `import_csv = TRUE`, causing it to overwrite the existing ledger file on each call.
+
+**Fix Applied** in `R/add_transaction.R` (lines 53-65):
+
+```r
+# First entry: import existing ledger if file exists, then export
+# This prevents overwriting existing entries when called multiple times
+file_exists <- file.exists(ledger_file)
+add_ledger_entry(
+  date = date,
+  descr = descr,
+  debit_account = debit_account,
+  amount = amount,
+  import_csv = file_exists,
+  filename_to_import = if (file_exists) ledger_file else NULL,
+  export_csv = TRUE,
+  filename_to_export = ledger_file
+)
+```
+
+### Bug 2: 'debit_account' not found in close_fiscal_year
+
+**Root Cause**: `get_account_balances_at_date()` in `ledger_helpers.R` was passing `target_language_ledger` (only 3 columns) to `sum_accounts()`, which requires the full ledger data with `debit_account`, `credit_account`, and `amount` columns.
+
+**Fix Applied** in `R/ledger_helpers.R` (line 131):
+
+Changed from:
+```r
+account_sums <- sum_accounts(target_language_ledger) |>
+```
+
+To:
+```r
+account_sums <- sum_accounts(filtered) |>
+```
+
+### Tests Added
+
+**New file**: `tests/testthat/test-add_transaction.R`
+- `add_transaction creates two entries per call`
+- `add_transaction preserves previous entries when called multiple times`
+- `add_transaction with three consecutive calls preserves all entries`
+
+**New file**: `tests/testthat/test-close_fiscal_year.R`
+- `close_fiscal_year works without debit_account error`
+- `get_account_balances_at_date returns correct structure`
+
+### Verification
+
+All 22 tests pass:
+```
+══ Results ═══════════════════════════════════════════════════════════════
+[ FAIL 0 | WARN 0 | SKIP 0 | PASS 22 ]
+```
+
+### Files Modified
+
+1. ✅ `R/add_transaction.R` - Added file existence check for `import_csv`
+2. ✅ `R/ledger_helpers.R` - Pass `filtered` instead of `target_language_ledger` to `sum_accounts()`
+3. ✅ `R/swissaccounting-package.R` - Added `@importFrom dplyr n` and `@importFrom dplyr row_number`
+4. ✅ `tests/testthat/test-add_transaction.R` (new file)
+5. ✅ `tests/testthat/test-close_fiscal_year.R` (new file)
+
+---
+
+## Previous: Add add_transaction() Function (2026-01-02)
 
 **Status**: ✅ COMPLETED
 
