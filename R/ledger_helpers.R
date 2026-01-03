@@ -126,7 +126,9 @@ get_account_balances_at_date <- function(ledger_file, closing_date, account_rang
   target_language_ledger <- select_ledger_language(filtered, language)
 
   # Sum accounts and filter by account range
-  account_sums <- sum_accounts(target_language_ledger) |>
+  # Note: sum_accounts() needs the full ledger data (with debit_account, credit_account, amount)
+  # not target_language_ledger which only has account descriptions
+  account_sums <- sum_accounts(filtered) |>
     filter(account_base_category %in% account_range) |>
     filter(sum_amounts != 0)
 

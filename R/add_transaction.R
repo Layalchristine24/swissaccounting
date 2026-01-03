@@ -50,12 +50,16 @@
 #' )
 #' }
 add_transaction <- function(ledger_file, date, descr, debit_account, credit_account, amount) {
-  # First entry: export only (no import) - creates entry with self-linked counterpart_id
+  # First entry: import existing ledger if file exists, then export
+  # This prevents overwriting existing entries when called multiple times
+  file_exists <- file.exists(ledger_file)
   add_ledger_entry(
     date = date,
     descr = descr,
     debit_account = debit_account,
     amount = amount,
+    import_csv = file_exists,
+    filename_to_import = if (file_exists) ledger_file else NULL,
     export_csv = TRUE,
     filename_to_export = ledger_file
   )

@@ -41,10 +41,14 @@ if (!dir.exists(file.path(here::here(), "documents", "ledger"))) {
   fs::dir_create(file.path(here::here(), "documents", "ledger"))
 }
 
-# Create sample ledger entries
 ledger_file <- file.path(here::here(), "documents", "ledger", "sample-ledger.csv")
 
-# Initial cash deposit
+# Create sample ledger entries
+if (!file.exists(file.path(here::here(), "documents", "ledger"))) {
+  fs::file_create(ledger_file)
+}
+
+# Initial cash deposit (Bank receives cash from owner equity)
 add_ledger_entry(
   date = "2024-01-01",
   language = "en", #or "fr" or "de"
@@ -61,6 +65,26 @@ add_ledger_entry(
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
 
+add_ledger_entry(
+  date = "2024-01-01",
+  counterpart_id = 1L,
+  language = "en", #or "fr" or "de"
+  descr = "Initial cash deposit",
+  credit_account = 2850,
+  amount = 10000,
+  import_csv = TRUE,
+  filename_to_import = ledger_file,
+  export_csv = TRUE,
+  filename_to_export = ledger_file
+)
+#> # A tibble: 2 × 9
+#>   date          id counterpart_id description       debit_account credit_account
+#>   <date>     <int>          <int> <chr>                     <int>          <int>
+#> 1 2024-01-01     1              1 Initial cash dep…          1020             NA
+#> 2 2024-01-01     2              1 Initial cash dep…            NA           2850
+#> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
+#> #   account_type <chr>
+
 # Office supplies purchase
 add_ledger_entry(
   date = "2024-01-15",
@@ -73,19 +97,20 @@ add_ledger_entry(
   export_csv = TRUE,
   filename_to_export = ledger_file
 )
-#> # A tibble: 2 × 9
+#> # A tibble: 3 × 9
 #>   date          id counterpart_id description       debit_account credit_account
 #>   <date>     <int>          <int> <chr>                     <int>          <int>
 #> 1 2024-01-01     1              1 Initial cash dep…          1020             NA
-#> 2 2024-01-15     2              1 Office supplies            4000             NA
+#> 2 2024-01-01     2              1 Initial cash dep…            NA           2850
+#> 3 2024-01-15     3              2 Office supplies            4000             NA
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
 
 add_ledger_entry(
   date = "2024-01-15",
-  counterpart_id = 2L,
+  counterpart_id = 3L,
   language = "en", #or "fr" or "de"
-  descr = "Office supplies payment",
+  descr = "Office supplies",
   credit_account = 1020,
   amount = 500,
   import_csv = TRUE,
@@ -93,12 +118,13 @@ add_ledger_entry(
   export_csv = TRUE,
   filename_to_export = ledger_file
 )
-#> # A tibble: 3 × 9
+#> # A tibble: 4 × 9
 #>   date          id counterpart_id description       debit_account credit_account
 #>   <date>     <int>          <int> <chr>                     <int>          <int>
 #> 1 2024-01-01     1              1 Initial cash dep…          1020             NA
-#> 2 2024-01-15     2              1 Office supplies            4000             NA
-#> 3 2024-01-15     3              2 Office supplies …            NA           1020
+#> 2 2024-01-01     2              1 Initial cash dep…            NA           2850
+#> 3 2024-01-15     3              2 Office supplies            4000             NA
+#> 4 2024-01-15     4              3 Office supplies              NA           1020
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
 
@@ -114,21 +140,22 @@ add_ledger_entry(
   export_csv = TRUE,
   filename_to_export = ledger_file
 )
-#> # A tibble: 4 × 9
+#> # A tibble: 5 × 9
 #>   date          id counterpart_id description       debit_account credit_account
 #>   <date>     <int>          <int> <chr>                     <int>          <int>
 #> 1 2024-01-01     1              1 Initial cash dep…          1020             NA
-#> 2 2024-01-15     2              1 Office supplies            4000             NA
-#> 3 2024-01-15     3              2 Office supplies …            NA           1020
-#> 4 2024-01-31     4              3 Monthly rent               6000             NA
+#> 2 2024-01-01     2              1 Initial cash dep…            NA           2850
+#> 3 2024-01-15     3              2 Office supplies            4000             NA
+#> 4 2024-01-15     4              3 Office supplies              NA           1020
+#> 5 2024-01-31     5              4 Monthly rent               6000             NA
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
 
 add_ledger_entry(
   date = "2024-01-31",
-  counterpart_id = 4L,
+  counterpart_id = 5L,
   language = "en", #or "fr" or "de"
-  descr = "Monthly rent payment",
+  descr = "Monthly rent",
   credit_account = 1020,
   amount = 2000,
   import_csv = TRUE,
@@ -136,14 +163,15 @@ add_ledger_entry(
   export_csv = TRUE,
   filename_to_export = ledger_file
 )
-#> # A tibble: 5 × 9
+#> # A tibble: 6 × 9
 #>   date          id counterpart_id description       debit_account credit_account
 #>   <date>     <int>          <int> <chr>                     <int>          <int>
 #> 1 2024-01-01     1              1 Initial cash dep…          1020             NA
-#> 2 2024-01-15     2              1 Office supplies            4000             NA
-#> 3 2024-01-15     3              2 Office supplies …            NA           1020
-#> 4 2024-01-31     4              3 Monthly rent               6000             NA
-#> 5 2024-01-31     5              4 Monthly rent pay…            NA           1020
+#> 2 2024-01-01     2              1 Initial cash dep…            NA           2850
+#> 3 2024-01-15     3              2 Office supplies            4000             NA
+#> 4 2024-01-15     4              3 Office supplies              NA           1020
+#> 5 2024-01-31     5              4 Monthly rent               6000             NA
+#> 6 2024-01-31     6              5 Monthly rent                 NA           1020
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
 
@@ -159,21 +187,22 @@ add_ledger_entry(
   export_csv = TRUE,
   filename_to_export = ledger_file
 )
-#> # A tibble: 6 × 9
+#> # A tibble: 7 × 9
 #>   date          id counterpart_id description       debit_account credit_account
 #>   <date>     <int>          <int> <chr>                     <int>          <int>
 #> 1 2024-01-01     1              1 Initial cash dep…          1020             NA
-#> 2 2024-01-15     2              1 Office supplies            4000             NA
-#> 3 2024-01-15     3              2 Office supplies …            NA           1020
-#> 4 2024-01-31     4              3 Monthly rent               6000             NA
-#> 5 2024-01-31     5              4 Monthly rent pay…            NA           1020
-#> 6 2024-02-15     6              5 Service revenue            1020             NA
+#> 2 2024-01-01     2              1 Initial cash dep…            NA           2850
+#> 3 2024-01-15     3              2 Office supplies            4000             NA
+#> 4 2024-01-15     4              3 Office supplies              NA           1020
+#> 5 2024-01-31     5              4 Monthly rent               6000             NA
+#> 6 2024-01-31     6              5 Monthly rent                 NA           1020
+#> 7 2024-02-15     7              6 Service revenue            1020             NA
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
 
 add_ledger_entry(
   date = "2024-02-15",
-  counterpart_id = 6L,
+  counterpart_id = 7L,
   language = "en", #or "fr" or "de"
   descr = "Service revenue",
   credit_account = 3000,
@@ -183,16 +212,17 @@ add_ledger_entry(
   export_csv = TRUE,
   filename_to_export = ledger_file
 )
-#> # A tibble: 7 × 9
+#> # A tibble: 8 × 9
 #>   date          id counterpart_id description       debit_account credit_account
 #>   <date>     <int>          <int> <chr>                     <int>          <int>
 #> 1 2024-01-01     1              1 Initial cash dep…          1020             NA
-#> 2 2024-01-15     2              1 Office supplies            4000             NA
-#> 3 2024-01-15     3              2 Office supplies …            NA           1020
-#> 4 2024-01-31     4              3 Monthly rent               6000             NA
-#> 5 2024-01-31     5              4 Monthly rent pay…            NA           1020
-#> 6 2024-02-15     6              5 Service revenue            1020             NA
-#> 7 2024-02-15     7              6 Service revenue              NA           3000
+#> 2 2024-01-01     2              1 Initial cash dep…            NA           2850
+#> 3 2024-01-15     3              2 Office supplies            4000             NA
+#> 4 2024-01-15     4              3 Office supplies              NA           1020
+#> 5 2024-01-31     5              4 Monthly rent               6000             NA
+#> 6 2024-01-31     6              5 Monthly rent                 NA           1020
+#> 7 2024-02-15     7              6 Service revenue            1020             NA
+#> 8 2024-02-15     8              7 Service revenue              NA           3000
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
 
@@ -208,25 +238,26 @@ add_ledger_entry(
   export_csv = TRUE,
   filename_to_export = ledger_file
 )
-#> # A tibble: 8 × 9
+#> # A tibble: 9 × 9
 #>   date          id counterpart_id description       debit_account credit_account
 #>   <date>     <int>          <int> <chr>                     <int>          <int>
 #> 1 2024-01-01     1              1 Initial cash dep…          1020             NA
-#> 2 2024-01-15     2              1 Office supplies            4000             NA
-#> 3 2024-01-15     3              2 Office supplies …            NA           1020
-#> 4 2024-01-31     4              3 Monthly rent               6000             NA
-#> 5 2024-01-31     5              4 Monthly rent pay…            NA           1020
-#> 6 2024-02-15     6              5 Service revenue            1020             NA
-#> 7 2024-02-15     7              6 Service revenue              NA           3000
-#> 8 2024-03-01     8              7 Computer equipme…          1000             NA
+#> 2 2024-01-01     2              1 Initial cash dep…            NA           2850
+#> 3 2024-01-15     3              2 Office supplies            4000             NA
+#> 4 2024-01-15     4              3 Office supplies              NA           1020
+#> 5 2024-01-31     5              4 Monthly rent               6000             NA
+#> 6 2024-01-31     6              5 Monthly rent                 NA           1020
+#> 7 2024-02-15     7              6 Service revenue            1020             NA
+#> 8 2024-02-15     8              7 Service revenue              NA           3000
+#> 9 2024-03-01     9              8 Computer equipme…          1000             NA
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
 
 add_ledger_entry(
   date = "2024-03-01",
-  counterpart_id = 8L,
+  counterpart_id = 9L,
   language = "en", #or "fr" or "de"
-  descr = "Computer equipment payment",
+  descr = "Computer equipment",
   credit_account = 1020,
   amount = 1500,
   import_csv = TRUE,
@@ -234,18 +265,19 @@ add_ledger_entry(
   export_csv = TRUE,
   filename_to_export = ledger_file
 )
-#> # A tibble: 9 × 9
-#>   date          id counterpart_id description       debit_account credit_account
-#>   <date>     <int>          <int> <chr>                     <int>          <int>
-#> 1 2024-01-01     1              1 Initial cash dep…          1020             NA
-#> 2 2024-01-15     2              1 Office supplies            4000             NA
-#> 3 2024-01-15     3              2 Office supplies …            NA           1020
-#> 4 2024-01-31     4              3 Monthly rent               6000             NA
-#> 5 2024-01-31     5              4 Monthly rent pay…            NA           1020
-#> 6 2024-02-15     6              5 Service revenue            1020             NA
-#> 7 2024-02-15     7              6 Service revenue              NA           3000
-#> 8 2024-03-01     8              7 Computer equipme…          1000             NA
-#> 9 2024-03-01     9              8 Computer equipme…            NA           1020
+#> # A tibble: 10 × 9
+#>    date          id counterpart_id description      debit_account credit_account
+#>    <date>     <int>          <int> <chr>                    <int>          <int>
+#>  1 2024-01-01     1              1 Initial cash de…          1020             NA
+#>  2 2024-01-01     2              1 Initial cash de…            NA           2850
+#>  3 2024-01-15     3              2 Office supplies           4000             NA
+#>  4 2024-01-15     4              3 Office supplies             NA           1020
+#>  5 2024-01-31     5              4 Monthly rent              6000             NA
+#>  6 2024-01-31     6              5 Monthly rent                NA           1020
+#>  7 2024-02-15     7              6 Service revenue           1020             NA
+#>  8 2024-02-15     8              7 Service revenue             NA           3000
+#>  9 2024-03-01     9              8 Computer equipm…          1000             NA
+#> 10 2024-03-01    10              9 Computer equipm…            NA           1020
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
 
@@ -261,25 +293,26 @@ add_ledger_entry(
   export_csv = TRUE,
   filename_to_export = ledger_file
 )
-#> # A tibble: 10 × 9
+#> # A tibble: 11 × 9
 #>    date          id counterpart_id description      debit_account credit_account
 #>    <date>     <int>          <int> <chr>                    <int>          <int>
 #>  1 2024-01-01     1              1 Initial cash de…          1020             NA
-#>  2 2024-01-15     2              1 Office supplies           4000             NA
-#>  3 2024-01-15     3              2 Office supplies…            NA           1020
-#>  4 2024-01-31     4              3 Monthly rent              6000             NA
-#>  5 2024-01-31     5              4 Monthly rent pa…            NA           1020
-#>  6 2024-02-15     6              5 Service revenue           1020             NA
-#>  7 2024-02-15     7              6 Service revenue             NA           3000
-#>  8 2024-03-01     8              7 Computer equipm…          1000             NA
-#>  9 2024-03-01     9              8 Computer equipm…            NA           1020
-#> 10 2024-03-31    10              9 Bank interest             1020             NA
+#>  2 2024-01-01     2              1 Initial cash de…            NA           2850
+#>  3 2024-01-15     3              2 Office supplies           4000             NA
+#>  4 2024-01-15     4              3 Office supplies             NA           1020
+#>  5 2024-01-31     5              4 Monthly rent              6000             NA
+#>  6 2024-01-31     6              5 Monthly rent                NA           1020
+#>  7 2024-02-15     7              6 Service revenue           1020             NA
+#>  8 2024-02-15     8              7 Service revenue             NA           3000
+#>  9 2024-03-01     9              8 Computer equipm…          1000             NA
+#> 10 2024-03-01    10              9 Computer equipm…            NA           1020
+#> 11 2024-03-31    11             10 Bank interest             1020             NA
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
 
 add_ledger_entry(
   date = "2024-03-31",
-  counterpart_id = 10L,
+  counterpart_id = 11L,
   language = "en", #or "fr" or "de"
   descr = "Bank interest",
   credit_account = 2850,
@@ -289,20 +322,21 @@ add_ledger_entry(
   export_csv = TRUE,
   filename_to_export = ledger_file
 )
-#> # A tibble: 11 × 9
+#> # A tibble: 12 × 9
 #>    date          id counterpart_id description      debit_account credit_account
 #>    <date>     <int>          <int> <chr>                    <int>          <int>
 #>  1 2024-01-01     1              1 Initial cash de…          1020             NA
-#>  2 2024-01-15     2              1 Office supplies           4000             NA
-#>  3 2024-01-15     3              2 Office supplies…            NA           1020
-#>  4 2024-01-31     4              3 Monthly rent              6000             NA
-#>  5 2024-01-31     5              4 Monthly rent pa…            NA           1020
-#>  6 2024-02-15     6              5 Service revenue           1020             NA
-#>  7 2024-02-15     7              6 Service revenue             NA           3000
-#>  8 2024-03-01     8              7 Computer equipm…          1000             NA
-#>  9 2024-03-01     9              8 Computer equipm…            NA           1020
-#> 10 2024-03-31    10              9 Bank interest             1020             NA
-#> 11 2024-03-31    11             10 Bank interest               NA           2850
+#>  2 2024-01-01     2              1 Initial cash de…            NA           2850
+#>  3 2024-01-15     3              2 Office supplies           4000             NA
+#>  4 2024-01-15     4              3 Office supplies             NA           1020
+#>  5 2024-01-31     5              4 Monthly rent              6000             NA
+#>  6 2024-01-31     6              5 Monthly rent                NA           1020
+#>  7 2024-02-15     7              6 Service revenue           1020             NA
+#>  8 2024-02-15     8              7 Service revenue             NA           3000
+#>  9 2024-03-01     9              8 Computer equipm…          1000             NA
+#> 10 2024-03-01    10              9 Computer equipm…            NA           1020
+#> 11 2024-03-31    11             10 Bank interest             1020             NA
+#> 12 2024-03-31    12             11 Bank interest               NA           2850
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
 
@@ -318,27 +352,28 @@ add_ledger_entry(
   export_csv = TRUE,
   filename_to_export = ledger_file
 )
-#> # A tibble: 12 × 9
+#> # A tibble: 13 × 9
 #>    date          id counterpart_id description      debit_account credit_account
 #>    <date>     <int>          <int> <chr>                    <int>          <int>
 #>  1 2024-01-01     1              1 Initial cash de…          1020             NA
-#>  2 2024-01-15     2              1 Office supplies           4000             NA
-#>  3 2024-01-15     3              2 Office supplies…            NA           1020
-#>  4 2024-01-31     4              3 Monthly rent              6000             NA
-#>  5 2024-01-31     5              4 Monthly rent pa…            NA           1020
-#>  6 2024-02-15     6              5 Service revenue           1020             NA
-#>  7 2024-02-15     7              6 Service revenue             NA           3000
-#>  8 2024-03-01     8              7 Computer equipm…          1000             NA
-#>  9 2024-03-01     9              8 Computer equipm…            NA           1020
-#> 10 2024-03-31    10              9 Bank interest             1020             NA
-#> 11 2024-03-31    11             10 Bank interest               NA           2850
-#> 12 2024-04-01    12             11 Bank loan                 1020             NA
+#>  2 2024-01-01     2              1 Initial cash de…            NA           2850
+#>  3 2024-01-15     3              2 Office supplies           4000             NA
+#>  4 2024-01-15     4              3 Office supplies             NA           1020
+#>  5 2024-01-31     5              4 Monthly rent              6000             NA
+#>  6 2024-01-31     6              5 Monthly rent                NA           1020
+#>  7 2024-02-15     7              6 Service revenue           1020             NA
+#>  8 2024-02-15     8              7 Service revenue             NA           3000
+#>  9 2024-03-01     9              8 Computer equipm…          1000             NA
+#> 10 2024-03-01    10              9 Computer equipm…            NA           1020
+#> 11 2024-03-31    11             10 Bank interest             1020             NA
+#> 12 2024-03-31    12             11 Bank interest               NA           2850
+#> 13 2024-04-01    13             12 Bank loan                 1020             NA
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
 
 add_ledger_entry(
   date = "2024-04-01",
-  counterpart_id = 12L,
+  counterpart_id = 13L,
   language = "en", #or "fr" or "de"
   descr = "Bank loan",
   credit_account = 2000,
@@ -348,22 +383,23 @@ add_ledger_entry(
   export_csv = TRUE,
   filename_to_export = ledger_file
 )
-#> # A tibble: 13 × 9
+#> # A tibble: 14 × 9
 #>    date          id counterpart_id description      debit_account credit_account
 #>    <date>     <int>          <int> <chr>                    <int>          <int>
 #>  1 2024-01-01     1              1 Initial cash de…          1020             NA
-#>  2 2024-01-15     2              1 Office supplies           4000             NA
-#>  3 2024-01-15     3              2 Office supplies…            NA           1020
-#>  4 2024-01-31     4              3 Monthly rent              6000             NA
-#>  5 2024-01-31     5              4 Monthly rent pa…            NA           1020
-#>  6 2024-02-15     6              5 Service revenue           1020             NA
-#>  7 2024-02-15     7              6 Service revenue             NA           3000
-#>  8 2024-03-01     8              7 Computer equipm…          1000             NA
-#>  9 2024-03-01     9              8 Computer equipm…            NA           1020
-#> 10 2024-03-31    10              9 Bank interest             1020             NA
-#> 11 2024-03-31    11             10 Bank interest               NA           2850
-#> 12 2024-04-01    12             11 Bank loan                 1020             NA
-#> 13 2024-04-01    13             12 Bank loan                   NA           2000
+#>  2 2024-01-01     2              1 Initial cash de…            NA           2850
+#>  3 2024-01-15     3              2 Office supplies           4000             NA
+#>  4 2024-01-15     4              3 Office supplies             NA           1020
+#>  5 2024-01-31     5              4 Monthly rent              6000             NA
+#>  6 2024-01-31     6              5 Monthly rent                NA           1020
+#>  7 2024-02-15     7              6 Service revenue           1020             NA
+#>  8 2024-02-15     8              7 Service revenue             NA           3000
+#>  9 2024-03-01     9              8 Computer equipm…          1000             NA
+#> 10 2024-03-01    10              9 Computer equipm…            NA           1020
+#> 11 2024-03-31    11             10 Bank interest             1020             NA
+#> 12 2024-03-31    12             11 Bank interest               NA           2850
+#> 13 2024-04-01    13             12 Bank loan                 1020             NA
+#> 14 2024-04-01    14             13 Bank loan                   NA           2000
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
 
@@ -390,7 +426,7 @@ balance_docs$total
 #>   account_base_category  total
 #>                   <int>  <dbl>
 #> 1                     1 20526.
-#> 2                     2 10526.
+#> 2                     2 20526.
 ```
 
 ## Simplifying with the add_transaction() Function
@@ -400,12 +436,28 @@ package provides the `add_transaction()` function that eliminates
 repetitive arguments:
 
 ``` r
-# Define ledger file path once
-ledger_file <- "path/to/your/ledger.csv"
+ledger_file <- file.path(here::here(), "documents", "ledger", "transactions-ledger.csv")
+
+# Create transaction ledger entries
+if (!file.exists(file.path(here::here(), "documents", "ledger"))) {
+  fs::file_create(ledger_file)
+}
 
 # Add transactions using the built-in add_transaction() function
-# Use explicit named arguments for safety
-swissaccounting::add_transaction(
+# Note: add_transaction() creates paired entries (debit + credit) automatically
+
+# Initial cash deposit (Bank receives cash from owner equity)
+add_transaction(
+  ledger_file = ledger_file,
+  date = "2024-01-01",
+  descr = "Initial cash deposit",
+  debit_account = 1020,
+  credit_account = 2850,
+  amount = 10000
+)
+
+# Office supplies purchase (account 4000 = Material Purchases)
+add_transaction(
   ledger_file = ledger_file,
   date = "2024-01-15",
   descr = "Office supplies",
@@ -414,7 +466,8 @@ swissaccounting::add_transaction(
   amount = 500
 )
 
-swissaccounting::add_transaction(
+# Monthly rent payment (account 6000 = Premises Expenses)
+add_transaction(
   ledger_file = ledger_file,
   date = "2024-01-31",
   descr = "Monthly rent",
@@ -423,7 +476,8 @@ swissaccounting::add_transaction(
   amount = 2000
 )
 
-swissaccounting::add_transaction(
+# Service revenue (account 3000 = Sales of Manufactured Products)
+add_transaction(
   ledger_file = ledger_file,
   date = "2024-02-15",
   descr = "Service revenue",
@@ -431,12 +485,42 @@ swissaccounting::add_transaction(
   credit_account = 3000,
   amount = 3000
 )
+
+# Computer equipment purchase (account 1000 = Cash)
+add_transaction(
+  ledger_file = ledger_file,
+  date = "2024-03-01",
+  descr = "Computer equipment",
+  debit_account = 1000,
+  credit_account = 1020,
+  amount = 1500
+)
+
+# Bank interest received (account 2850 = Private Account)
+add_transaction(
+  ledger_file = ledger_file,
+  date = "2024-03-31",
+  descr = "Bank interest",
+  debit_account = 1020,
+  credit_account = 2850,
+  amount = 25.50
+)
+
+# Bank loan received (account 2000 = Creditors)
+add_transaction(
+  ledger_file = ledger_file,
+  date = "2024-04-01",
+  descr = "Bank loan",
+  debit_account = 1020,
+  credit_account = 2000,
+  amount = 10000
+)
 ```
 
 **Benefits of add_transaction()**:
 
 - **Package-level function**: Available to all users via
-  `swissaccounting::add_transaction()`
+  `add_transaction()`
 - **Code reduction**: From 10 lines per transaction to just 6 lines
   (with named arguments)
 - **Explicit argument names**: Prevents debit/credit confusion

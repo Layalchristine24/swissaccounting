@@ -40,7 +40,7 @@ pak::pak("Layalchristine24/swissaccounting")
 ## Example
 
 This is a basic example which shows you how to get the accounts needed to create a balance sheet from a ledger file.
-```{r example}
+```{r example, eval=TRUE}
 library(swissaccounting)
 # Create sample ledger file for documentation purposes
 
@@ -49,16 +49,33 @@ if (!dir.exists(file.path(here::here(), "documents", "ledger"))) {
   fs::dir_create(file.path(here::here(), "documents", "ledger"))
 }
 
-# Create sample ledger entries
 ledger_file <- file.path(here::here(), "documents", "ledger", "sample-ledger.csv")
 
-# Initial cash deposit
+# Create sample ledger entries
+if (!file.exists(file.path(here::here(), "documents", "ledger"))) {
+  fs::file_create(ledger_file)
+}
+
+# Initial cash deposit (Bank receives cash from owner equity)
 add_ledger_entry(
   date = "2024-01-01",
   language = "en", #or "fr" or "de"
   descr = "Initial cash deposit",
   debit_account = 1020,
   amount = 10000,
+  export_csv = TRUE,
+  filename_to_export = ledger_file
+)
+
+add_ledger_entry(
+  date = "2024-01-01",
+  counterpart_id = 1L,
+  language = "en", #or "fr" or "de"
+  descr = "Initial cash deposit",
+  credit_account = 2850,
+  amount = 10000,
+  import_csv = TRUE,
+  filename_to_import = ledger_file,
   export_csv = TRUE,
   filename_to_export = ledger_file
 )
@@ -78,9 +95,9 @@ add_ledger_entry(
 
 add_ledger_entry(
   date = "2024-01-15",
-  counterpart_id = 2L,
+  counterpart_id = 3L,
   language = "en", #or "fr" or "de"
-  descr = "Office supplies payment",
+  descr = "Office supplies",
   credit_account = 1020,
   amount = 500,
   import_csv = TRUE,
@@ -104,9 +121,9 @@ add_ledger_entry(
 
 add_ledger_entry(
   date = "2024-01-31",
-  counterpart_id = 4L,
+  counterpart_id = 5L,
   language = "en", #or "fr" or "de"
-  descr = "Monthly rent payment",
+  descr = "Monthly rent",
   credit_account = 1020,
   amount = 2000,
   import_csv = TRUE,
@@ -130,7 +147,7 @@ add_ledger_entry(
 
 add_ledger_entry(
   date = "2024-02-15",
-  counterpart_id = 6L,
+  counterpart_id = 7L,
   language = "en", #or "fr" or "de"
   descr = "Service revenue",
   credit_account = 3000,
@@ -156,9 +173,9 @@ add_ledger_entry(
 
 add_ledger_entry(
   date = "2024-03-01",
-  counterpart_id = 8L,
+  counterpart_id = 9L,
   language = "en", #or "fr" or "de"
-  descr = "Computer equipment payment",
+  descr = "Computer equipment",
   credit_account = 1020,
   amount = 1500,
   import_csv = TRUE,
@@ -182,7 +199,7 @@ add_ledger_entry(
 
 add_ledger_entry(
   date = "2024-03-31",
-  counterpart_id = 10L,
+  counterpart_id = 11L,
   language = "en", #or "fr" or "de"
   descr = "Bank interest",
   credit_account = 2850,
@@ -208,7 +225,7 @@ add_ledger_entry(
 
 add_ledger_entry(
   date = "2024-04-01",
-  counterpart_id = 12L,
+  counterpart_id = 13L,
   language = "en", #or "fr" or "de"
   descr = "Bank loan",
   credit_account = 2000,
@@ -236,13 +253,29 @@ balance_docs$total
 
 For cleaner code when adding many transactions, the `swissaccounting` package provides the `add_transaction()` function that eliminates repetitive arguments:
 
-```{r add-transaction-example, eval=FALSE}
-# Define ledger file path once
-ledger_file <- "path/to/your/ledger.csv"
+```{r add-transaction-example, eval=TRUE}
+ledger_file <- file.path(here::here(), "documents", "ledger", "transactions-ledger.csv")
+
+# Create transaction ledger entries
+if (!file.exists(file.path(here::here(), "documents", "ledger"))) {
+  fs::file_create(ledger_file)
+}
 
 # Add transactions using the built-in add_transaction() function
-# Use explicit named arguments for safety
-swissaccounting::add_transaction(
+# Note: add_transaction() creates paired entries (debit + credit) automatically
+
+# Initial cash deposit (Bank receives cash from owner equity)
+add_transaction(
+  ledger_file = ledger_file,
+  date = "2024-01-01",
+  descr = "Initial cash deposit",
+  debit_account = 1020,
+  credit_account = 2850,
+  amount = 10000
+)
+
+# Office supplies purchase (account 4000 = Material Purchases)
+add_transaction(
   ledger_file = ledger_file,
   date = "2024-01-15",
   descr = "Office supplies",
@@ -251,7 +284,8 @@ swissaccounting::add_transaction(
   amount = 500
 )
 
-swissaccounting::add_transaction(
+# Monthly rent payment (account 6000 = Premises Expenses)
+add_transaction(
   ledger_file = ledger_file,
   date = "2024-01-31",
   descr = "Monthly rent",
@@ -260,7 +294,8 @@ swissaccounting::add_transaction(
   amount = 2000
 )
 
-swissaccounting::add_transaction(
+# Service revenue (account 3000 = Sales of Manufactured Products)
+add_transaction(
   ledger_file = ledger_file,
   date = "2024-02-15",
   descr = "Service revenue",
@@ -268,11 +303,41 @@ swissaccounting::add_transaction(
   credit_account = 3000,
   amount = 3000
 )
+
+# Computer equipment purchase (account 1000 = Cash)
+add_transaction(
+  ledger_file = ledger_file,
+  date = "2024-03-01",
+  descr = "Computer equipment",
+  debit_account = 1000,
+  credit_account = 1020,
+  amount = 1500
+)
+
+# Bank interest received (account 2850 = Private Account)
+add_transaction(
+  ledger_file = ledger_file,
+  date = "2024-03-31",
+  descr = "Bank interest",
+  debit_account = 1020,
+  credit_account = 2850,
+  amount = 25.50
+)
+
+# Bank loan received (account 2000 = Creditors)
+add_transaction(
+  ledger_file = ledger_file,
+  date = "2024-04-01",
+  descr = "Bank loan",
+  debit_account = 1020,
+  credit_account = 2000,
+  amount = 10000
+)
 ```
 
 **Benefits of add_transaction()**:
 
-- **Package-level function**: Available to all users via `swissaccounting::add_transaction()`
+- **Package-level function**: Available to all users via `add_transaction()`
 - **Code reduction**: From 10 lines per transaction to just 6 lines (with named arguments)
 - **Explicit argument names**: Prevents debit/credit confusion
 - **Zero duplication**: File path passed as parameter
