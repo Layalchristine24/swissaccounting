@@ -58,11 +58,8 @@ sum_accounts <- function(my_ledger) {
     filter(
       !(account_type %in%
         c(
-          "Income/Expense",
           "Closing",
-          "Produit/Charge",
           "Cl\u00f4ture",
-          "Einnahmen/Ausgabe",
           "Abschluss"
         ))
     ) |>
@@ -100,22 +97,46 @@ aggregate_accounts <- function(my_ledger_filtered) {
   my_ledger_filtered |>
     mutate(
       amount = case_when(
+        # Assets and Expenses: debits are positive, credits are negative
         account_type %in%
           c("Asset", "Expense", "Actif", "Charge", "Aktivkonto", "Ausgabe") &
           !is.na(debit_account) ~
           amount,
         account_type %in%
+          c("Asset", "Expense", "Actif", "Charge", "Aktivkonto", "Ausgabe") &
+          !is.na(credit_account) ~
+          -amount,
+        # Liabilities and Income: credits are negative (normal balance), debits are positive (reduce balance)
+        # Note: "Income/Expense" accounts are treated as Income (credits negative, debits positive)
+        account_type %in%
           c(
             "Liability",
             "Income",
+            "Income/Expense",
             "Passif",
             "Produit",
+            "Produit/Charge",
             "Passivkonto",
-            "Einnahmen"
+            "Einnahmen",
+            "Einnahmen/Ausgabe"
           ) &
           !is.na(credit_account) ~
+          -amount,
+        account_type %in%
+          c(
+            "Liability",
+            "Income",
+            "Income/Expense",
+            "Passif",
+            "Produit",
+            "Produit/Charge",
+            "Passivkonto",
+            "Einnahmen",
+            "Einnahmen/Ausgabe"
+          ) &
+          !is.na(debit_account) ~
           amount,
-        .default = -amount
+        .default = amount
       )
     ) |>
     get_high_category() |>

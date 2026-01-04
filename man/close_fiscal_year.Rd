@@ -8,7 +8,7 @@ close_fiscal_year(
   ledger_file,
   closing_date,
   language = NULL,
-  transfer_to_account = 2850L,
+  transfer_to_account = 2970L,
   overwrite = FALSE
 )
 }
@@ -20,7 +20,7 @@ close_fiscal_year(
 \item{language}{Language for account descriptions: "en" (English), "fr" (French), or "de" (German).
 If not specified, automatically detects language from existing ledger.}
 
-\item{transfer_to_account}{Account number to receive final P&L transfer (default: 2850L for Private Account)}
+\item{transfer_to_account}{Account number to receive final P&L transfer (default: 2970L for Carried Forward Profit/Loss)}
 
 \item{overwrite}{If TRUE, allows overwriting existing closing entries for the same date (default: FALSE)}
 }
@@ -31,8 +31,8 @@ Invisibly returns the updated ledger tibble
 Creates year-end closing entries following Swiss GAAP accounting standards.
 Closes all profit and loss accounts (categories 3-8) to account 9200
 (Current Year Profit/Loss), then transfers to account 2891 (Balance Sheet
-Profit/Loss), and finally to the specified equity account (default: 2850
-Private Account).
+Profit/Loss), and finally to the specified equity account (default: 2970
+Carried Forward Profit/Loss).
 }
 \examples{
 \dontrun{

@@ -3,14 +3,14 @@
 #' Creates year-end closing entries following Swiss GAAP accounting standards.
 #' Closes all profit and loss accounts (categories 3-8) to account 9200
 #' (Current Year Profit/Loss), then transfers to account 2891 (Balance Sheet
-#' Profit/Loss), and finally to the specified equity account (default: 2850
-#' Private Account).
+#' Profit/Loss), and finally to the specified equity account (default: 2970
+#' Carried Forward Profit/Loss).
 #'
 #' @param ledger_file Path to the ledger CSV file
 #' @param closing_date Date of fiscal year end (as character string, e.g., "2024-12-31")
 #' @param language Language for account descriptions: "en" (English), "fr" (French), or "de" (German).
 #'   If not specified, automatically detects language from existing ledger.
-#' @param transfer_to_account Account number to receive final P&L transfer (default: 2850L for Private Account)
+#' @param transfer_to_account Account number to receive final P&L transfer (default: 2970L for Carried Forward Profit/Loss)
 #' @param overwrite If TRUE, allows overwriting existing closing entries for the same date (default: FALSE)
 #'
 #' @return Invisibly returns the updated ledger tibble
@@ -28,7 +28,7 @@
 close_fiscal_year <- function(ledger_file,
                               closing_date,
                               language = NULL,
-                              transfer_to_account = 2850L,
+                              transfer_to_account = 2970L,
                               overwrite = FALSE) {
 
   # Detect language if not specified
@@ -98,12 +98,12 @@ close_fiscal_year <- function(ledger_file,
     "Transfer to Balance Sheet"
   }
 
-  transfer_to_private_desc <- if (language == "fr") {
-    "Transfert au compte privé"
+  transfer_to_equity_desc <- if (language == "fr") {
+    "Transfert aux réserves"
   } else if (language == "de") {
-    "Übertrag zum Privatkonto"
+    "Übertrag zu Reserven"
   } else {
-    "Transfer to Private Account"
+    "Transfer to Retained Earnings"
   }
 
   # Initialize entries list
@@ -116,8 +116,11 @@ close_fiscal_year <- function(ledger_file,
     balance <- pl_balances$sum_amounts[i]
     account_base_cat <- pl_balances$account_base_category[i]
 
-    # Determine if this is income (category 3) or expense (categories 4-8)
-    is_income <- account_base_cat == 3L
+    # Determine if this is income or expense based on balance sign
+    # Income accounts have negative balance (credits > debits)
+    # Expense accounts have positive balance (debits > credits)
+    # Note: Account 6950 (Financial Income) is in category 6 but acts as income
+    is_income <- balance < 0
 
     if (is_income) {
       # Income accounts: DR Income, CR 9200
@@ -233,12 +236,12 @@ close_fiscal_year <- function(ledger_file,
     cli_abort(paste0("Account ", transfer_to_account, " not found in account model"))
   }
 
-  # Transfer 2891 to transfer_to_account (default: 2850)
+  # Transfer 2891 to transfer_to_account (default: 2970)
   if (net_pl < 0) {
-    # Profit: DR 2891, CR 2850
+    # Profit: DR 2891, CR 2970
     closing_entries[[length(closing_entries) + 1]] <- tibble(
       date = closing_date_parsed,
-      description = transfer_to_private_desc,
+      description = transfer_to_equity_desc,
       debit_account = 2891L,
       credit_account = NA_integer_,
       amount = abs(net_pl),
@@ -248,7 +251,7 @@ close_fiscal_year <- function(ledger_file,
 
     closing_entries[[length(closing_entries) + 1]] <- tibble(
       date = closing_date_parsed,
-      description = transfer_to_private_desc,
+      description = transfer_to_equity_desc,
       debit_account = NA_integer_,
       credit_account = transfer_to_account,
       amount = abs(net_pl),
@@ -256,10 +259,10 @@ close_fiscal_year <- function(ledger_file,
       account_type = "Liability"
     )
   } else {
-    # Loss: DR 2850, CR 2891
+    # Loss: DR 2970, CR 2891
     closing_entries[[length(closing_entries) + 1]] <- tibble(
       date = closing_date_parsed,
-      description = transfer_to_private_desc,
+      description = transfer_to_equity_desc,
       debit_account = transfer_to_account,
       credit_account = NA_integer_,
       amount = abs(net_pl),
@@ -269,7 +272,7 @@ close_fiscal_year <- function(ledger_file,
 
     closing_entries[[length(closing_entries) + 1]] <- tibble(
       date = closing_date_parsed,
-      description = transfer_to_private_desc,
+      description = transfer_to_equity_desc,
       debit_account = NA_integer_,
       credit_account = 2891L,
       amount = abs(net_pl),
