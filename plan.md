@@ -1,744 +1,136 @@
-# Implementation Plan: swissaccounting Package Evolution
-
-## Latest: README.Rmd Example Alignment (2026-01-03)
+## Latest: Fix counterpart_id Pairing in Transactions (2026-01-05)
 
 **Status**: ✅ COMPLETED
 
 ### Overview
 
-Aligned the `add_ledger_entry()` and `add_transaction()` examples in README.Rmd to produce identical ledger outputs.
+Fixed `counterpart_id` assignment so transaction pairs are correctly linked. Previously, the first entry of each transaction was incorrectly linking to the previous transaction's entry instead of having `NA`.
 
-### Changes Made
+### Issues Fixed
 
-1. **Added credit entry for "Initial cash deposit"** in the `add_ledger_entry()` section
-   - Previously only had a single debit entry (incomplete double-entry)
-   - Now credits account 2850 (Private Account) to match `add_transaction()` behavior
+1. **First entry had wrong counterpart_id**: First entry of a new transaction was getting `counterpart_id` pointing to the previous transaction's last entry instead of `NA`
 
-2. **Updated counterpart_id values** to reflect the new entry sequence:
-   - Office supplies: counterpart_id = 3L (was 2L)
-   - Monthly rent: counterpart_id = 5L (was 4L)
-   - Service revenue: counterpart_id = 7L (was 6L)
-   - Computer equipment: counterpart_id = 9L (was 8L)
-   - Bank interest: counterpart_id = 11L (was 10L)
-   - Bank loan: counterpart_id = 13L (was 12L)
-
-3. **Fixed R Markdown chunk syntax error**
-   - Changed `{r example, eval=TRUE}}` to `{r example, eval=TRUE}` (removed extra `}`)
-
-4. **Updated sample-ledger.csv and transactions-ledger.csv** to be identical
+2. **Second entry relied on implicit linking**: Second entry used `max(last_ledger$id)` which worked but was fragile. Now explicitly passes the first entry's ID.
 
 ### Files Modified
 
-1. ✅ `README.Rmd` - Added credit entry for initial deposit, updated counterpart_ids, fixed chunk syntax
-2. ✅ `documents/ledger/sample-ledger.csv` - Updated to match new 14-entry structure
-3. ✅ `documents/ledger/transactions-ledger.csv` - Updated to match sample-ledger.csv
+1. ✅ `R/ledger.R` - Added `is_first_entry` parameter to `add_ledger_entry()` to explicitly mark first entries (sets `counterpart_id = NA`)
+2. ✅ `R/add_transaction.R` - Captures first entry's ID and explicitly passes it as `counterpart_id` to second entry
+3. ✅ `R/ledger_helpers.R` - Updated `append_ledger_entries()` to use `NA_integer_` for first entries instead of self-linking
+
+### Result
+
+Transactions now correctly paired:
+```
+id=1, counterpart_id=NA     # First entry of transaction 1
+id=2, counterpart_id=1      # Second entry links to first
+id=3, counterpart_id=NA     # First entry of transaction 2
+id=4, counterpart_id=3      # Second entry links to first
+```
 
 ---
 
-## Previous: Bug Fixes for add_transaction and close_fiscal_year (2026-01-03)
+## Previous: Fix Balance Sheet to Include Operating Result (2026-01-04)
 
 **Status**: ✅ COMPLETED
 
 ### Overview
 
-Fixed two critical bugs:
-1. Multiple `add_transaction()` calls only preserved the last transaction
-2. `close_fiscal_year()` threw error `'debit_account' not found`
+Fixed `get_balance_accounts()` to automatically include the current year's profit/loss (account 2891 - Balance Sheet P/L) so the balance sheet balances during the fiscal year before closing.
 
-### Bug 1: Only Last Transaction Appearing in Ledger
+### Issue Fixed
 
-**Root Cause**: The first `add_ledger_entry()` call in `add_transaction()` did not use `import_csv = TRUE`, causing it to overwrite the existing ledger file on each call.
+4. **Balance sheet didn't balance during fiscal year**: Added operating result calculation to `get_balance_accounts`
+   - During the fiscal year, income/expense accounts (3-6) affect assets but aren't shown on balance sheet
+   - Now automatically calculates P&L from income statement and adds it as account 2891
+   - Balance sheet now balances: Assets = |Liabilities| at all times
 
-**Fix Applied** in `R/add_transaction.R` (lines 53-65):
+### Files Modified
 
-```r
-# First entry: import existing ledger if file exists, then export
-# This prevents overwriting existing entries when called multiple times
-file_exists <- file.exists(ledger_file)
-add_ledger_entry(
-  date = date,
-  descr = descr,
-  debit_account = debit_account,
-  amount = amount,
-  import_csv = file_exists,
-  filename_to_import = if (file_exists) ledger_file else NULL,
-  export_csv = TRUE,
-  filename_to_export = ledger_file
-)
-```
-
-### Bug 2: 'debit_account' not found in close_fiscal_year
-
-**Root Cause**: `get_account_balances_at_date()` in `ledger_helpers.R` was passing `target_language_ledger` (only 3 columns) to `sum_accounts()`, which requires the full ledger data with `debit_account`, `credit_account`, and `amount` columns.
-
-**Fix Applied** in `R/ledger_helpers.R` (line 131):
-
-Changed from:
-```r
-account_sums <- sum_accounts(target_language_ledger) |>
-```
-
-To:
-```r
-account_sums <- sum_accounts(filtered) |>
-```
-
-### Tests Added
-
-**New file**: `tests/testthat/test-add_transaction.R`
-- `add_transaction creates two entries per call`
-- `add_transaction preserves previous entries when called multiple times`
-- `add_transaction with three consecutive calls preserves all entries`
-
-**New file**: `tests/testthat/test-close_fiscal_year.R`
-- `close_fiscal_year works without debit_account error`
-- `get_account_balances_at_date returns correct structure`
+1. ✅ `R/get_balance_accounts.R` - Added automatic operating result as Balance Sheet P/L (2891)
 
 ### Verification
 
-All 22 tests pass:
-```
-══ Results ═══════════════════════════════════════════════════════════════
-[ FAIL 0 | WARN 0 | SKIP 0 | PASS 22 ]
+Balance sheet now properly balanced during fiscal year:
+```r
+# A tibble: 5 × 3
+  account_number account_description                              sum_amounts
+           <int> <chr>                                                  <dbl>
+1           1020 Bank                                                   19026
+2           1000 Cash                                                    1500
+3           2800 Share Capital                                         -10000
+4           2000 Creditors                                             -10000
+5           2891 Balance Sheet P/L                                       -526
+
+# A tibble: 2 × 2
+  account_base_category total
+                  <int> <dbl>
+1                     1  20526  # Assets
+2                     2 -20526  # Liabilities (equals assets in absolute value) ✓
 ```
 
-### Files Modified
+All 22 tests pass.
 
-1. ✅ `R/add_transaction.R` - Added file existence check for `import_csv`
-2. ✅ `R/ledger_helpers.R` - Pass `filtered` instead of `target_language_ledger` to `sum_accounts()`
-3. ✅ `R/swissaccounting-package.R` - Added `@importFrom dplyr n` and `@importFrom dplyr row_number`
-4. ✅ `tests/testthat/test-add_transaction.R` (new file)
-5. ✅ `tests/testthat/test-close_fiscal_year.R` (new file)
+Note: README.md needs to be regenerated with `devtools::build_readme()` once pandoc is available.
 
 ---
 
-## Previous: Add add_transaction() Function (2026-01-02)
+## Previous: Fix Fiscal Year Closing and Balance Sheet (2026-01-04)
 
 **Status**: ✅ COMPLETED
 
 ### Overview
 
-Added `add_transaction()` as an exported package function to simplify transaction entry by wrapping two `add_ledger_entry()` calls into a single function call.
+Fixed critical accounting issues in fiscal year closing and balance sheet generation to follow Swiss GAAP standards.
 
-### Changes Implemented
+### Issues Fixed
 
-#### 1. New Function: `R/add_transaction.R` ✅
+1. **Wrong default account for profit transfer**: Changed from 2850 (Private Account) to 2970 (Carried Forward Profit/Loss)
+   - Private account is for owner withdrawals/contributions, not profit allocation
+   - Per Swiss GAAP, profit should go to reserves (2970) not private account (2850)
 
-**Created new file** with full roxygen2 documentation:
+2. **Incorrect sign convention in aggregate_accounts**: Fixed `sum_accounts.R`
+   - Credits to liability/income accounts now correctly negative
+   - Debits to asset/expense accounts now correctly positive
+   - This fixes the net P&L calculation for closing
 
-```r
-#' Add a Complete Transaction (Debit + Credit Pair)
-#'
-#' @description
-#' Simplified function to add a complete double-entry transaction with one call.
-#' This function adds two ledger entries (debit and credit) automatically, maintaining
-#' the exact same behavior as manual calls to \code{add_ledger_entry()}.
-#'
-#' @param ledger_file Path to the ledger CSV file
-#' @param date Transaction date (character or Date object)
-#' @param descr Transaction description
-#' @param debit_account Account number to debit
-#' @param credit_account Account number to credit
-#' @param amount Transaction amount (positive number)
-#'
-#' @return Invisibly returns NULL. Side effect: updates the ledger CSV file
-#' @export
-add_transaction <- function(ledger_file, date, descr, debit_account, credit_account, amount) {
-  # First entry: export only (no import) - creates entry with self-linked counterpart_id
-  add_ledger_entry(...)
-
-  # Second entry: import and export - automatically links to previous entry via counterpart_id
-  add_ledger_entry(...)
-
-  invisible(NULL)
-}
-```
-
-**Key features**:
-- Exported function available to all users
-- Explicit named parameters (ledger_file, date, descr, debit_account, credit_account, amount)
-- Maintains exact same behavior as manual `add_ledger_entry()` calls
-- Leverages automatic counterpart_id assignment
-
-#### 2. Updated NAMESPACE ✅
-
-After running `devtools::document()`:
-- Added `export(add_transaction)` to NAMESPACE
-- Generated help file `man/add_transaction.Rd`
-
-#### 3. Updated README.Rmd ✅
-
-**Changed section title**: "Simplifying with the add_transaction() Function"
-
-**Replaced user-defined wrapper example** with package function:
-
-**Before**:
-```r
-# Create wrapper for transaction pairs
-add_transaction <- function(date, descr, debit_account, credit_account, amount) { ... }
-```
-
-**After**:
-```r
-# Use the built-in add_transaction() function
-swissaccounting::add_transaction(
-  ledger_file = ledger_file,
-  date = "2024-01-15",
-  descr = "Office supplies",
-  debit_account = 4000,
-  credit_account = 1020,
-  amount = 500
-)
-```
-
-#### 4. Updated User Script: `script/script_ledger.R` ✅
-
-**Removed local wrapper function** (lines 15-37 previously)
-
-**Updated all transaction calls**:
-
-**Before**:
-```r
-add_transaction(date = "2024-01-01", descr = "...", debit_account = 6570, credit_account = 2300, amount = 38.77)
-```
-
-**After**:
-```r
-swissaccounting::add_transaction(ledger_file = ledger_file, date = "2024-01-01", descr = "...", debit_account = 6570, credit_account = 2300, amount = 38.77)
-```
-
-All 43 transactions (21 in 2024, 22 in 2025) now use the package function with explicit named arguments.
-
-### Benefits Achieved
-
-1. **Package-level function**: Available to all users via `swissaccounting::add_transaction()`
-2. **Cleaner user scripts**: No need to define wrapper functions locally
-3. **Better documentation**: Full roxygen2 docs with examples
-4. **Explicit argument names**: Prevents debit/credit confusion
-5. **Maintainability**: Package function is tested and versioned
-6. **Exact reproducibility**: Same ledger.csv output as before
-
-### Swiss GAAP Compliance
-
-This change does NOT affect Swiss GAAP compliance:
-- ✅ Double-entry bookkeeping maintained (function creates debit + credit pair)
-- ✅ Audit trail preserved (counterpart_id linking works as before)
-- ✅ Chronological recording maintained
-- ✅ Account classification unchanged
-- ✅ Year-end closing and opening balances unaffected
+3. **Spurious private account in balance sheet**: Removed auto-generated private account entry from `get_balance_accounts`
+   - Previously, `get_balance_accounts` called `get_private_account` which synthesized an entry
+   - This caused double-counting after closing since profit was already in 2970
+   - Now balance sheet only shows actual ledger entries
 
 ### Files Modified
 
-**swissaccounting package**:
-1. ✅ `R/add_transaction.R` (new file)
-2. ✅ `NAMESPACE` (auto-generated via devtools::document())
-3. ✅ `man/add_transaction.Rd` (auto-generated)
-4. ✅ `README.Rmd` (updated section on simplifying transactions)
+1. ✅ `R/close_fiscal_year.R` - Changed default `transfer_to_account` from 2850L to 2970L
+2. ✅ `R/sum_accounts.R` - Fixed sign convention in `aggregate_accounts()`
+3. ✅ `R/get_balance_accounts.R` - Removed synthetic private account entry
+4. ✅ `README.Rmd` - Updated documentation for new default account
 
-**User scripts**:
-5. ✅ `script/script_ledger.R` (removed local wrapper, updated all calls)
+### Verification
 
-### Package Version
-
-Version: 0.1.0.9002 (installed and verified)
-
----
-
-# Previous: Automatic counterpart_id Management
-
-**Status**: ✅ COMPLETED (Commits: 9755473, 4eab15f)
-
-## Problem Statement
-
-The swissaccounting package had manual `counterpart_id` management throughout the codebase:
-- `add_ledger_entry()` required users to manually track and specify counterpart_id for linked entries
-- `close_fiscal_year()` manually managed IDs with `current_id` and `current_id + 1L` patterns
-- `create_opening_balances()` manually incremented IDs with `current_id <- current_id + 2L`
-- User scripts like `script_ledger.R` had hardcoded counterpart_ids (1L, 3L, 5L, etc.)
-
-This made the code:
-- ❌ Error-prone when regenerating ledgers
-- ❌ Difficult to maintain
-- ❌ Verbose and repetitive
-
-## Solution Implemented
-
-Fully automated counterpart_id assignment at the package level, eliminating all manual ID management.
-
----
-
-## Changes Implemented
-
-### 1. Core Automation: `R/ledger.R` ✅
-
-**Modified `add_ledger_entry()` function** (commit 9755473):
-
-**What changed**:
-- Added automatic counterpart_id detection logic before creating ledger_raw tibble
-- Calculates `next_id` once at the beginning
-- Determines counterpart_id based on `import_csv` parameter:
-  - `import_csv = FALSE` → First entry in transaction → self-link (`counterpart_id = next_id`)
-  - `import_csv = TRUE` → Subsequent entry → link to previous (`counterpart_id = max(ledger$id)`)
-  - Explicit `counterpart_id` provided → use as-is (for multi-entry transactions)
-
-**Code added** (lines 148-166):
+Balance sheet now properly balanced:
 ```r
-# Determine next ID
-next_id <- if_else(is.na(max(last_ledger$id)), 1L, max(last_ledger$id) + 1L)
+# After closing:
+# A tibble: 3 × 3
+  account_number account_description                              sum_amounts
+           <int> <chr>                                                  <dbl>
+1           1020 Bank                                                    1300
+2           2800 Share Capital                                          -1000
+3           2970 Carried Forward Profit / Loss                           -300
 
-# Automatic counterpart_id assignment logic
-.counterpart_id <- if (is.null(counterpart_id)) {
-  if (import_csv && !is.null(filename_to_import)) {
-    # For subsequent entries in a transaction: link to the previous entry
-    if (nrow(last_ledger) > 0) {
-      max(last_ledger$id, na.rm = TRUE)
-    } else {
-      next_id  # Empty ledger, first entry ever
-    }
-  } else {
-    # For first entry in a transaction: self-link
-    next_id
-  }
-} else {
-  counterpart_id
-}
+# A tibble: 2 × 2
+  account_base_category total
+                  <int> <dbl>
+1                     1  1300  # Assets
+2                     2 -1300  # Liabilities (equals assets in absolute value) ✓
 ```
 
-**Documentation updated**:
-```r
-#' @param counterpart_id integer Optional. ID to link related ledger entries together.
-#'   If NULL and import_csv is FALSE, defaults to the entry's own ID (first entry in a transaction).
-#'   If NULL and import_csv is TRUE, automatically links to the previous entry's ID (subsequent entries).
-#'   For multi-entry transactions (>2 entries), you can explicitly provide the first entry's ID.
-```
+All 22 tests pass.
 
 ---
 
-### 2. Simplified `close_fiscal_year()`: `R/close_fiscal_year.R` ✅
+## Previous Notes (Reference)
 
-**What changed** (commit 9755473):
-- Removed `next_id <- get_next_ledger_id(ledger_file)`
-- Removed `current_id <- next_id` tracker
-- Removed all `id = current_id` and `id = current_id + 1L` assignments from tibbles
-- Removed all `counterpart_id = current_id` assignments from tibbles
-- Removed `current_id <- current_id + 2L` increments
 
-**Before** (~130 lines with manual ID management):
-```r
-next_id <- get_next_ledger_id(ledger_file)
-current_id <- next_id
 
-closing_entries[[length(closing_entries) + 1]] <- tibble(
-  date = closing_date_parsed,
-  id = current_id,
-  counterpart_id = current_id,
-  description = paste(closing_desc_prefix, account_desc),
-  debit_account = account_num,
-  credit_account = NA_integer_,
-  amount = abs(balance),
-  account_description = account_desc,
-  account_type = closing_type
-)
 
-closing_entries[[length(closing_entries) + 1]] <- tibble(
-  date = closing_date_parsed,
-  id = current_id + 1L,
-  counterpart_id = current_id,
-  description = paste(closing_desc_prefix, account_desc),
-  debit_account = NA_integer_,
-  credit_account = 9200L,
-  amount = abs(balance),
-  account_description = account_9200$account_description[1],
-  account_type = closing_type
-)
-
-current_id <- current_id + 2L
-```
-
-**After** (~110 lines, cleaner):
-```r
-closing_entries[[length(closing_entries) + 1]] <- tibble(
-  date = closing_date_parsed,
-  description = paste(closing_desc_prefix, account_desc),
-  debit_account = account_num,
-  credit_account = NA_integer_,
-  amount = abs(balance),
-  account_description = account_desc,
-  account_type = closing_type
-)
-
-closing_entries[[length(closing_entries) + 1]] <- tibble(
-  date = closing_date_parsed,
-  description = paste(closing_desc_prefix, account_desc),
-  debit_account = NA_integer_,
-  credit_account = 9200L,
-  amount = abs(balance),
-  account_description = account_9200$account_description[1],
-  account_type = closing_type
-)
-```
-
-**Entries simplified**:
-- Income closing entries (2 entries per account)
-- Expense closing entries (2 entries per account)
-- Transfer 9200 → 2891 (2 entries)
-- Transfer 2891 → 2850 (2 entries)
-
-All now rely on `append_ledger_entries()` for automatic ID/counterpart_id assignment.
-
----
-
-### 3. Simplified `create_opening_balances()`: `R/create_opening_balances.R` ✅
-
-**What changed** (commit 9755473):
-- Removed `next_id <- get_next_ledger_id(ledger_file)`
-- Removed `current_id <- next_id` tracker
-- Removed all `id = current_id` and `id = current_id + 1L` assignments from tibbles
-- Removed all `counterpart_id = current_id` assignments from tibbles
-- Removed `current_id <- current_id + 2L` increments
-
-**Before** (~140 lines with manual ID management):
-```r
-next_id <- get_next_ledger_id(ledger_file)
-current_id <- next_id
-
-# Asset with debit balance
-opening_entries[[length(opening_entries) + 1]] <- tibble(
-  date = opening_date_parsed,
-  id = current_id,
-  counterpart_id = current_id,
-  description = paste(opening_desc_prefix, account_desc),
-  debit_account = account_num,
-  credit_account = NA_integer_,
-  amount = abs(balance),
-  account_description = account_desc,
-  account_type = account_type
-)
-
-opening_entries[[length(opening_entries) + 1]] <- tibble(
-  date = opening_date_parsed,
-  id = current_id + 1L,
-  counterpart_id = current_id,
-  description = opening_desc,
-  debit_account = NA_integer_,
-  credit_account = 9100L,
-  amount = abs(balance),
-  account_description = account_9100$account_description[1],
-  account_type = closing_type
-)
-
-current_id <- current_id + 2L
-```
-
-**After** (~110 lines, cleaner):
-```r
-# Asset with debit balance
-opening_entries[[length(opening_entries) + 1]] <- tibble(
-  date = opening_date_parsed,
-  description = paste(opening_desc_prefix, account_desc),
-  debit_account = account_num,
-  credit_account = NA_integer_,
-  amount = abs(balance),
-  account_description = account_desc,
-  account_type = account_type
-)
-
-opening_entries[[length(opening_entries) + 1]] <- tibble(
-  date = opening_date_parsed,
-  description = opening_desc,
-  debit_account = NA_integer_,
-  credit_account = 9100L,
-  amount = abs(balance),
-  account_description = account_9100$account_description[1],
-  account_type = closing_type
-)
-```
-
-**Entries simplified**:
-- Asset opening entries (normal + reversed, 2 entries each)
-- Liability opening entries (normal + reversed, 2 entries each)
-
-All now rely on `append_ledger_entries()` for automatic ID/counterpart_id assignment.
-
----
-
-### 4. Enhanced `append_ledger_entries()`: `R/ledger_helpers.R` ✅
-
-**What changed** (commit 9755473):
-- Added automatic ID assignment if `id` column is missing
-- Added automatic counterpart_id assignment if `counterpart_id` column is missing
-- Assumes entries come in pairs (first links to self, second links to previous)
-
-**Code added** (lines 79-96):
-```r
-# Check if new_entries have id/counterpart_id columns
-# If not, assign them automatically
-if (!"id" %in% colnames(new_entries)) {
-  # Get next available ID
-  next_id <- get_next_ledger_id(ledger_file)
-
-  # Assign sequential IDs
-  new_entries <- new_entries |>
-    mutate(id = seq(from = next_id, length.out = n()))
-}
-
-if (!"counterpart_id" %in% colnames(new_entries)) {
-  # Assign counterpart_ids: first entry of each pair links to itself
-  # Subsequent entries link to the previous entry
-  # Assumes entries come in pairs
-  new_entries <- new_entries |>
-    mutate(counterpart_id = if_else(row_number() %% 2 == 1, id, lag(id)))
-}
-```
-
-**Documentation updated**:
-```r
-#' @param new_entries Tibble with new entries to append. Can include:
-#'   - Entries with explicit counterpart_id (will be used as-is)
-#'   - Entries without id/counterpart_id columns (will be auto-assigned sequentially)
-```
-
-This enables `close_fiscal_year()` and `create_opening_balances()` to create entries without IDs.
-
----
-
-### 5. Updated User Script Comments: `script/script_ledger.R` ✅
-
-**What changed** (commit 4eab15f):
-- Updated comment block at lines 111-127 to document automatic behavior
-- Removed outdated references to hardcoded IDs
-
-**New comments**:
-```r
-# ============================================
-# YEAR-END CLOSING 2024 & OPENING BALANCES 2025
-# ============================================
-# IMPORTANT: To regenerate the ledger with closing/opening entries:
-# 1. Delete the existing ersatz-ledger.csv file
-# 2. Run this script from the beginning
-# 3. All transactions use AUTOMATIC counterpart_id assignment (no hardcoded IDs!)
-#
-# AUTOMATIC ID ASSIGNMENT PATTERN:
-# - First entry: export_csv = TRUE, import_csv = FALSE
-#   → Creates entry with self-linked counterpart_id (marks beginning of transaction)
-# - Second entry: import_csv = TRUE
-#   → Automatically links to previous entry's ID (pairs the entries correctly)
-# - This ensures correctness regardless of closing/opening entries
-#
-# The close_fiscal_year() and create_opening_balances() functions also use automatic
-# counterpart_id assignment for all closing and opening entries.
-```
-
----
-
-### 6. Swiss GAAP Compliance Documentation: `doc/swiss-gaap.md` ✅
-
-**What changed** (commit 4eab15f):
-- Created comprehensive Swiss GAAP compliance documentation
-- Covers all 7 key compliance areas
-- Explains how automatic counterpart_id maintains compliance
-
-**Content added** (see [doc/swiss-gaap.md](doc/swiss-gaap.md)):
-1. Double-entry bookkeeping ✅
-2. Audit trail (Prüfungspfad) ✅
-3. Chronological recording (Chronologische Buchführung) ✅
-4. Account classification (Kontenrahmen) ✅
-5. Year-end closing (Jahresabschluss) ✅
-6. Opening balances (Eröffnungsbilanz) ✅
-7. Documentation (Belegprinzip) ✅
-
-**Key conclusion**:
-> The automated counterpart_id approach is FULLY COMPLIANT with Swiss GAAP because it does NOT change accounting principles, does NOT modify transaction amounts/dates/descriptions, does NOT alter year-end closing or opening procedures, IMPROVES audit trail reliability, and is a TECHNICAL IMPLEMENTATION DETAIL for ID management, not an accounting principle change.
-
----
-
-## Files Modified
-
-### swissaccounting package:
-
-1. ✅ **R/ledger.R** (commit 9755473)
-   - Modified `add_ledger_entry()` function (lines 148-180)
-   - Updated `@param counterpart_id` documentation (lines 69-72)
-
-2. ✅ **R/close_fiscal_year.R** (commit 9755473)
-   - Removed manual ID management (lines 109-293)
-   - Simplified all closing entry creation (~20 lines removed)
-
-3. ✅ **R/create_opening_balances.R** (commit 9755473)
-   - Removed manual ID management (lines 107-222)
-   - Simplified all opening entry creation (~30 lines removed)
-
-4. ✅ **R/ledger_helpers.R** (commit 9755473)
-   - Enhanced `append_ledger_entries()` (lines 54-101)
-   - Added automatic ID/counterpart_id assignment
-
-5. ✅ **doc/swiss-gaap.md** (commit 4eab15f)
-   - Created comprehensive compliance documentation (new file, 420 lines)
-
-### ersatz-accounting (user code):
-
-6. ✅ **script/script_ledger.R** (commit 4eab15f)
-   - Updated comment block (lines 111-127)
-   - NO code changes needed - already has no hardcoded counterpart_ids
-
----
-
-## Benefits Achieved
-
-- 🎯 **100% automated** - No manual ID management anywhere in codebase
-- 📉 **Zero script bloat** - No repetitive ID retrieval code
-- 🔧 **Maintainable** - New transactions work automatically
-- 🧹 **Cleaner codebase** - Removed ~100 lines of manual ID management
-- ✅ **Swiss GAAP compliant** - Verified full compliance with all 7 key requirements
-- 🔗 **Reliable** - Correct linking regardless of closing/opening entries
-- 📦 **Package-level solution** - All automation in swissaccounting package
-
----
-
-## How It Works
-
-### For User Scripts (`add_ledger_entry`)
-
-**Simple transaction (2 entries)**:
-```r
-# First entry (debit)
-add_ledger_entry(
-  date = "2024-01-01",
-  descr = "Google Workspace",
-  debit_account = 6570,
-  amount = 38.77,
-  export_csv = TRUE,
-  filename_to_export = ledger_file
-)
-# → Creates: id=1, counterpart_id=1 (self-linked)
-
-# Second entry (credit)
-add_ledger_entry(
-  date = "2024-01-01",
-  descr = "Google Workspace",
-  credit_account = 2300,
-  amount = 38.77,
-  import_csv = TRUE,
-  filename_to_import = ledger_file,
-  export_csv = TRUE,
-  filename_to_export = ledger_file
-)
-# → Creates: id=2, counterpart_id=1 (linked to previous) ✅
-```
-
-**Multi-entry transaction (>2 entries)**:
-```r
-# Entry 1: DR Expense
-add_ledger_entry(date = "2024-01-01", debit_account = 6570, amount = 38.77, ...)
-# → id=1, counterpart_id=1
-
-# Entry 2: CR Payable (auto-links to previous)
-add_ledger_entry(date = "2024-01-01", credit_account = 2300, amount = 38.77, import_csv = TRUE, ...)
-# → id=2, counterpart_id=1 ✅
-
-# Entry 3: DR Payable (explicit link to first)
-add_ledger_entry(date = "2024-01-01", counterpart_id = 1L, debit_account = 2300, amount = 38.77, import_csv = TRUE, ...)
-# → id=3, counterpart_id=1 ✅
-
-# Entry 4: CR Bank (explicit link to first)
-add_ledger_entry(date = "2024-01-01", counterpart_id = 1L, credit_account = 1020, amount = 38.77, import_csv = TRUE, ...)
-# → id=4, counterpart_id=1 ✅
-```
-
-### For Package Functions (`close_fiscal_year`, `create_opening_balances`)
-
-**Batch entry creation**:
-```r
-# Functions create tibbles WITHOUT id/counterpart_id
-closing_entries <- list()
-closing_entries[[1]] <- tibble(date = ..., description = ..., debit_account = ..., ...)
-closing_entries[[2]] <- tibble(date = ..., description = ..., credit_account = ..., ...)
-# ... more entries ...
-
-all_closing_entries <- bind_rows(closing_entries)
-
-# append_ledger_entries() automatically assigns IDs:
-# Entry 1: id=43, counterpart_id=43
-# Entry 2: id=44, counterpart_id=43
-# Entry 3: id=45, counterpart_id=45
-# Entry 4: id=46, counterpart_id=45
-# ... etc (pairs automatically linked)
-```
-
----
-
-## Testing
-
-To verify the implementation:
-
-1. **Reinstall package**:
-   ```r
-   pak::pak("Layalchristine24/swissaccounting")
-   ```
-
-2. **Delete and regenerate ledger**:
-   ```r
-   file.remove(file.path(here::here(), "documents", "ledger", "ersatz-ledger.csv"))
-   source(file.path(here::here(), "script", "script_ledger.R"))
-   ```
-
-3. **Verify counterpart_ids**:
-   ```r
-   ledger <- swissaccounting::read_ledger_csv(ledger_file)
-   View(ledger %>% select(id, counterpart_id, date, description, debit_account, credit_account, amount))
-
-   # Check pairing:
-   # IDs 1-2: counterpart_id = 1
-   # IDs 3-4: counterpart_id = 3
-   # IDs 5-6: counterpart_id = 5
-   # ... etc.
-   ```
-
-4. **Verify financial statements**:
-   ```r
-   balance_2025 <- get_balance_accounts(ledger_file, "2025-01-01", "2025-12-31", "en")
-   print(balance_2025$total)
-   # Expected: 438.00 CHF (256.45 opening + 181.55 from 2025)
-   ```
-
----
-
-## Commits
-
-**Commit 9755473b9efa6ba03a7eb4d8441af4a604c35281**:
-- Modified `R/ledger.R` - automatic counterpart_id in `add_ledger_entry()`
-- Simplified `R/close_fiscal_year.R` - removed manual ID management
-- Simplified `R/create_opening_balances.R` - removed manual ID management
-- Enhanced `R/ledger_helpers.R` - automatic ID assignment in `append_ledger_entries()`
-
-**Commit 4eab15fba536deb8f66da1d3a8f35df2f7a3f4a1**:
-- Created `doc/swiss-gaap.md` - comprehensive compliance documentation
-- Updated `script/script_ledger.R` - new comment block explaining automatic behavior
-
----
-
-## User Feedback Addressed
-
-- ✅ "can these operations be included in the function add_ledger_entry directly?"
-  → YES, implemented automatic detection in `add_ledger_entry()`
-
-- ✅ "also update the new functions close_fiscal_year and create_opening_balance with these ids"
-  → YES, removed all manual ID management from both functions
-
-- ✅ "check that your plan complies to the SWISS GAAP"
-  → YES, verified and documented full compliance in `doc/swiss-gaap.md`
-
-- ✅ "beware that sometimes more than 2 entries have the same counterpart id"
-  → YES, explicit counterpart_id parameter still available for multi-entry transactions
-
-- ✅ "so everything would be automated"
-  → YES, 100% automated - no manual ID management anywhere
-
-- ✅ "no more writings"
-  → YES, zero repetitive code - clean and maintainable
-
----
-
-## Summary
-
-The implementation successfully automated counterpart_id management throughout the swissaccounting package while maintaining full Swiss GAAP compliance. All manual ID tracking has been eliminated, resulting in cleaner, more maintainable code with zero risk of ID conflicts when regenerating ledgers.
