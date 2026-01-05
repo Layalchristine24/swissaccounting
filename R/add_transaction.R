@@ -7,7 +7,7 @@
 #'
 #' The function creates two entries:
 #' \itemize{
-#'   \item{First entry (debit): Creates an entry with self-linked counterpart_id}
+#'   \item{First entry (debit): Creates an entry with counterpart_id = NA}
 #'   \item{Second entry (credit): Automatically links to the first entry via counterpart_id}
 #' }
 #'
@@ -50,10 +50,10 @@
 #' )
 #' }
 add_transaction <- function(ledger_file, date, descr, debit_account, credit_account, amount) {
-  # First entry: import existing ledger if file exists, then export
-  # This prevents overwriting existing entries when called multiple times
   file_exists <- file.exists(ledger_file)
-  add_ledger_entry(
+
+  # First entry: capture the returned ledger to get the new entry's ID
+  first_entry_ledger <- add_ledger_entry(
     date = date,
     descr = descr,
     debit_account = debit_account,
@@ -61,15 +61,20 @@ add_transaction <- function(ledger_file, date, descr, debit_account, credit_acco
     import_csv = file_exists,
     filename_to_import = if (file_exists) ledger_file else NULL,
     export_csv = TRUE,
-    filename_to_export = ledger_file
+    filename_to_export = ledger_file,
+    is_first_entry = TRUE
   )
 
-  # Second entry: import and export - automatically links to previous entry via counterpart_id
+  # Get the ID of the first entry we just added
+  first_entry_id <- max(first_entry_ledger$id)
+
+  # Second entry: explicitly pass the first entry's ID as counterpart_id
   add_ledger_entry(
     date = date,
     descr = descr,
     credit_account = credit_account,
     amount = amount,
+    counterpart_id = first_entry_id,
     import_csv = TRUE,
     filename_to_import = ledger_file,
     export_csv = TRUE,

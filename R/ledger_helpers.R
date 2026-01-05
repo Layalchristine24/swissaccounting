@@ -88,11 +88,11 @@ append_ledger_entries <- function(ledger_file, new_entries) {
   }
 
   if (!"counterpart_id" %in% colnames(new_entries)) {
-    # Assign counterpart_ids: first entry of each pair links to itself
+    # Assign counterpart_ids: first entry of each pair has no counterpart yet
     # Subsequent entries link to the previous entry
     # Assumes entries come in pairs
     new_entries <- new_entries |>
-      mutate(counterpart_id = if_else(row_number() %% 2 == 1, id, lag(id)))
+      mutate(counterpart_id = if_else(row_number() %% 2 == 1, NA_integer_, lag(id)))
   }
 
   updated_ledger <- bind_rows(existing_ledger, new_entries)

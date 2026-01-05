@@ -63,9 +63,10 @@ add_ledger_entry(
 #> # A tibble: 1 × 9
 #>   date          id counterpart_id description       debit_account credit_account
 #>   <date>     <int>          <int> <chr>                     <int>          <int>
-#> 1 2024-01-15     1              1 Capital contribu…          1020             NA
+#> 1 2024-01-15     1             NA Capital contribu…          1020             NA
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
+
 
 add_ledger_entry(
   date = "2024-01-15",
@@ -81,7 +82,7 @@ add_ledger_entry(
 #> # A tibble: 2 × 9
 #>   date          id counterpart_id description       debit_account credit_account
 #>   <date>     <int>          <int> <chr>                     <int>          <int>
-#> 1 2024-01-15     1              1 Capital contribu…          1020             NA
+#> 1 2024-01-15     1             NA Capital contribu…          1020             NA
 #> 2 2024-01-15     2              1 Capital contribu…            NA           2820
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
 #> #   account_type <chr>
@@ -101,7 +102,7 @@ add_ledger_entry(
 #> # A tibble: 3 × 9
 #>   date          id counterpart_id description       debit_account credit_account
 #>   <date>     <int>          <int> <chr>                     <int>          <int>
-#> 1 2024-01-15     1              1 Capital contribu…          1020             NA
+#> 1 2024-01-15     1             NA Capital contribu…          1020             NA
 #> 2 2024-01-15     2              1 Capital contribu…            NA           2820
 #> 3 2024-01-31     3              2 Software subscri…          6570             NA
 #> # ℹ 3 more variables: amount <dbl>, account_description <chr>,
@@ -121,7 +122,7 @@ add_ledger_entry(
 #> # A tibble: 4 × 9
 #>   date          id counterpart_id description       debit_account credit_account
 #>   <date>     <int>          <int> <chr>                     <int>          <int>
-#> 1 2024-01-15     1              1 Capital contribu…          1020             NA
+#> 1 2024-01-15     1             NA Capital contribu…          1020             NA
 #> 2 2024-01-15     2              1 Capital contribu…            NA           2820
 #> 3 2024-01-31     3              2 Software subscri…          6570             NA
 #> 4 2024-01-31     4              3 Software subscri…            NA           2300
@@ -143,7 +144,7 @@ add_ledger_entry(
 #> # A tibble: 5 × 9
 #>   date          id counterpart_id description       debit_account credit_account
 #>   <date>     <int>          <int> <chr>                     <int>          <int>
-#> 1 2024-01-15     1              1 Capital contribu…          1020             NA
+#> 1 2024-01-15     1             NA Capital contribu…          1020             NA
 #> 2 2024-01-15     2              1 Capital contribu…            NA           2820
 #> 3 2024-01-31     3              2 Software subscri…          6570             NA
 #> 4 2024-01-31     4              3 Software subscri…            NA           2300
@@ -165,7 +166,7 @@ add_ledger_entry(
 #> # A tibble: 6 × 9
 #>   date          id counterpart_id description       debit_account credit_account
 #>   <date>     <int>          <int> <chr>                     <int>          <int>
-#> 1 2024-01-15     1              1 Capital contribu…          1020             NA
+#> 1 2024-01-15     1             NA Capital contribu…          1020             NA
 #> 2 2024-01-15     2              1 Capital contribu…            NA           2820
 #> 3 2024-01-31     3              2 Software subscri…          6570             NA
 #> 4 2024-01-31     4              3 Software subscri…            NA           2300
@@ -189,7 +190,7 @@ add_ledger_entry(
 #> # A tibble: 7 × 9
 #>   date          id counterpart_id description       debit_account credit_account
 #>   <date>     <int>          <int> <chr>                     <int>          <int>
-#> 1 2024-01-15     1              1 Capital contribu…          1020             NA
+#> 1 2024-01-15     1             NA Capital contribu…          1020             NA
 #> 2 2024-01-15     2              1 Capital contribu…            NA           2820
 #> 3 2024-01-31     3              2 Software subscri…          6570             NA
 #> 4 2024-01-31     4              3 Software subscri…            NA           2300
@@ -213,7 +214,7 @@ add_ledger_entry(
 #> # A tibble: 8 × 9
 #>   date          id counterpart_id description       debit_account credit_account
 #>   <date>     <int>          <int> <chr>                     <int>          <int>
-#> 1 2024-01-15     1              1 Capital contribu…          1020             NA
+#> 1 2024-01-15     1             NA Capital contribu…          1020             NA
 #> 2 2024-01-15     2              1 Capital contribu…            NA           2820
 #> 3 2024-01-31     3              2 Software subscri…          6570             NA
 #> 4 2024-01-31     4              3 Software subscri…            NA           2300
@@ -239,7 +240,7 @@ add_ledger_entry(
 #> # A tibble: 9 × 9
 #>   date          id counterpart_id description       debit_account credit_account
 #>   <date>     <int>          <int> <chr>                     <int>          <int>
-#> 1 2024-01-15     1              1 Capital contribu…          1020             NA
+#> 1 2024-01-15     1             NA Capital contribu…          1020             NA
 #> 2 2024-01-15     2              1 Capital contribu…            NA           2820
 #> 3 2024-01-31     3              2 Software subscri…          6570             NA
 #> 4 2024-01-31     4              3 Software subscri…            NA           2300
@@ -265,7 +266,7 @@ add_ledger_entry(
 #> # A tibble: 10 × 9
 #>    date          id counterpart_id description      debit_account credit_account
 #>    <date>     <int>          <int> <chr>                    <int>          <int>
-#>  1 2024-01-15     1              1 Capital contrib…          1020             NA
+#>  1 2024-01-15     1             NA Capital contrib…          1020             NA
 #>  2 2024-01-15     2              1 Capital contrib…            NA           2820
 #>  3 2024-01-31     3              2 Software subscr…          6570             NA
 #>  4 2024-01-31     4              3 Software subscr…            NA           2300
@@ -293,7 +294,7 @@ add_ledger_entry(
 #> # A tibble: 11 × 9
 #>    date          id counterpart_id description      debit_account credit_account
 #>    <date>     <int>          <int> <chr>                    <int>          <int>
-#>  1 2024-01-15     1              1 Capital contrib…          1020             NA
+#>  1 2024-01-15     1             NA Capital contrib…          1020             NA
 #>  2 2024-01-15     2              1 Capital contrib…            NA           2820
 #>  3 2024-01-31     3              2 Software subscr…          6570             NA
 #>  4 2024-01-31     4              3 Software subscr…            NA           2300
@@ -321,7 +322,7 @@ add_ledger_entry(
 #> # A tibble: 12 × 9
 #>    date          id counterpart_id description      debit_account credit_account
 #>    <date>     <int>          <int> <chr>                    <int>          <int>
-#>  1 2024-01-15     1              1 Capital contrib…          1020             NA
+#>  1 2024-01-15     1             NA Capital contrib…          1020             NA
 #>  2 2024-01-15     2              1 Capital contrib…            NA           2820
 #>  3 2024-01-31     3              2 Software subscr…          6570             NA
 #>  4 2024-01-31     4              3 Software subscr…            NA           2300
@@ -351,7 +352,7 @@ add_ledger_entry(
 #> # A tibble: 13 × 9
 #>    date          id counterpart_id description      debit_account credit_account
 #>    <date>     <int>          <int> <chr>                    <int>          <int>
-#>  1 2024-01-15     1              1 Capital contrib…          1020             NA
+#>  1 2024-01-15     1             NA Capital contrib…          1020             NA
 #>  2 2024-01-15     2              1 Capital contrib…            NA           2820
 #>  3 2024-01-31     3              2 Software subscr…          6570             NA
 #>  4 2024-01-31     4              3 Software subscr…            NA           2300
@@ -381,7 +382,7 @@ add_ledger_entry(
 #> # A tibble: 14 × 9
 #>    date          id counterpart_id description      debit_account credit_account
 #>    <date>     <int>          <int> <chr>                    <int>          <int>
-#>  1 2024-01-15     1              1 Capital contrib…          1020             NA
+#>  1 2024-01-15     1             NA Capital contrib…          1020             NA
 #>  2 2024-01-15     2              1 Capital contrib…            NA           2820
 #>  3 2024-01-31     3              2 Software subscr…          6570             NA
 #>  4 2024-01-31     4              3 Software subscr…            NA           2300

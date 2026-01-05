@@ -68,6 +68,7 @@ add_ledger_entry(
   filename_to_export = ledger_file
 )
 
+
 add_ledger_entry(
   date = "2024-01-15",
   language = "en",

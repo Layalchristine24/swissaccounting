@@ -78,6 +78,8 @@ get_ledger <- function(ledger_file = NULL, import_csv = FALSE) {
 #' @param filename_to_import character Optional. Path to import CSV file.
 #' @param export_csv logical Whether to export to CSV file. Defaults to FALSE.
 #' @param filename_to_export character Optional. Path to export CSV file.
+#' @param is_first_entry logical Whether this is the first entry of a transaction pair.
+#'   If TRUE and counterpart_id is NULL, sets counterpart_id to NA. Defaults to FALSE.
 #'
 #' @return tibble A tibble containing the updated ledger with the new entry.
 #'   See get_ledger() for column descriptions.
@@ -121,7 +123,8 @@ add_ledger_entry <- function(
   import_csv = FALSE,
   filename_to_import = NULL,
   export_csv = FALSE,
-  filename_to_export = NULL
+  filename_to_export = NULL,
+  is_first_entry = FALSE
 ) {
   if (is.character(date)) {
     date <- lubridate::as_date(date)
@@ -153,16 +156,15 @@ add_ledger_entry <- function(
 
   # Automatic counterpart_id assignment logic
   .counterpart_id <- if (is.null(counterpart_id)) {
-    if (import_csv && !is.null(filename_to_import)) {
+    if (is_first_entry) {
+      # For first entry in a transaction: no counterpart yet
+      NA_integer_
+    } else if (import_csv && !is.null(filename_to_import) && nrow(last_ledger) > 0) {
       # For subsequent entries in a transaction: link to the previous entry
-      if (nrow(last_ledger) > 0) {
-        max(last_ledger$id, na.rm = TRUE)
-      } else {
-        next_id  # Empty ledger, first entry ever
-      }
+      max(last_ledger$id, na.rm = TRUE)
     } else {
-      # For first entry in a transaction: self-link
-      next_id
+      # Fallback: no counterpart
+      NA_integer_
     }
   } else {
     counterpart_id
