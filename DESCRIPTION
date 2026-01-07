@@ -26,3 +26,21 @@ Suggests:
 Config/roxyglobals/filename: globals.R
 Config/roxyglobals/unique: FALSE
 Config/testthat/edition: 3
+Collate: 
+    'ensure_type.R'
+    'accounting_plan_template.R'
+    'add_transaction.R'
+    'close_fiscal_year.R'
+    'consolidate_accounting_plans.R'
+    'create_opening_balances.R'
+    'get_balance_accounts.R'
+    'get_higher_categories.R'
+    'get_income_statement.R'
+    'get_operating_result.R'
+    'get_private_account.R'
+    'globals.R'
+    'ledger.R'
+    'ledger_helpers.R'
+    'sum_accounts.R'
+    'swissaccounting-package.R'
+    'utils.R'

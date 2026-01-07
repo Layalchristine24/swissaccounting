@@ -23,6 +23,7 @@
 #' accounts_model_fr
 #' }
 #'
+#' @include ensure_type.R
 #' @keywords dataset
 #' @export
 # fmt: skip
@@ -198,8 +199,10 @@ accounts_model_fr <- tribble(
   92, "B\u00e9n\u00e9fice / perte", "Cl\u00f4ture",
   9200, "B\u00e9n\u00e9fice / perte de l'exercice", "Produit/Charge"
 ) |>
-  ensure_type(account_number = integer(), 
-.default = character())
+  ensure_type(
+    account_number = integer(),
+    .default = character()
+  )
 
 
 #' Financial Accounts Model (English)
@@ -402,8 +405,10 @@ accounts_model_en <- tribble(
   92, "Profit / Loss", "Closing",
   9200, "Current Year's Profit / Loss", "Income/Expense"
 ) |>
-  ensure_type(account_number = integer(), 
-.default = character())
+  ensure_type(
+    account_number = integer(),
+    .default = character()
+  )
 
 
 #' Financial Accounts Model (German)
@@ -606,5 +611,7 @@ accounts_model_de <- tribble(
   92, "Gewinn / Verlust", "Abschluss",
   9200, "Gewinn / Verlust des Gesch\u00e4ftsjahres", "Einnahmen/Ausgabe"
 ) |>
-  ensure_type(account_number = integer(), 
-.default = character())
+  ensure_type(
+    account_number = integer(),
+    .default = character()
+  )
