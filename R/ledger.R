@@ -159,7 +159,9 @@ add_ledger_entry <- function(
     if (is_first_entry) {
       # For first entry in a transaction: no counterpart yet
       NA_integer_
-    } else if (import_csv && !is.null(filename_to_import) && nrow(last_ledger) > 0) {
+    } else if (
+      import_csv && !is.null(filename_to_import) && nrow(last_ledger) > 0
+    ) {
       # For subsequent entries in a transaction: link to the previous entry
       max(last_ledger$id, na.rm = TRUE)
     } else {

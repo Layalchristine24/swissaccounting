@@ -50,7 +50,14 @@
 #'   amount = 3000
 #' )
 #' }
-add_transaction <- function(ledger_file, date, descr, debit_account, credit_account, amount) {
+add_transaction <- function(
+  ledger_file,
+  date,
+  descr,
+  debit_account,
+  credit_account,
+  amount
+) {
   file_exists <- file.exists(ledger_file)
 
   # First entry: capture the returned ledger to get the new entry's ID

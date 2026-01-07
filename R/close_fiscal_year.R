@@ -26,12 +26,13 @@
 #'   language = "en"
 #' )
 #' }
-close_fiscal_year <- function(ledger_file,
-                              closing_date,
-                              language = NULL,
-                              transfer_to_account = 2970L,
-                              overwrite = FALSE) {
-
+close_fiscal_year <- function(
+  ledger_file,
+  closing_date,
+  language = NULL,
+  transfer_to_account = 2970L,
+  overwrite = FALSE
+) {
   # Detect language if not specified
   if (is.null(language)) {
     language <- detect_ledger_language(ledger_file)
@@ -44,7 +45,11 @@ close_fiscal_year <- function(ledger_file,
 
   # Check if closing already exists
   if (check_closing_exists(ledger_file, closing_date) && !overwrite) {
-    cli_abort(paste0("Closing entries already exist for ", closing_date, ". Use overwrite = TRUE to replace."))
+    cli_abort(paste0(
+      "Closing entries already exist for ",
+      closing_date,
+      ". Use overwrite = TRUE to replace."
+    ))
   }
 
   # Parse closing date
@@ -72,7 +77,9 @@ close_fiscal_year <- function(ledger_file,
     filter(account_number == 9200L)
 
   if (nrow(account_9200) == 0) {
-    cli_abort("Account 9200 (Current Year Profit/Loss) not found in account model")
+    cli_abort(
+      "Account 9200 (Current Year Profit/Loss) not found in account model"
+    )
   }
 
   closing_type <- if (language == "fr") {
@@ -181,7 +188,9 @@ close_fiscal_year <- function(ledger_file,
     filter(account_number == 2891L)
 
   if (nrow(account_2891) == 0) {
-    cli_abort("Account 2891 (Balance Sheet Profit/Loss) not found in account model")
+    cli_abort(
+      "Account 2891 (Balance Sheet Profit/Loss) not found in account model"
+    )
   }
 
   # Transfer 9200 to 2891
@@ -234,7 +243,11 @@ close_fiscal_year <- function(ledger_file,
     filter(account_number == transfer_to_account)
 
   if (nrow(transfer_account) == 0) {
-    cli_abort(paste0("Account ", transfer_to_account, " not found in account model"))
+    cli_abort(paste0(
+      "Account ",
+      transfer_to_account,
+      " not found in account model"
+    ))
   }
 
   # Transfer 2891 to transfer_to_account (default: 2970)

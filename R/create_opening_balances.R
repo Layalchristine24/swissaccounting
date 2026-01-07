@@ -25,12 +25,13 @@
 #'   language = "en"
 #' )
 #' }
-create_opening_balances <- function(ledger_file,
-                                    opening_date,
-                                    previous_closing_date = NULL,
-                                    language = NULL,
-                                    overwrite = FALSE) {
-
+create_opening_balances <- function(
+  ledger_file,
+  opening_date,
+  previous_closing_date = NULL,
+  language = NULL,
+  overwrite = FALSE
+) {
   # Detect language if not specified
   if (is.null(language)) {
     language <- detect_ledger_language(ledger_file)
@@ -53,7 +54,11 @@ create_opening_balances <- function(ledger_file,
 
   # Check if opening already exists
   if (check_opening_exists(ledger_file, opening_date) && !overwrite) {
-    cli_abort(paste0("Opening entries already exist for ", opening_date, ". Use overwrite = TRUE to replace."))
+    cli_abort(paste0(
+      "Opening entries already exist for ",
+      opening_date,
+      ". Use overwrite = TRUE to replace."
+    ))
   }
 
   # Get balance sheet account balances (categories 1-2) at previous closing date
@@ -78,7 +83,9 @@ create_opening_balances <- function(ledger_file,
     filter(account_number == 9100L)
 
   if (nrow(account_9100) == 0) {
-    cli_abort("Account 9100 (Opening Balance) not found in account model. Please add it to accounting_plan_template.R")
+    cli_abort(
+      "Account 9100 (Opening Balance) not found in account model. Please add it to accounting_plan_template.R"
+    )
   }
 
   opening_desc_prefix <- if (language == "fr") {

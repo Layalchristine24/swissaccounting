@@ -13,12 +13,26 @@ detect_ledger_language <- function(ledger_file) {
   ledger <- read_ledger_csv(ledger_file)
 
   # Get a sample of account descriptions
-  sample_descriptions <- unique(ledger$account_description)[1:min(10, length(unique(ledger$account_description)))]
+  sample_descriptions <- unique(ledger$account_description)[
+    1:min(10, length(unique(ledger$account_description)))
+  ]
 
   # Check for language-specific words
-  french_words <- sum(grepl("Banque|Caisse|Actif|Passif|Produit|Charge", sample_descriptions, ignore.case = TRUE))
-  english_words <- sum(grepl("Bank|Cash|Asset|Liability|Income|Expense", sample_descriptions, ignore.case = TRUE))
-  german_words <- sum(grepl("Aktivkonto|Passivkonto|Einnahmen|Ausgabe", sample_descriptions, ignore.case = TRUE))
+  french_words <- sum(grepl(
+    "Banque|Caisse|Actif|Passif|Produit|Charge",
+    sample_descriptions,
+    ignore.case = TRUE
+  ))
+  english_words <- sum(grepl(
+    "Bank|Cash|Asset|Liability|Income|Expense",
+    sample_descriptions,
+    ignore.case = TRUE
+  ))
+  german_words <- sum(grepl(
+    "Aktivkonto|Passivkonto|Einnahmen|Ausgabe",
+    sample_descriptions,
+    ignore.case = TRUE
+  ))
 
   if (french_words > english_words && french_words > german_words) {
     return("fr")
@@ -95,7 +109,9 @@ append_ledger_entries <- function(ledger_file, new_entries) {
     # Subsequent entries link to the previous entry
     # Assumes entries come in pairs
     new_entries <- new_entries |>
-      mutate(counterpart_id = if_else(row_number() %% 2 == 1, NA_integer_, lag(id)))
+      mutate(
+        counterpart_id = if_else(row_number() %% 2 == 1, NA_integer_, lag(id))
+      )
   }
 
   updated_ledger <- bind_rows(existing_ledger, new_entries)
@@ -116,7 +132,12 @@ append_ledger_entries <- function(ledger_file, new_entries) {
 #' @keywords internal
 #' @noRd
 #' @autoglobal
-get_account_balances_at_date <- function(ledger_file, closing_date, account_range, language) {
+get_account_balances_at_date <- function(
+  ledger_file,
+  closing_date,
+  account_range,
+  language
+) {
   ledger <- read_ledger_csv(ledger_file)
 
   # Filter by date range (from beginning to closing date)
@@ -149,10 +170,11 @@ get_account_balances_at_date <- function(ledger_file, closing_date, account_rang
 
   result <- account_sums |>
     left_join(
-      account_model |> ensure_type(
-        account_number = integer(),
-        account_type = character()
-      ),
+      account_model |>
+        ensure_type(
+          account_number = integer(),
+          account_type = character()
+        ),
       by = "account_number"
     )
 
@@ -198,8 +220,11 @@ check_opening_exists <- function(ledger_file, opening_date) {
 
   opening_entries <- ledger |>
     filter(date == opening_date_parsed) |>
-    filter(grepl("Opening|Ouverture|Er\u00f6ffnung|Bilan d'ouverture|Opening Balance|Er\u00f6ffnungsbilanz",
-                       description, ignore.case = TRUE))
+    filter(grepl(
+      "Opening|Ouverture|Er\u00f6ffnung|Bilan d'ouverture|Opening Balance|Er\u00f6ffnungsbilanz",
+      description,
+      ignore.case = TRUE
+    ))
 
   return(nrow(opening_entries) > 0)
 }

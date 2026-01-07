@@ -22,8 +22,6 @@ utils::globalVariables(c(
   "id", # <append_ledger_entries>
   "account_base_category", # <get_account_balances_at_date>
   "sum_amounts", # <get_account_balances_at_date>
-  "account_number", # <get_account_balances_at_date>
-  "account_type", # <get_account_balances_at_date>
   "account_type", # <check_closing_exists>
   "description", # <check_opening_exists>
   "account_type", # <sum_accounts>

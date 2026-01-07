@@ -4,7 +4,14 @@ test_that("get_income_statement returns correct structure", {
   on.exit(unlink(temp_ledger))
 
   # Add income transaction (account 3xxx)
-  add_transaction(temp_ledger, "2024-01-15", "Service revenue", 1020, 3000, 1000)
+  add_transaction(
+    temp_ledger,
+    "2024-01-15",
+    "Service revenue",
+    1020,
+    3000,
+    1000
+  )
 
   # Add expense transactions (accounts 4xxx, 5xxx, 6xxx)
   add_transaction(temp_ledger, "2024-01-20", "Cost of goods", 4000, 1020, 300)
@@ -49,7 +56,14 @@ test_that("get_income_statement filters out zero-amount entries", {
 
   # Add an income entry and reverse it (net zero)
   add_transaction(temp_ledger, "2024-01-15", "Revenue", 1020, 3000, 500)
-  add_transaction(temp_ledger, "2024-01-16", "Revenue reversal", 3000, 1020, 500)
+  add_transaction(
+    temp_ledger,
+    "2024-01-16",
+    "Revenue reversal",
+    3000,
+    1020,
+    500
+  )
 
   # Add a non-zero expense
   add_transaction(temp_ledger, "2024-01-20", "Office expense", 6000, 1020, 100)
@@ -73,7 +87,14 @@ test_that("get_income_statement respects date filtering", {
   on.exit(unlink(temp_ledger))
 
   # Add transactions in different months
-  add_transaction(temp_ledger, "2024-01-15", "January revenue", 1020, 3000, 1000)
+  add_transaction(
+    temp_ledger,
+    "2024-01-15",
+    "January revenue",
+    1020,
+    3000,
+    1000
+  )
   add_transaction(temp_ledger, "2024-03-15", "March expense", 6000, 1020, 200)
 
   # Filter for January only
