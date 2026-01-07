@@ -29,7 +29,7 @@ either "assets" or "liabilities"}
 }
 \value{
 data.frame A data frame containing:
-\itemize{
+\describe{
 \item{account_base_category}{Integer. First digit of account number (1 or 2)}
 \item{high_category}{Integer. First two digits of account number}
 \item{intermediate_category}{Integer. First three digits of account number}

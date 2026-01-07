@@ -7,21 +7,21 @@
 #' for account descriptions and types throughout the package.
 #'
 #' @param my_accounts_model_en data.frame English account plan with columns:
-#'   \itemize{
+#'   \describe{
 #'     \item{account_number}{Integer. The account identifier}
 #'     \item{account_type}{Character. Account type in English}
 #'     \item{account_description}{Character. Account description in English}
 #'   }
 #'   Defaults to accounts_model_en
 #' @param my_accounts_model_fr data.frame French account plan with columns:
-#'   \itemize{
+#'   \describe{
 #'     \item{account_number}{Integer. The account identifier}
 #'     \item{account_type}{Character. Account type in French}
 #'     \item{account_description}{Character. Account description in French}
 #'   }
 #'   Defaults to accounts_model_fr
 #' @param my_accounts_model_de data.frame German account plan with columns:
-#'   \itemize{
+#'   \describe{
 #'     \item{account_number}{Integer. The account identifier}
 #'     \item{account_type}{Character. Account type in German}
 #'     \item{account_description}{Character. Account description in German}
@@ -29,7 +29,7 @@
 #'   Defaults to accounts_model_de
 #'
 #' @return data.frame A consolidated data frame with columns:
-#'   \itemize{
+#'   \describe{
 #'     \item{account_number}{Integer. Unique account identifier}
 #'     \item{account_type_en}{Character. Account type in English}
 #'     \item{account_description_en}{Character. Account description in English}
@@ -44,18 +44,21 @@
 #' consolidated <- consolidate_accounting_plans()
 #' head(consolidated)
 #'
+#' \dontrun{
 #' # Use custom account plans
 #' custom_consolidated <- consolidate_accounting_plans(
 #'   my_accounts_model_en = custom_en_plan,
 #'   my_accounts_model_fr = custom_fr_plan,
 #'   my_accounts_model_de = custom_de_plan
 #' )
+#' }
 #'
 #' @seealso
 #' \code{\link{accounts_model_en}} for English account plan
 #' \code{\link{accounts_model_fr}} for French account plan
 #' \code{\link{accounts_model_de}} for German account plan
 #'
+#' @export
 #' @autoglobal
 consolidate_accounting_plans <- function(
   my_accounts_model_en = accounts_model_en,

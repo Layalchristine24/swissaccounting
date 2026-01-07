@@ -14,6 +14,7 @@
 #'
 #' @return Invisibly returns the updated ledger tibble
 #' @export
+#' @autoglobal
 #'
 #' @examples
 #' \dontrun{
@@ -83,7 +84,7 @@ create_opening_balances <- function(ledger_file,
   opening_desc_prefix <- if (language == "fr") {
     "Bilan d'ouverture:"
   } else if (language == "de") {
-    "Eröffnungsbilanz:"
+    "Er\u00f6ffnungsbilanz:"
   } else {
     "Opening Balance:"
   }
@@ -91,13 +92,13 @@ create_opening_balances <- function(ledger_file,
   opening_desc <- if (language == "fr") {
     "Bilan d'ouverture"
   } else if (language == "de") {
-    "Eröffnungsbilanz"
+    "Er\u00f6ffnungsbilanz"
   } else {
     "Opening Balance"
   }
 
   closing_type <- if (language == "fr") {
-    "Clôture"
+    "Cl\u00f4ture"
   } else if (language == "de") {
     "Abschluss"
   } else {

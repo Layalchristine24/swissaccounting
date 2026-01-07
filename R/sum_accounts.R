@@ -9,7 +9,7 @@
 #'
 #' @param my_ledger data.frame A data frame containing accounting ledger data with
 #'   the following columns:
-#'   \itemize{
+#'   \describe{
 #'     \item{account_type}{Character. Type of account (Asset, Liability, etc.)}
 #'     \item{debit_account}{Integer. Account number for debit entries}
 #'     \item{credit_account}{Integer. Account number for credit entries}
@@ -18,7 +18,7 @@
 #'   }
 #'
 #' @return data.frame A grouped data frame with the following columns:
-#'   \itemize{
+#'   \describe{
 #'     \item{account_base_category}{Integer. First digit of account number (1-9)}
 #'     \item{high_category}{Integer. First two digits of account number}
 #'     \item{intermediate_category}{Integer. First three digits of account number}
@@ -29,6 +29,7 @@
 #'   }
 #'
 #' @examples
+#' \dontrun{
 #' # Create sample ledger data
 #' ledger_data <- data.frame(
 #'   account_type = c("Asset", "Liability", "Asset"),
@@ -46,6 +47,7 @@
 #' # intermediate_category: 100, 200
 #' # account_number: 1001, 1002, 2001
 #' # sum_amounts: 1750, -500
+#' }
 #'
 #' @seealso
 #' \code{\link{get_account_base_category}} for extracting base categories
@@ -77,7 +79,7 @@ sum_accounts <- function(my_ledger) {
 #'   debit_account and/or credit_account columns
 #'
 #' @return data.frame A data frame with additional category columns:
-#'   \itemize{
+#'   \describe{
 #'     \item{account_base_category}{Integer. First digit of account number}
 #'     \item{high_category}{Integer. First two digits of account number}
 #'     \item{intermediate_category}{Integer. First three digits of account number}

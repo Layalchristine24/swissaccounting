@@ -15,7 +15,8 @@ add_ledger_entry(
   import_csv = FALSE,
   filename_to_import = NULL,
   export_csv = FALSE,
-  filename_to_export = NULL
+  filename_to_export = NULL,
+  is_first_entry = FALSE
 )
 }
 \arguments{
@@ -44,6 +45,9 @@ For multi-entry transactions (>2 entries), you can explicitly provide the first 
 \item{export_csv}{logical Whether to export to CSV file. Defaults to FALSE.}
 
 \item{filename_to_export}{character Optional. Path to export CSV file.}
+
+\item{is_first_entry}{logical Whether this is the first entry of a transaction pair.
+If TRUE and counterpart_id is NULL, sets counterpart_id to NA. Defaults to FALSE.}
 }
 \value{
 tibble A tibble containing the updated ledger with the new entry.

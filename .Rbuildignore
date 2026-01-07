@@ -1,3 +1,10 @@
 ^swissaccounting\.Rproj$
 ^\.Rproj\.user$
 ^README\.Rmd$
+^\.claude$
+^\.vscode$
+^doc$
+^documents$
+^log\.md$
+^plan\.md$
+^work$

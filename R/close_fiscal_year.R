@@ -15,6 +15,7 @@
 #'
 #' @return Invisibly returns the updated ledger tibble
 #' @export
+#' @autoglobal
 #'
 #' @examples
 #' \dontrun{
@@ -75,7 +76,7 @@ close_fiscal_year <- function(ledger_file,
   }
 
   closing_type <- if (language == "fr") {
-    "Clôture"
+    "Cl\u00f4ture"
   } else if (language == "de") {
     "Abschluss"
   } else {
@@ -83,7 +84,7 @@ close_fiscal_year <- function(ledger_file,
   }
 
   closing_desc_prefix <- if (language == "fr") {
-    "Clôture:"
+    "Cl\u00f4ture:"
   } else if (language == "de") {
     "Abschluss:"
   } else {
@@ -93,15 +94,15 @@ close_fiscal_year <- function(ledger_file,
   transfer_desc <- if (language == "fr") {
     "Transfert au bilan"
   } else if (language == "de") {
-    "Übertrag zur Bilanz"
+    "\u00dcbertrag zur Bilanz"
   } else {
     "Transfer to Balance Sheet"
   }
 
   transfer_to_equity_desc <- if (language == "fr") {
-    "Transfert aux réserves"
+    "Transfert aux r\u00e9serves"
   } else if (language == "de") {
-    "Übertrag zu Reserven"
+    "\u00dcbertrag zu Reserven"
   } else {
     "Transfer to Retained Earnings"
   }

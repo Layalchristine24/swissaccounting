@@ -9,6 +9,7 @@
 #' @importFrom dplyr filter
 #' @importFrom dplyr if_else
 #' @importFrom dplyr join_by
+#' @importFrom dplyr lag
 #' @importFrom dplyr last
 #' @importFrom dplyr left_join
 #' @importFrom dplyr mutate

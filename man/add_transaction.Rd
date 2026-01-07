@@ -36,8 +36,8 @@ the exact same behavior as manual calls to \code{add_ledger_entry()}.
 
 The function creates two entries:
 \itemize{
-\item{First entry (debit): Creates an entry with self-linked counterpart_id}
-\item{Second entry (credit): Automatically links to the first entry via counterpart_id}
+\item First entry (debit): Creates an entry with counterpart_id = NA
+\item Second entry (credit): Automatically links to the first entry via counterpart_id
 }
 
 This ensures proper double-entry bookkeeping and maintains Swiss GAAP compliance.

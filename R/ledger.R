@@ -8,7 +8,7 @@
 #' @param import_csv logical Whether to import from CSV file. Defaults to FALSE.
 #'
 #' @return tibble A tibble containing ledger data with columns:
-#'   \itemize{
+#'   \describe{
 #'     \item{date}{Date. Transaction date}
 #'     \item{id}{Integer. Unique transaction identifier}
 #'     \item{counterpart_id}{Integer. ID of the counterpart entry}

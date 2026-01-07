@@ -14,7 +14,7 @@
 #'   Defaults to "fr"
 #'
 #' @return data.frame A data frame with private account details:
-#'   \itemize{
+#'   \describe{
 #'     \item{account_number}{Integer. Account identifier (2850)}
 #'     \item{account_description}{Character. Account description in selected language}
 #'     \item{sum_amounts}{Numeric. Total balance of the private account}

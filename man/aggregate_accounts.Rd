@@ -12,7 +12,7 @@ debit_account and/or credit_account columns}
 }
 \value{
 data.frame A data frame with additional category columns:
-\itemize{
+\describe{
 \item{account_base_category}{Integer. First digit of account number}
 \item{high_category}{Integer. First two digits of account number}
 \item{intermediate_category}{Integer. First three digits of account number}

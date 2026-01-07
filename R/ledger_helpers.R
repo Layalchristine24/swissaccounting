@@ -8,6 +8,7 @@
 #' @return Character - "en", "fr", or "de"
 #' @keywords internal
 #' @noRd
+#' @autoglobal
 detect_ledger_language <- function(ledger_file) {
   ledger <- read_ledger_csv(ledger_file)
 
@@ -38,6 +39,7 @@ detect_ledger_language <- function(ledger_file) {
 #' @return Integer - the next available ID (max ID + 1)
 #' @keywords internal
 #' @noRd
+#' @autoglobal
 get_next_ledger_id <- function(ledger_file) {
   ledger <- read_ledger_csv(ledger_file)
 
@@ -65,6 +67,7 @@ get_next_ledger_id <- function(ledger_file) {
 #' @return Updated ledger tibble (invisibly)
 #' @keywords internal
 #' @noRd
+#' @autoglobal
 append_ledger_entries <- function(ledger_file, new_entries) {
   existing_ledger <- read_ledger_csv(ledger_file)
 
@@ -112,6 +115,7 @@ append_ledger_entries <- function(ledger_file, new_entries) {
 #' @return Tibble with account numbers, balances, descriptions, and account types
 #' @keywords internal
 #' @noRd
+#' @autoglobal
 get_account_balances_at_date <- function(ledger_file, closing_date, account_range, language) {
   ledger <- read_ledger_csv(ledger_file)
 
@@ -162,13 +166,14 @@ get_account_balances_at_date <- function(ledger_file, closing_date, account_rang
 #' @return Logical - TRUE if closing entries exist, FALSE otherwise
 #' @keywords internal
 #' @noRd
+#' @autoglobal
 check_closing_exists <- function(ledger_file, closing_date) {
   ledger <- read_ledger_csv(ledger_file)
   closing_date_parsed <- ymd(closing_date)
 
   closing_entries <- ledger |>
     filter(date == closing_date_parsed) |>
-    filter(account_type %in% c("Closing", "Clôture", "Abschluss"))
+    filter(account_type %in% c("Closing", "Cl\u00f4ture", "Abschluss"))
 
   return(nrow(closing_entries) > 0)
 }
@@ -183,13 +188,14 @@ check_closing_exists <- function(ledger_file, closing_date) {
 #' @return Logical - TRUE if opening entries exist, FALSE otherwise
 #' @keywords internal
 #' @noRd
+#' @autoglobal
 check_opening_exists <- function(ledger_file, opening_date) {
   ledger <- read_ledger_csv(ledger_file)
   opening_date_parsed <- ymd(opening_date)
 
   opening_entries <- ledger |>
     filter(date == opening_date_parsed) |>
-    filter(grepl("Opening|Ouverture|Eröffnung|Bilan d'ouverture|Opening Balance|Eröffnungsbilanz",
+    filter(grepl("Opening|Ouverture|Er\u00f6ffnung|Bilan d'ouverture|Opening Balance|Er\u00f6ffnungsbilanz",
                        description, ignore.case = TRUE))
 
   return(nrow(opening_entries) > 0)

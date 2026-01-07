@@ -17,7 +17,7 @@ add_transaction(
 ledger <- read_ledger_csv(temp_ledger)
 expect_equal(nrow(ledger), 2)
 expect_equal(ledger$id, c(1L, 2L))
-expect_equal(ledger$counterpart_id, c(1L, 1L))
+expect_equal(ledger$counterpart_id, c(NA_integer_, 1L))
 })
 
 test_that("add_transaction preserves previous entries when called multiple times", {

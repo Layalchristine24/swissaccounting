@@ -21,9 +21,9 @@
 #'   "en", "fr", "de". Defaults to "fr"
 #'
 #' @return A list containing two elements:
-#'   \itemize{
+#'   \describe{
 #'     \item{balance_accounts}{A data frame containing balance sheet data with columns:
-#'       \itemize{
+#'       \describe{
 #'         \item{account_base_category}{Integer. First digit of account number (1 or 2)}
 #'         \item{high_category}{Integer. First two digits of account number}
 #'         \item{intermediate_category}{Integer. First three digits of account number}
@@ -33,7 +33,7 @@
 #'       }
 #'     }
 #'     \item{total}{A data frame containing total amounts by base category with columns:
-#'       \itemize{
+#'       \describe{
 #'         \item{account_base_category}{Integer. First digit of account number (1 or 2)}
 #'         \item{total}{Numeric. Total amount for the base category}
 #'       }
@@ -102,7 +102,7 @@ get_balance_accounts <- function(
   ledger_data <- read_ledger_csv(ledger_file)
   has_closing_entries <- any(
     (ledger_data$debit_account == 9200L | ledger_data$credit_account == 9200L) &
-      ledger_data$account_type %in% c("Closing", "Clôture", "Abschluss") &
+      ledger_data$account_type %in% c("Closing", "Cl\u00f4ture", "Abschluss") &
       ledger_data$date <= ymd(max_date) &
       ledger_data$date >= ymd(min_date),
     na.rm = TRUE
@@ -128,7 +128,7 @@ get_balance_accounts <- function(
       intermediate_category = 289L,
       account_number = 2891L,
       account_description = if (language == "fr") {
-        "Résultat du bilan"
+        "R\u00e9sultat du bilan"
       } else if (language == "de") {
         "Bilanzergebnis"
       } else {
