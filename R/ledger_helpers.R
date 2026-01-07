@@ -149,7 +149,10 @@ get_account_balances_at_date <- function(ledger_file, closing_date, account_rang
 
   result <- account_sums |>
     left_join(
-      account_model |> select(account_number, account_type),
+      account_model |> ensure_type(
+        account_number = integer(),
+        account_type = character()
+      ),
       by = "account_number"
     )
 

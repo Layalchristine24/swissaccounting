@@ -1,23 +1,61 @@
+test_that("add_transaction returns ledger with correct structure", {
+  # Setup: create temp file
+  temp_ledger <- tempfile(fileext = ".csv")
+  on.exit(unlink(temp_ledger))
+
+  # Add a transaction
+  add_transaction(
+    ledger_file = temp_ledger,
+    date = "2024-01-01",
+    descr = "Test transaction",
+    debit_account = 6000,
+    credit_account = 1020,
+    amount = 100
+  )
+
+  # Read the ledger
+  ledger <- read_ledger_csv(temp_ledger)
+
+  # Verify it returns a data frame
+  expect_s3_class(ledger, "data.frame")
+
+  # Verify columns and types using ensure_type (will error if types don't match)
+  expect_no_error(
+    ensure_type(
+      ledger,
+      date = lubridate::NA_Date_,
+      id = integer(),
+      counterpart_id = integer(),
+      description = character(),
+      debit_account = integer(),
+      credit_account = integer(),
+      amount = double(),
+      account_description = character(),
+      account_type = character()
+    )
+  )
+})
+
 test_that("add_transaction creates two entries per call", {
   # Setup: create temp file
-temp_ledger <- tempfile(fileext = ".csv")
-on.exit(unlink(temp_ledger))
+  temp_ledger <- tempfile(fileext = ".csv")
+  on.exit(unlink(temp_ledger))
 
-# Add first transaction
-add_transaction(
-  ledger_file = temp_ledger,
-  date = "2024-01-01",
-  descr = "Test transaction 1",
-  debit_account = 6000,
-  credit_account = 1020,
-  amount = 100
-)
+  # Add first transaction
+  add_transaction(
+    ledger_file = temp_ledger,
+    date = "2024-01-01",
+    descr = "Test transaction 1",
+    debit_account = 6000,
+    credit_account = 1020,
+    amount = 100
+  )
 
-# Read and verify: should have 2 entries
-ledger <- read_ledger_csv(temp_ledger)
-expect_equal(nrow(ledger), 2)
-expect_equal(ledger$id, c(1L, 2L))
-expect_equal(ledger$counterpart_id, c(NA_integer_, 1L))
+  # Read and verify: should have 2 entries
+  ledger <- read_ledger_csv(temp_ledger)
+  expect_equal(nrow(ledger), 2)
+  expect_equal(ledger$id, c(1L, 2L))
+  expect_equal(ledger$counterpart_id, c(NA_integer_, 1L))
 })
 
 test_that("add_transaction preserves previous entries when called multiple times", {
