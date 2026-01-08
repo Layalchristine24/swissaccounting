@@ -27,6 +27,7 @@
 #' # Get the English accounting plan
 #' get_accounting_plan_template("en")
 #'
+#' @autoglobal
 #' @export
 get_accounting_plan_template <- function(language) {
   if (language == "fr") {
