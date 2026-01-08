@@ -159,11 +159,11 @@ get_account_balances_at_date <- function(
 
   # Join with account information to get account types
   account_model <- if (language == "fr") {
-    accounts_model_fr
+    get_accounting_plan_template(language == "fr")
   } else if (language == "en") {
-    accounts_model_en
+    get_accounting_plan_template(language == "en")
   } else if (language == "de") {
-    accounts_model_de
+    get_accounting_plan_template(language == "de")
   } else {
     cli_abort("Language must be 'en', 'fr', or 'de'")
   }
