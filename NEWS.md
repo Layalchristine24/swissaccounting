@@ -1,3 +1,14 @@
+<!-- NEWS.md is maintained by https://cynkra.github.io/fledge, do not edit -->
+
+# swissaccounting 0.1.0.9003 (2026-01-08)
+
+* fix: remove path_csv argument from get_income_statement
+* chore: update roxygennote version
+* fix: remove unneeded comma
+* docs: fix readme example
+* fix: format files with air
+
+
 <!-- NEWS.md is maintained by https://fledge.cynkra.com, contributors should not edit this file -->
 
 # swissaccounting 0.1.0.9002 (2025-04-13)
