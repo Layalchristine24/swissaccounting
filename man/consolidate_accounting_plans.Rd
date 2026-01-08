@@ -5,9 +5,9 @@
 \title{Consolidate Multiple Language Account Plans}
 \usage{
 consolidate_accounting_plans(
-  my_accounts_model_en = accounts_model_en,
-  my_accounts_model_fr = accounts_model_fr,
-  my_accounts_model_de = accounts_model_de
+  my_accounts_model_en = get_accounting_plan_template("en"),
+  my_accounts_model_fr = get_accounting_plan_template("fr"),
+  my_accounts_model_de = get_accounting_plan_template("de")
 )
 }
 \arguments{
@@ -17,7 +17,7 @@ consolidate_accounting_plans(
 \item{account_type}{Character. Account type in English}
 \item{account_description}{Character. Account description in English}
 }
-Defaults to accounts_model_en}
+Defaults to get_accounting_plan_template("en")}
 
 \item{my_accounts_model_fr}{data.frame French account plan with columns:
 \describe{
@@ -25,7 +25,7 @@ Defaults to accounts_model_en}
 \item{account_type}{Character. Account type in French}
 \item{account_description}{Character. Account description in French}
 }
-Defaults to accounts_model_fr}
+Defaults to get_accounting_plan_template("fr")}
 
 \item{my_accounts_model_de}{data.frame German account plan with columns:
 \describe{
@@ -33,7 +33,7 @@ Defaults to accounts_model_fr}
 \item{account_type}{Character. Account type in German}
 \item{account_description}{Character. Account description in German}
 }
-Defaults to accounts_model_de}
+Defaults to get_accounting_plan_template("de")}
 }
 \value{
 data.frame A consolidated data frame with columns:
@@ -69,7 +69,5 @@ custom_consolidated <- consolidate_accounting_plans(
 
 }
 \seealso{
-\code{\link{accounts_model_en}} for English account plan
-\code{\link{accounts_model_fr}} for French account plan
-\code{\link{accounts_model_de}} for German account plan
+\code{\link{get_accounting_plan_template}} for account plans
 }

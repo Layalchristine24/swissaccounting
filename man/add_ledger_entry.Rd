@@ -82,7 +82,5 @@ ledger <- add_ledger_entry(
 }
 \seealso{
 \code{\link{get_ledger}} for retrieving ledger data
-\code{\link{accounts_model_en}} for English account descriptions
-\code{\link{accounts_model_fr}} for French account descriptions
-\code{\link{accounts_model_de}} for German account descriptions
+\code{\link{get_accounting_plan_template}} for account descriptions
 }

@@ -106,9 +106,7 @@ get_ledger <- function(ledger_file = NULL, import_csv = FALSE) {
 #'
 #' @seealso
 #' \code{\link{get_ledger}} for retrieving ledger data
-#' \code{\link{accounts_model_en}} for English account descriptions
-#' \code{\link{accounts_model_fr}} for French account descriptions
-#' \code{\link{accounts_model_de}} for German account descriptions
+#' \code{\link{get_accounting_plan_template}} for account descriptions
 #'
 #' @export
 #' @autoglobal
@@ -143,13 +141,7 @@ add_ledger_entry <- function(
     ledger_file = filename_to_import
   )
 
-  account_model <- if (language == "fr") {
-    accounts_model_fr
-  } else if (language == "en") {
-    accounts_model_en
-  } else if (language == "de") {
-    accounts_model_de
-  }
+  account_model <- get_accounting_plan_template(language)
 
   # Determine next ID
   next_id <- if_else(is.na(max(last_ledger$id)), 1L, max(last_ledger$id) + 1L)
