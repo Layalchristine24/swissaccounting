@@ -9,16 +9,38 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE, roclets = c("collate", "namespace", "rd",
     "roxyglobals::global_roclet"))
 RoxygenNote: 7.3.2
-Imports: 
+Imports:
     cli,
     dplyr,
     lubridate,
     readr,
+    rlang,
     stringr,
     tibble,
     tidyr,
-    tidyselect
+    tidyselect,
+    vctrs
 Suggests: 
-    roxyglobals
+    roxyglobals,
+    testthat (>= 3.0.0)
 Config/roxyglobals/filename: globals.R
 Config/roxyglobals/unique: FALSE
+Config/testthat/edition: 3
+Collate: 
+    'ensure_type.R'
+    'accounting_plan_template.R'
+    'add_transaction.R'
+    'close_fiscal_year.R'
+    'consolidate_accounting_plans.R'
+    'create_opening_balances.R'
+    'get_balance_accounts.R'
+    'get_higher_categories.R'
+    'get_income_statement.R'
+    'get_operating_result.R'
+    'get_private_account.R'
+    'globals.R'
+    'ledger.R'
+    'ledger_helpers.R'
+    'sum_accounts.R'
+    'swissaccounting-package.R'
+    'utils.R'

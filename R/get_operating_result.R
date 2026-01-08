@@ -13,7 +13,7 @@
 #'   Defaults to "fr"
 #'
 #' @return data.frame A data frame with a single column:
-#'   \itemize{
+#'   \describe{
 #'     \item{amount}{Numeric. The net operating result (positive for profit, negative for loss)}
 #'   }
 #'

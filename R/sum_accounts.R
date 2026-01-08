@@ -9,7 +9,7 @@
 #'
 #' @param my_ledger data.frame A data frame containing accounting ledger data with
 #'   the following columns:
-#'   \itemize{
+#'   \describe{
 #'     \item{account_type}{Character. Type of account (Asset, Liability, etc.)}
 #'     \item{debit_account}{Integer. Account number for debit entries}
 #'     \item{credit_account}{Integer. Account number for credit entries}
@@ -18,7 +18,7 @@
 #'   }
 #'
 #' @return data.frame A grouped data frame with the following columns:
-#'   \itemize{
+#'   \describe{
 #'     \item{account_base_category}{Integer. First digit of account number (1-9)}
 #'     \item{high_category}{Integer. First two digits of account number}
 #'     \item{intermediate_category}{Integer. First three digits of account number}
@@ -29,6 +29,7 @@
 #'   }
 #'
 #' @examples
+#' \dontrun{
 #' # Create sample ledger data
 #' ledger_data <- data.frame(
 #'   account_type = c("Asset", "Liability", "Asset"),
@@ -46,6 +47,7 @@
 #' # intermediate_category: 100, 200
 #' # account_number: 1001, 1002, 2001
 #' # sum_amounts: 1750, -500
+#' }
 #'
 #' @seealso
 #' \code{\link{get_account_base_category}} for extracting base categories
@@ -58,11 +60,8 @@ sum_accounts <- function(my_ledger) {
     filter(
       !(account_type %in%
         c(
-          "Income/Expense",
           "Closing",
-          "Produit/Charge",
           "Cl\u00f4ture",
-          "Einnahmen/Ausgabe",
           "Abschluss"
         ))
     ) |>
@@ -80,7 +79,7 @@ sum_accounts <- function(my_ledger) {
 #'   debit_account and/or credit_account columns
 #'
 #' @return data.frame A data frame with additional category columns:
-#'   \itemize{
+#'   \describe{
 #'     \item{account_base_category}{Integer. First digit of account number}
 #'     \item{high_category}{Integer. First two digits of account number}
 #'     \item{intermediate_category}{Integer. First three digits of account number}
@@ -100,22 +99,46 @@ aggregate_accounts <- function(my_ledger_filtered) {
   my_ledger_filtered |>
     mutate(
       amount = case_when(
+        # Assets and Expenses: debits are positive, credits are negative
         account_type %in%
           c("Asset", "Expense", "Actif", "Charge", "Aktivkonto", "Ausgabe") &
           !is.na(debit_account) ~
           amount,
         account_type %in%
+          c("Asset", "Expense", "Actif", "Charge", "Aktivkonto", "Ausgabe") &
+          !is.na(credit_account) ~
+          -amount,
+        # Liabilities and Income: credits are negative (normal balance), debits are positive (reduce balance)
+        # Note: "Income/Expense" accounts are treated as Income (credits negative, debits positive)
+        account_type %in%
           c(
             "Liability",
             "Income",
+            "Income/Expense",
             "Passif",
             "Produit",
+            "Produit/Charge",
             "Passivkonto",
-            "Einnahmen"
+            "Einnahmen",
+            "Einnahmen/Ausgabe"
           ) &
           !is.na(credit_account) ~
+          -amount,
+        account_type %in%
+          c(
+            "Liability",
+            "Income",
+            "Income/Expense",
+            "Passif",
+            "Produit",
+            "Produit/Charge",
+            "Passivkonto",
+            "Einnahmen",
+            "Einnahmen/Ausgabe"
+          ) &
+          !is.na(debit_account) ~
           amount,
-        .default = -amount
+        .default = amount
       )
     ) |>
     get_high_category() |>

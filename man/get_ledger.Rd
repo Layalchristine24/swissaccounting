@@ -13,7 +13,7 @@ get_ledger(ledger_file = NULL, import_csv = FALSE)
 }
 \value{
 tibble A tibble containing ledger data with columns:
-\itemize{
+\describe{
 \item{date}{Date. Transaction date}
 \item{id}{Integer. Unique transaction identifier}
 \item{counterpart_id}{Integer. ID of the counterpart entry}

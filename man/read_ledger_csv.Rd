@@ -11,7 +11,7 @@ read_ledger_csv(ledger_file)
 }
 \value{
 data.frame A data frame with the following columns:
-\itemize{
+\describe{
 \item{date}{Date. Transaction date}
 \item{description}{Character. Transaction description}
 \item{account_description}{Character. Description of the account}

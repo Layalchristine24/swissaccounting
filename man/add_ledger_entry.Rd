@@ -15,7 +15,8 @@ add_ledger_entry(
   import_csv = FALSE,
   filename_to_import = NULL,
   export_csv = FALSE,
-  filename_to_export = NULL
+  filename_to_export = NULL,
+  is_first_entry = FALSE
 )
 }
 \arguments{
@@ -24,7 +25,10 @@ add_ledger_entry(
 \item{language}{character Language code for account descriptions. One of "en", "fr", "de".
 Defaults to "en".}
 
-\item{counterpart_id}{integer Optional. ID of the counterpart entry for double-entry bookkeeping.}
+\item{counterpart_id}{integer Optional. ID to link related ledger entries together.
+If NULL and import_csv is FALSE, defaults to the entry's own ID (first entry in a transaction).
+If NULL and import_csv is TRUE, automatically links to the previous entry's ID (subsequent entries).
+For multi-entry transactions (>2 entries), you can explicitly provide the first entry's ID.}
 
 \item{debit_account}{integer Optional. Account number for debit entry.}
 
@@ -41,6 +45,9 @@ Defaults to "en".}
 \item{export_csv}{logical Whether to export to CSV file. Defaults to FALSE.}
 
 \item{filename_to_export}{character Optional. Path to export CSV file.}
+
+\item{is_first_entry}{logical Whether this is the first entry of a transaction pair.
+If TRUE and counterpart_id is NULL, sets counterpart_id to NA. Defaults to FALSE.}
 }
 \value{
 tibble A tibble containing the updated ledger with the new entry.

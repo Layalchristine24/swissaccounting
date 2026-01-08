@@ -14,7 +14,7 @@ select_ledger_language(ledger_data, language)
 }
 \value{
 data.frame A data frame with columns:
-\itemize{
+\describe{
 \item{account_number}{Integer. The account identifier}
 \item{account_type}{Character. Account type in selected language}
 \item{account_description}{Character. Account description in selected

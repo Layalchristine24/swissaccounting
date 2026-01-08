@@ -22,7 +22,7 @@ statement period (format: "YYYY-MM-DD")}
 \value{
 data.frame A data frame containing income and expense entries with
 non-zero amounts, including:
-\itemize{
+\describe{
 \item{account_base_category}{Integer. First digit of account number (3-6)}
 \item{high_category}{Integer. First two digits of account number}
 \item{intermediate_category}{Integer. First three digits of account number}

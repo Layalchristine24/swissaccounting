@@ -8,7 +8,7 @@
 #' @param import_csv logical Whether to import from CSV file. Defaults to FALSE.
 #'
 #' @return tibble A tibble containing ledger data with columns:
-#'   \itemize{
+#'   \describe{
 #'     \item{date}{Date. Transaction date}
 #'     \item{id}{Integer. Unique transaction identifier}
 #'     \item{counterpart_id}{Integer. ID of the counterpart entry}
@@ -66,7 +66,10 @@ get_ledger <- function(ledger_file = NULL, import_csv = FALSE) {
 #' @param date Date,character Date of the ledger entry. If character, will be converted to Date.
 #' @param language character Language code for account descriptions. One of "en", "fr", "de".
 #'   Defaults to "en".
-#' @param counterpart_id integer Optional. ID of the counterpart entry for double-entry bookkeeping.
+#' @param counterpart_id integer Optional. ID to link related ledger entries together.
+#'   If NULL and import_csv is FALSE, defaults to the entry's own ID (first entry in a transaction).
+#'   If NULL and import_csv is TRUE, automatically links to the previous entry's ID (subsequent entries).
+#'   For multi-entry transactions (>2 entries), you can explicitly provide the first entry's ID.
 #' @param debit_account integer Optional. Account number for debit entry.
 #' @param credit_account integer Optional. Account number for credit entry.
 #' @param descr character Description of the transaction.
@@ -75,6 +78,8 @@ get_ledger <- function(ledger_file = NULL, import_csv = FALSE) {
 #' @param filename_to_import character Optional. Path to import CSV file.
 #' @param export_csv logical Whether to export to CSV file. Defaults to FALSE.
 #' @param filename_to_export character Optional. Path to export CSV file.
+#' @param is_first_entry logical Whether this is the first entry of a transaction pair.
+#'   If TRUE and counterpart_id is NULL, sets counterpart_id to NA. Defaults to FALSE.
 #'
 #' @return tibble A tibble containing the updated ledger with the new entry.
 #'   See get_ledger() for column descriptions.
@@ -118,7 +123,8 @@ add_ledger_entry <- function(
   import_csv = FALSE,
   filename_to_import = NULL,
   export_csv = FALSE,
-  filename_to_export = NULL
+  filename_to_export = NULL,
+  is_first_entry = FALSE
 ) {
   if (is.character(date)) {
     date <- lubridate::as_date(date)
@@ -145,8 +151,23 @@ add_ledger_entry <- function(
     accounts_model_de
   }
 
+  # Determine next ID
+  next_id <- if_else(is.na(max(last_ledger$id)), 1L, max(last_ledger$id) + 1L)
+
+  # Automatic counterpart_id assignment logic
   .counterpart_id <- if (is.null(counterpart_id)) {
-    NA_integer_
+    if (is_first_entry) {
+      # For first entry in a transaction: no counterpart yet
+      NA_integer_
+    } else if (
+      import_csv && !is.null(filename_to_import) && nrow(last_ledger) > 0
+    ) {
+      # For subsequent entries in a transaction: link to the previous entry
+      max(last_ledger$id, na.rm = TRUE)
+    } else {
+      # Fallback: no counterpart
+      NA_integer_
+    }
   } else {
     counterpart_id
   }
@@ -156,15 +177,14 @@ add_ledger_entry <- function(
   ledger_raw <-
     tibble(
       date = date,
-      id = if_else(is.na(max(last_ledger$id)), 1L, max(last_ledger$id) + 1L),
+      id = next_id,
       counterpart_id = .counterpart_id,
       description = descr,
       debit_account = debit_account,
       credit_account = credit_account,
       amount = amount
     ) |>
-    drop_na(amount) |>
-    mutate(counterpart_id = if_else(is.na(.counterpart_id), id, counterpart_id))
+    drop_na(amount)
 
   new_ledger <- if (is.null(filename_to_import)) {
     if (!is.null(debit_account)) {

@@ -53,3 +53,5 @@ rsconnect/
 work/
 .vscode/
 documents/
+*.pdf
+*.jpeg

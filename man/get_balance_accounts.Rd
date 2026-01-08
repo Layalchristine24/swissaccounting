@@ -24,9 +24,9 @@ up to the end of the ledger.}
 }
 \value{
 A list containing two elements:
-\itemize{
+\describe{
 \item{balance_accounts}{A data frame containing balance sheet data with columns:
-\itemize{
+\describe{
 \item{account_base_category}{Integer. First digit of account number (1 or 2)}
 \item{high_category}{Integer. First two digits of account number}
 \item{intermediate_category}{Integer. First three digits of account number}
@@ -36,7 +36,7 @@ A list containing two elements:
 }
 }
 \item{total}{A data frame containing total amounts by base category with columns:
-\itemize{
+\describe{
 \item{account_base_category}{Integer. First digit of account number (1 or 2)}
 \item{total}{Numeric. Total amount for the base category}
 }

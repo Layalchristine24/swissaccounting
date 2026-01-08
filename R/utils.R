@@ -9,7 +9,7 @@
 #' @param ledger_file character Path to the CSV ledger file to read
 #'
 #' @return data.frame A data frame with the following columns:
-#'   \itemize{
+#'   \describe{
 #'     \item{date}{Date. Transaction date}
 #'     \item{description}{Character. Transaction description}
 #'     \item{account_description}{Character. Description of the account}
@@ -111,7 +111,7 @@ filter_ledger_date_range <- function(ledger_data, min_date, max_date) {
 #'   "fr", "de"
 #'
 #' @return data.frame A data frame with columns:
-#'   \itemize{
+#'   \describe{
 #'     \item{account_number}{Integer. The account identifier}
 #'     \item{account_type}{Character. Account type in selected language}
 #'     \item{account_description}{Character. Account description in selected
@@ -152,7 +152,7 @@ select_ledger_language <- function(ledger_data, language) {
 #'   either "assets" or "liabilities"
 #'
 #' @return data.frame A data frame containing:
-#'   \itemize{
+#'   \describe{
 #'     \item{account_base_category}{Integer. First digit of account number (1 or 2)}
 #'     \item{high_category}{Integer. First two digits of account number}
 #'     \item{intermediate_category}{Integer. First three digits of account number}
@@ -241,7 +241,7 @@ get_account_category <- function(
 #'   either "assets" or "liabilities"
 #'
 #' @return data.frame A data frame containing:
-#'   \itemize{
+#'   \describe{
 #'     \item{account_base_category}{Integer. First digit of account number (1 or 2)}
 #'     \item{high_category}{Integer. First two digits of account number}
 #'     \item{intermediate_category}{Integer. First three digits of account number}
