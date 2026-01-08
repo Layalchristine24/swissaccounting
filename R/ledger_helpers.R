@@ -158,15 +158,10 @@ get_account_balances_at_date <- function(
     filter(sum_amounts != 0)
 
   # Join with account information to get account types
-  account_model <- if (language == "fr") {
-    accounts_model_fr
-  } else if (language == "en") {
-    accounts_model_en
-  } else if (language == "de") {
-    accounts_model_de
-  } else {
+  if (!language %in% c("en", "fr", "de")) {
     cli_abort("Language must be 'en', 'fr', or 'de'")
   }
+  account_model <- get_accounting_plan_template(language)
 
   result <- account_sums |>
     left_join(

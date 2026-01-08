@@ -12,21 +12,21 @@
 #'     \item{account_type}{Character. Account type in English}
 #'     \item{account_description}{Character. Account description in English}
 #'   }
-#'   Defaults to accounts_model_en
+#'   Defaults to get_accounting_plan_template("en")
 #' @param my_accounts_model_fr data.frame French account plan with columns:
 #'   \describe{
 #'     \item{account_number}{Integer. The account identifier}
 #'     \item{account_type}{Character. Account type in French}
 #'     \item{account_description}{Character. Account description in French}
 #'   }
-#'   Defaults to accounts_model_fr
+#'   Defaults to get_accounting_plan_template("fr")
 #' @param my_accounts_model_de data.frame German account plan with columns:
 #'   \describe{
 #'     \item{account_number}{Integer. The account identifier}
 #'     \item{account_type}{Character. Account type in German}
 #'     \item{account_description}{Character. Account description in German}
 #'   }
-#'   Defaults to accounts_model_de
+#'   Defaults to get_accounting_plan_template("de")
 #'
 #' @return data.frame A consolidated data frame with columns:
 #'   \describe{
@@ -54,16 +54,14 @@
 #' }
 #'
 #' @seealso
-#' \code{\link{accounts_model_en}} for English account plan
-#' \code{\link{accounts_model_fr}} for French account plan
-#' \code{\link{accounts_model_de}} for German account plan
+#' \code{\link{get_accounting_plan_template}} for account plans
 #'
 #' @export
 #' @autoglobal
 consolidate_accounting_plans <- function(
-  my_accounts_model_en = accounts_model_en,
-  my_accounts_model_fr = accounts_model_fr,
-  my_accounts_model_de = accounts_model_de
+  my_accounts_model_en = get_accounting_plan_template("en"),
+  my_accounts_model_fr = get_accounting_plan_template("fr"),
+  my_accounts_model_de = get_accounting_plan_template("de")
 ) {
   my_accounts_model_en |>
     rename(

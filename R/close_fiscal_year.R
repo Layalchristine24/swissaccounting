@@ -64,13 +64,7 @@ close_fiscal_year <- function(
   )
 
   # Get account model for descriptions
-  account_model <- if (language == "fr") {
-    accounts_model_fr
-  } else if (language == "en") {
-    accounts_model_en
-  } else if (language == "de") {
-    accounts_model_de
-  }
+  account_model <- get_accounting_plan_template(language)
 
   # Get account 9200 description
   account_9200 <- account_model |>
