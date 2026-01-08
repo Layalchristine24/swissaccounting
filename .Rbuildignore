@@ -9,3 +9,4 @@
 ^plan\.md$
 ^work$
 ^LICENSE\.md$
+^[.]?air[.]toml$
