@@ -1,4 +1,18 @@
-<!-- NEWS.md is maintained by https://cynkra.github.io/fledge, do not edit -->
+<!-- NEWS.md is maintained by https://fledge.cynkra.com, contributors should not edit this file -->
+
+# swissaccounting 0.1.0.9004 (2026-02-18)
+
+## Bug fixes
+
+- Fix multiple closings.
+
+  When a ledger contains more than one fiscal year (e.g. 2024 + 2025), calling `close_fiscal_year()` or `create_opening_balances()` for the second year produced inflated balances because `get_account_balances_at_date()` used `min_date = NULL`, summing all entries from the beginning of the ledger.
+  The fix in get_account_balances_at_date() correctly scopes calculations to the current fiscal year by detecting the most recent account 9100 (Opening Balance) date as the start boundary.
+
+## Testing
+
+- Add test.
+
 
 # swissaccounting 0.1.0.9003 (2026-01-08)
 
