@@ -140,10 +140,28 @@ get_account_balances_at_date <- function(
 ) {
   ledger <- read_ledger_csv(ledger_file)
 
-  # Filter by date range (from beginning to closing date)
+  closing_date_parsed <- ymd(closing_date)
+
+  # Find the most recent opening balance date (entries using account 9100)
+
+  # to scope the calculation to the current fiscal year only.
+  # This avoids double-counting from prior years' entries + opening balances.
+  opening_entries <- ledger |>
+    filter(
+      date <= closing_date_parsed,
+      (debit_account == 9100L | credit_account == 9100L)
+    )
+
+  min_date <- if (nrow(opening_entries) > 0) {
+    as.character(max(opening_entries$date))
+  } else {
+    NULL
+  }
+
+  # Filter by date range (from most recent opening to closing date)
   filtered <- filter_ledger_date_range(
     ledger_data = ledger,
-    min_date = NULL,
+    min_date = min_date,
     max_date = closing_date
   )
 
