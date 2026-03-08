@@ -20,6 +20,8 @@ utils::globalVariables(c(
   "account_number", # <add_ledger_entry>
   "id", # <add_ledger_entry>
   "id", # <append_ledger_entries>
+  "debit_account", # <get_account_balances_at_date>
+  "credit_account", # <get_account_balances_at_date>
   "account_base_category", # <get_account_balances_at_date>
   "sum_amounts", # <get_account_balances_at_date>
   "account_type", # <check_closing_exists>
